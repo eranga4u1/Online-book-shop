@@ -1,0 +1,29 @@
+﻿@using Online_book_shop.Models;
+@{
+    Layout = null;
+    List<Author> authors = ViewBag.Authors;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddMultipleAuthors</title>
+</head>
+<body>
+    <div>
+        <form action="/">
+            <select id="authors" multiple style="height:500px;">
+                @foreach (Author a in authors)
+                {
+
+                    <option value="@a.Id">@a.Name</option>
+                }
+
+            </select>
+        </form>
+
+    </div>
+</body>
+</html>

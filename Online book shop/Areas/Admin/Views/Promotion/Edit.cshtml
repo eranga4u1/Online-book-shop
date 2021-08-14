@@ -1,0 +1,150 @@
+﻿@using Online_book_shop.Handlers.Business;
+@using Online_book_shop.Models.ViewModel;
+@using Online_book_shop.Models;
+@using Online_book_shop.Handlers.Helper;
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<DataObjVM> data = ViewBag.list;
+    Promotion promotion = ViewBag.Promotion;
+}
+
+<h2>Edit Promotion</h2>
+
+<form id="form-add-promotion" method="post" action="/Admin/Promotion/Edit" enctype="multipart/form-data">
+    <input type="hidden" name="Id" id="Id" value="@promotion.Id" />
+    <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" id="PromotionTitle" name="PromotionTitle" placeholder="Title" value="@promotion.PromotionTitle">
+    </div>
+    <div class="form-group">
+        <label>Summary</label>
+        <textarea type="text" class="form-control" id="PromotionDescription" name="PromotionDescription" placeholder="Summary">@promotion.PromotionDescription</textarea>
+    </div>
+    <div class="form-group">
+        <label>Promotion Types For</label>
+        <div class="select">
+            <select id="PromotionTypesFor" class="form-control" name="PromotionTypesFor">
+                @foreach (var item in Enum.GetValues(typeof(PromotionTypesFor)))
+                {
+                    if (promotion.PromotionTypesFor == (int)item)
+                    {
+                        <option selected value="@((int)item)">@item</option>
+                    }
+                    else
+                    {
+                        <option value="@((int)item)">@item</option>
+                    }
+
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>PromotionMethods</label>
+        <div class="select">
+            <select id="PromotionMethods" class="form-control" name="PromotionMethods">
+                @foreach (var item in Enum.GetValues(typeof(PromotionMethods)))
+                {
+                    if (promotion.PromotionMethods == (int)item)
+                    {
+                        <option selected value="@((int)item)">@item</option>
+                    }
+                    else
+                    {
+                        <option value="@((int)item)">@item</option>
+                    }
+
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Object Type</label>
+        <div class="select">
+            <select id="ObjectType" class="form-control" name="ObjectType">
+                @foreach (var item in Enum.GetValues(typeof(ObjectTypes)))
+                {
+                    if (promotion.ObjectType == (int)item)
+                    {
+                        <option selected value="@((int)item)">@item</option>
+                    }
+                    else
+                    {
+                        <option value="@((int)item)">@item</option>
+                    }
+
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Object </label>
+        <div class="select">
+            <select id="ObjectId" class="form-control" name="ObjectId">
+                @foreach (var item in data)
+                {
+                    if (item.ObjType == promotion.ObjectType)
+                    {
+                        if (promotion.ObjectId == item.Id)
+                        {
+                            <option selected class="obj_@item.ObjType obj_select" value="@item.Id">@item.Name</option>
+
+                        }
+                        else
+                        {
+                            <option class="obj_@item.ObjType obj_select" value="@item.Id">@item.Name</option>
+
+                        }
+                    }
+                    else
+                    {
+                        <option style="display:none;" class="obj_@item.ObjType obj_select" value="@item.Id">@item.Name</option>
+                    }
+
+                }
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Discount Value</label>
+        <input type="text" class="form-control" id="DiscountValue" name="DiscountValue" placeholder="Discount Value" value="@promotion.DiscountValue">
+    </div>
+    <div class="form-group">
+        <label>Other Parameters</label>
+        <input type="text" class="form-control" id="OtherParameters" name="OtherParameters" placeholder="Other Parameters" value="@promotion.OtherParameters">
+    </div>
+    <div class="form-group">
+        <label>Start Date</label>
+        <input type="text" class="form-control" id="StartDate" name="StartDate" placeholder="StartDate" value="@promotion.StartDate.ToString("yyyy/MM/dd")">
+    </div>
+    <div class="form-group">
+        <label>End Date</label>
+        <input type="text" class="form-control" id="EndDate" name="EndDate" placeholder="EndDate" value="@promotion.EndDate.ToString("yyyy/MM/dd")">
+    </div>
+    <div class="form-group">
+        <label>Main Image</label>
+        <input type="file" class="form-control-file author_prof" id="MainPicture" name="MainPicture">
+        @{
+            Media m = BusinessHandlerMedia.Get(promotion.PromotionMediaId);
+            if (m != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/ProfilePicture/" + m.FileName))
+            {
+                <div>
+                    <img id="temp_img_author_prof" style="height:100px;" class="img-thumbnail" src="Content/UploadFiles/Images/ProfilePicture/@m.FileName" alt="Profile Image" />
+                </div>
+            }
+            else
+            {
+                <div>
+                    <img id="temp_img_author_prof" style="height:100px;" class="img-thumbnail" src="~/Content/images/NoImage.jpg" alt="Profile Image" />
+                </div>
+            }
+        }
+
+    </div>
+
+    <div class="form-group text-right">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+</form>

@@ -1,0 +1,52 @@
+﻿@using Online_book_shop.Models;
+@using Online_book_shop.Handlers.Business;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<Promotion> promotions = ViewBag.Promotions;
+    double timeOffset = BusinessHandlerConfigurations.GetTimeOffSet();
+}
+
+<h2>promotions</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th colspan="3" scope="col"><input class="col-lg-12" id="searchInput" type="text" placeholder="Search.."></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"><a href="/Admin/Promotion/Create" class="btn btn-info">New Promotion</a></th>
+        </tr>
+    </thead>
+    <thead>
+        <tr>
+            <th scope="col">Author Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Created date</th>
+            <th scope="col">Operation</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Promotion promotion in promotions)
+        {
+            <tr class="author-card">
+                <th scope="row">@promotion.Id</th>
+                <td>@promotion.PromotionTitle</td>
+                <td>@promotion.StartDate.AddHours(timeOffset).ToString("yyyy/MM/dd h:mm tt")</td>
+                <td>
+                    <a href="/Admin/Promotion/Edit/@promotion.Id" class="btn-sm btn-info">Edit</a>
+                    @if (promotion.isDeleted)
+                    {
+                        <a href="/Admin/Promotion/ShowItem/@promotion.Id" class="btn-sm btn-warning">Activate</a>
+                    }
+                    else
+                    {
+                        <a href="/Admin/Promotion/HideItem/@promotion.Id" class="btn-sm btn-danger">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+

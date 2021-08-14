@@ -1,0 +1,276 @@
+﻿@using Online_book_shop.Models;
+@using Online_book_shop.Handlers.Business;
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<Order> List = ViewBag.orders;
+    int pageCount = ViewBag.pageCount;
+    List<DeliverStatus> deliveryStatus = BusinessHandlerDeliveryStatus.GetAllActiveDeliverStatus();
+    string status = "";
+    string type = "";
+    if (Request.QueryString["deliveryStatus"] != null && Request.QueryString["deliveryStatus"] != "-1")
+    {
+        status = deliveryStatus.Where(x => x.Id == int.Parse(Request.QueryString["deliveryStatus"])).FirstOrDefault().DisplayText;
+    }
+    if (Request.QueryString["OrderType"] != null && Request.QueryString["OrderType"] == "0")
+    {
+        type = "Pre Orders";
+    }
+    if (Request.QueryString["OrderType"] != null && Request.QueryString["OrderType"] == "1")
+    {
+        type = "Daily Orders";
+    }
+    double timeOffset = BusinessHandlerConfigurations.GetTimeOffSet();
+}
+<div class="panel panel-default">
+    <div class="panel-heading">ADVANCED ORDER SEARCH</div>
+    <div class="panel-body">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered">
+
+                    <tbody>
+                        <tr class="text-center">
+                            <td width="30%"><strong>Date Range</strong></td>
+                            <td width="30%"><strong>Type</strong></td>
+                            <td><strong>Status</strong></td>
+
+                        </tr>
+                        <tr class="text-center">
+                            <td>
+                                
+                                @{
+                                    string startdt = "2018-01-01 04:00:00";
+                                    string enddt = "2018-03-01 04:00:00";
+                                    if (string.IsNullOrEmpty(Request.QueryString["StartDate"]))
+                                    {
+                                        startdt = "2021-01-01";
+                                    }
+                                    else
+                                    {
+                                        startdt = Request.QueryString["StartDate"];
+                                    }
+                                    if (string.IsNullOrEmpty(Request.QueryString["EndDate"]))
+                                    {
+                                        enddt = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+                                    }
+                                    else
+                                    {
+                                        enddt = Request.QueryString["EndDate"];
+                                    }
+                                }
+                                <div class="c-datepicker-date-editor J-datepicker-range mt10" style="margin-top:15px;">
+                                    <i class="c-datepicker-range__icon kxiconfont icon-clock"></i>
+                                    <input placeholder="Start" name="" id="start-date" class="c-datepicker-data-input" value="@startdt">
+                                    <span class="c-datepicker-range-separator">-</span>
+                                    <input placeholder="End" name="" id="end-date" class="c-datepicker-data-input" value="@enddt">
+                                </div>
+                            </td>
+                            <td>
+                                <div class="select " style="width:75%">
+                                    <select class="form-control" id="OrderfilteringType">
+                                        @if (Request.QueryString["OrderType"] != null)
+                                        {
+                                            if (Request.QueryString["OrderType"] == "0")
+                                            {
+                                                <option selected value="-1">All</option>
+                                                <option value="@((int)OrderType.DailyOrder)">Daily Orders</option>
+                                                <option value="@((int)OrderType.PreOrder)" selected>Pre Orders</option>
+                                            }
+                                            else if (Request.QueryString["OrderType"] == "1")
+                                            {
+                                                <option selected value="-1">All</option>
+                                                <option value="@((int)OrderType.DailyOrder)" selected>Daily Orders</option>
+                                                <option value="@((int)OrderType.PreOrder)">Pre Orders</option>
+                                            }
+                                            else
+                                            {
+                                                <option selected value="-1">All</option>
+                                                <option value="@((int)OrderType.DailyOrder)">Daily Orders</option>
+                                                <option value="@((int)OrderType.PreOrder)">Pre Orders</option>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            <option selected value="-1">All</option>
+                                            <option value="@((int)OrderType.DailyOrder)" selected>Daily Orders</option>
+                                            <option value="@((int)OrderType.PreOrder)">Pre Orders</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="select " style="width:75%">
+                                    @if (Request.QueryString["deliveryStatus"] != null)
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            <option value="-1" @(int.Parse(Request.QueryString["deliveryStatus"]) == -1 ? "selected" : "")>All</option>
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+                                                if (int.Parse(Request.QueryString["deliveryStatus"]) == s.Id)
+                                                {
+                                                    <option value="@s.Id" selected>@s.DisplayText</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@s.Id">@s.DisplayText</option>
+                                                }
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            <option selected value="-1">All</option>
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+
+                                                <option value="@s.Id">@s.DisplayText</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer text-right">
+        <button class="btn btn-success btn-xs" id="filter-orders"> Search</button>
+        <a data-toggle="tooltip" data-placement="top" title="Download filtered results" href="/Admin/Report/DownloadExcell?deliveryStatus=@Request.QueryString["deliveryStatus"]&OrderType=@Request.QueryString["OrderType"]&StartDate=@startdt&EndDate=@enddt">
+            @*<strong>
+                <i class="fa fa-file-excel-o" aria-hidden="true"></i>Import Result To Excell Sheet
+            </strong>*@
+        </a>
+        <button class="btn btn-warning btn-xs" id="sync-order-desc">Sync</button>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">BULK ORDER UPDATE</div>
+    <div class="panel-body">
+        <div class="card">
+            <div class="card-body">
+                <table class="table table-bordered">
+
+                    <tbody>
+                        <tr class="text-center">
+                            <td width="50%"><strong>Update Status To</strong></td>
+                            <td width="50%">
+                                <div class="select ">
+                                    <select class="form-control" id="bulkChangeStatus">
+                                        <option value="-1">--Select--</option>
+                                        @foreach (DeliverStatus s in deliveryStatus)
+                                        {
+
+                                            <option value="@s.Id">@s.DisplayText</option>
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="col-lg-6">
+        <input class="col-lg-12 form-control" id="searchInput" type="text" placeholder="Search Page Results">
+</div>
+
+<div class="col-lg-6 text-right">
+    <a data-toggle="tooltip" data-placement="top" title="Download filtered results" href="/Admin/Report/DownloadExcell?deliveryStatus=@Request.QueryString["deliveryStatus"]&OrderType=@Request.QueryString["OrderType"]&StartDate=@startdt&EndDate=@enddt">
+        <h4><i class="fa fa-file-excel-o" aria-hidden="true"></i>Import To Excell</h4>
+    </a>
+
+</div>
+<table class="table">
+
+    <thead>
+        <tr>
+            <th scope="col">Select</th>
+            <th scope="col">Order Id</th>
+            <th scope="col">Invoice Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Order state</th>
+            <th scope="col">Created date</th>
+            <th scope="col">Operation</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in List)//.Where(x => x.DeliveryStatus > 0)
+        {
+            <tr class="author-card">
+                <td>
+                    <input class="form-check-input bulk-edit-d-status" type="checkbox" data-order-id="@order.Id">
+                </td>
+                <td scope="row">@order.Id</td>
+                <td scope="row">@order.UId</td>
+                <td>@order.FirstName @order.LastName</td>
+                <td>
+                    <div class="">
+                        <select id="select-list-@order.Id" data-order-id="@order.Id" class="delivery-status-dd" name="">
+                            @{
+                                foreach (DeliverStatus item in deliveryStatus)
+                                {
+                                    //if (item.Title != "temp_cart")
+                                    //{
+                                    if (order.DeliveryStatus < item.Id || order.DeliveryStatus == item.Id)
+                                    {
+                                        <option value="@item.Id" @((order.DeliveryStatus == item.Id) ? "selected" : "")>@item.DisplayText</option>
+                                    }
+                                    //}
+
+                                }
+                            }
+                        </select>
+                        <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                    </div>
+                </td>
+                <td> @order.CreatedDate.AddHours(timeOffset).ToString("yyyy/MM/dd h:mm tt")</td>
+                <td>
+                    <a href="/Admin/order/Get/@order.Id" class="btn-sm btn-info">Details</a>
+                    <a target="_blank" href="/Invoice/Find?uid=@order.UId" class="btn-sm btn-info">Show Invoice</a>
+                </td>
+            </tr>
+        }
+
+    </tbody>
+</table>
+
+
+@{
+    int previous = (Request.QueryString["pageId"] != null && Convert.ToInt32(Request.QueryString["pageId"]) != 1) ?
+            Convert.ToInt32(Request.QueryString["pageId"]) - 1 : 1;
+    int next = (Request.QueryString["pageId"] != null && Convert.ToInt32(Request.QueryString["pageId"]) != pageCount) ?
+            Convert.ToInt32(Request.QueryString["pageId"]) + 1 : 1;
+}
+@*<nav aria-label="Page navigation">
+    <ul class="pagination">
+        @if (pageCount > 1)
+        {
+            <li class="page-item"><a class="page-link" href="/Admin/Order/GetAll?deliveryStatus=2&OrderType=1&pageId=@previous">Previous</a></li>
+
+        }
+        @for (int i = 1; i < pageCount; i++)
+        {
+            <li class="page-item"><a class="page-link" href="/Admin/Order/GetAll?deliveryStatus=2&OrderType=1&pageId=@i">@i</a></li>
+        }
+        @if (pageCount > 1)
+        {
+            <li class="page-item"><a class="page-link" href="/Admin/Order/GetAll?deliveryStatus=2&OrderType=1&pageId=@next">Next</a></li>
+
+        }
+    </ul>
+</nav>*@

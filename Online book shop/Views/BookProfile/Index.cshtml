@@ -1,0 +1,788 @@
+﻿@using Online_book_shop.Models;
+@using Online_book_shop.Models.ViewModel;
+@using Online_book_shop.Handlers.Helper;
+@using Online_book_shop.Handlers.Business;
+@using Online_book_shop.Controllers; 
+@{
+    BookVMTile book = ViewBag.book;
+    List<BookVMTile> Authorsbooks = ViewBag.Authorsbooks;
+    List<BookVMTile> Suggestionbooks = ViewBag.Suggestionbooks;
+    List<ReviewVM> reviews = ViewBag.Reviews;
+    int RecentRate = BusinessHandlerUserReviews.GetBookRating(book.Id);
+    Dictionary<int,int> stock = BookProfileController.GetStock(book.Id);
+    List<ItemMedia> otherImages = BusinessHandlerBook.GetOtherMedia(book.Id, ObjectTypes.Book);
+    Dictionary<string, string> Images = new Dictionary<string, string>();
+    SaleStatus saleStatus = BusinessHandlerSaleStatus.GetSaleStatus(book.SaleType);
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<body>
+    <div class="container">
+        <div class="book-details">
+            <div id="book-image" class="book-image col-sm-5">
+                <div class="book">
+                    <div class="slider-for">
+                        @if (book.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + book.FrontCover.FileName))
+                        {
+                            Images.Add(book.FrontCover.FileName, "/Content/UploadFiles/Images/BookFrontCover/");
+                            <div>
+                                <a class="lightbox" href="#@book.FrontCover.FileName">
+                                    <img src="@Url.Action("ResizeImage", "Utility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+ book.FrontCover.FileName,width=300,height=460})" />
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div><img src="~/Content/images/no-image-book.jpg" alt="@book.BookName" /></div>
+                        }
+                        @if (book.BackCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookBackCover/" + book.BackCover.FileName))
+                        {
+                            Images.Add(book.BackCover.FileName, "/Content/UploadFiles/Images/BookBackCover/");
+                            <div>
+                                <a class="lightbox" href="#@book.BackCover.FileName">
+                                    <img src="@Url.Action("ResizeImage", "Utility", new {FileName="~/Content/UploadFiles/Images/BookBackCover/"+ book.BackCover.FileName,width=300,height=460})" />
+                                </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div><img src="~/Content/images/no-image-book.jpg" alt="@book.BookName" /></div>
+                        }
+                        @{
+                            if (otherImages != null)
+                            {
+                                foreach (ItemMedia im in otherImages)
+                                {
+                                    Media m = BusinessHandlerMedia.Get(im.MediaId);
+                                    if (m != null)
+                                    {
+                                        if (book.BackCover != null && HTMLHelper.isImageExist("/Content/UploadFiles/Images/CoverImage/" + m.FileName))
+                                        {
+                                            Images.Add(m.FileName, "/Content/UploadFiles/Images/CoverImage/");
+                                            <div>
+                                                <a class="lightbox" href="#@m.FileName">
+                                                    <img src="@Url.Action("ResizeImage", "Utility", new {FileName="~/Content/UploadFiles/Images/CoverImage/"+ m.FileName,width=300,height=460})" />
+                                                </a>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div><img src="~/Content/images/no-image-book.jpg" alt="@book.BookName" /></div>
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                    </div>
+                    <div class="slider-nav">
+                        @if (book.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + book.FrontCover.FileName))
+                        {
+                            <div><img src="@Url.Action("ResizeImage", "Utility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+ book.FrontCover.FileName,width=67,height=102})" /></div>
+                        }
+
+                        @if (book.BackCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookBackCover/" + book.BackCover.FileName))
+                        {
+                            <div><img src="@Url.Action("ResizeImage", "Utility", new {FileName="~/Content/UploadFiles/Images/BookBackCover/"+ book.BackCover.FileName,width=67,height=102})" /></div>
+                        }
+                        @{
+                            if (otherImages != null)
+                            {
+                                foreach (ItemMedia im in otherImages)
+                                {
+                                    Media m = BusinessHandlerMedia.Get(im.MediaId);
+                                    if (m != null)
+                                    {
+                                        if (book.BackCover != null && HTMLHelper.isImageExist("/Content/UploadFiles/Images/CoverImage/" + m.FileName))
+                                        {
+                                            <div><img src="@Url.Action("ResizeImage", "Utility", new {FileName="~/Content/UploadFiles/Images/CoverImage/"+ m.FileName,width=67,height=102})" /></div>
+
+                                        }
+
+                                    }
+
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+                <div class="read-sample">
+                    @if (book.Property != null && book.Property.FirstOrDefault() != null && book.Property.FirstOrDefault().FreeReadPDFMediaId > 0)
+                    {
+                        <span class="btn-readsample">Read Sample</span>
+                    }
+                    else
+                    {
+                        @*<span class="btn-readsample">Read Sample</span>*@
+                    }
+                </div>
+                <div class="dorating-block">
+                    <h3>Rate this Book</h3>
+                    @{
+                        string uid = BusinessHandlerAuthor.GetLoginUserId();
+                        if (string.IsNullOrEmpty(uid))
+                        {
+                            uid = "";
+                        }
+                    }
+                    <div class="rating">
+                        <div class="starbox" data-userid="@uid" data-bookid="@book.Id" data-rateson="book">
+                            <div class="blk-1 rate-star" data-userid="@uid" data-objType="@((int)ObjectTypes.Book)" data-val="1" data-bookid="@book.Id"></div>
+                            <div class="blk-2 rate-star" data-userid="@uid" data-objType="@((int)ObjectTypes.Book)" data-val="2" data-bookid="@book.Id"></div>
+                            <div class="blk-3 rate-star" data-userid="@uid" data-objType="@((int)ObjectTypes.Book)" data-val="3" data-bookid="@book.Id"></div>
+                            <div class="blk-4 rate-star" data-userid="@uid" data-objType="@((int)ObjectTypes.Book)" data-val="4" data-bookid="@book.Id"></div>
+                            <div class="blk-5 rate-star" data-userid="@uid" data-objType="@((int)ObjectTypes.Book)" data-val="5" data-bookid="@book.Id"></div>
+                        </div>
+                        @if (uid != "")
+                        {
+                            var review = reviews.Where(x => x.UserId == uid).FirstOrDefault();
+                            if (review != null)
+                            {
+                                <span class="stars" data-rating="@review.value"></span>
+                            }
+                            else
+                            {
+                                <span class="stars" data-rating="0"></span>
+                            }
+
+                        }
+                        else
+                        {
+                            <span class="stars" data-rating="0"></span>
+                        }
+
+                    </div>
+
+                </div>
+                <a href="#" class="writeareview">Write a review</a>
+            </div>
+
+            <div class="book-content col-sm-7">
+                <h2>
+                    @book.LocalBookName - @book.BookName
+                    @{
+                        string logedUid = BusinessHandlerAuthor.GetLoginUserId();
+                        if (!string.IsNullOrEmpty(logedUid))
+                        {
+                            if (BusinessHandlerWishListItem.isLovedBook(book.Id, logedUid))
+                            {
+                                <a><span data-bookid="@book.Id" id="love-book">❤️</span></a>
+                                <a><span data-bookid="@book.Id" id="no-love-book" class="display-none">🤍</span></a>
+                            }
+                            else
+                            {
+                                <a><span data-bookid="@book.Id" id="love-book" class="display-none">❤️</span></a>
+                                <a><span data-bookid="@book.Id" id="no-love-book">🤍</span></a>
+                            }
+                        }
+                    }
+
+
+                </h2>
+
+                <h3>By: <a href="/authors/@book.AuthorId">@book.LocalAuthorName - @book.AuthorName</a></h3>
+                @{
+                    List<Author> mulauthors = BusinessHandlerAuthor.GetmultipleAuthors(book.Id);
+                    if (mulauthors != null && mulauthors.Count > 0)
+                    {
+                        foreach (Author author in mulauthors)
+                        {
+                            <h3>And <a href="/authors/@author.FriendlyName">@author.LocalName - @author.Name</a></h3>
+                        }
+                    }
+                }
+                <div class="text-justify">
+                    @Html.Raw(book.Description)
+                </div>
+                <div class="rating-details">
+                    <div class="rating">
+                        Rating details <div class="stars small" data-rating="@RecentRate"></div>
+                    </div>
+                    @{
+                        int rateCount = (reviews != null && reviews.Where(x => !string.IsNullOrEmpty(x.value.ToString())) != null) ? reviews.Where(x => !string.IsNullOrEmpty(x.value.ToString())).Count() : 0;
+                        int reviewsCount = (reviews != null && reviews.Where(x => !string.IsNullOrEmpty(x.UserComment.ToString())) != null) ? reviews.Where(x => !string.IsNullOrEmpty(x.UserComment.ToString())).Count() : 0;
+                        <span class="count">@rateCount rating(s)</span>
+                        <span class="reviews">@reviewsCount Reviews</span>
+                    }
+
+                </div>
+                @{
+                    string pages = "No Data";
+                    string weight = "No Data";
+                    int remainings = 0;
+                    if (book.Property != null)
+                    {
+                        pages = book.Property.FirstOrDefault().NumberOfPages.ToString();
+                        weight = book.Property.FirstOrDefault().WeightByGrams.ToString();
+                        remainings = book.Property.FirstOrDefault().NumberOfCopies;
+                    }
+                    if (stock != null)
+                    {
+                        foreach (KeyValuePair<int, int> entry in stock)
+                        {
+                            if (book.SaleType == BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order").Id)
+                            {
+                                <input type="hidden" id="stock_@entry.Key" value="0" />
+                            }
+                            else
+                            {
+                                <input type="hidden" id="stock_@entry.Key" value="@entry.Value" />
+                            }
+
+                        }
+                    }
+
+                }
+
+                @if (saleStatus.Title == "normal_sale")
+                {
+                    var active_property = book.Property.Where(p => p.NumberOfCopies > 0);
+                    if (active_property != null && active_property.ToList().Count > 0)
+                    {
+                        <div class="availability">
+                            Availability&nbsp;: <span style="background-color:@saleStatus.BackGroundColor;color:@saleStatus.ForeColor">Stock Available</span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="availability">
+                            Availability&nbsp;: <span class="outofstock">Out of Stock</span>
+                        </div>
+
+                    }
+                }
+                @*else if (remainings < 1)
+                {
+                    <div class="availability">
+                        Availability&nbsp;: <span class="outofstock">Out of Stock</span>
+                    </div>
+                }*@
+                else
+                {
+                    <div class="availability">
+                        Availability: <span class="" style="background-color:@saleStatus.BackGroundColor;color:@saleStatus.ForeColor">@saleStatus.DisplayText</span>
+                    </div>
+                    if (saleStatus.Title == "pre_order")
+                    {
+                        <div class="countdown-wrapper">
+                            <h3>Countdown</h3>
+                            <div class="countdown" id="countdown" data-date="@book.RelaseDate.ToString("MMM dd, yyyy HH:mm:ss")">
+
+                            </div>
+                        </div>
+                    }
+                }
+
+                <div class="bookdetails">
+                    <div class="row-element">
+                        <div class="column-left">
+                            ISBN13:
+                        </div>
+                        <div class="column-right">
+                            @book.ISBN
+                        </div>
+                    </div>
+
+                    <div class="row-element">
+                        <div class="column-left">
+                            Weight&nbsp;:
+                        </div>
+                        <div class="column-right">
+                            @weight g
+                        </div>
+                    </div>
+                    <div class="row-element">
+                        <div class="column-left">
+                            Pages&nbsp;:
+                        </div>
+                        <div class="column-right">
+                            @pages
+                        </div>
+                    </div>
+                    <div class="row-element">
+                        <div class="column-left">
+                            Publisher&nbsp;:
+                        </div>
+                        <div class="column-right">
+                            <a href="/publisher/@book.publisher.Id">@book.publisher.Name</a>
+                        </div>
+                    </div>
+                    <div class="row-element">
+                        <div class="column-left">
+                            Categories&nbsp;:
+                        </div>
+                        <div class="column-right">
+                            @string.Join(",", book.Categories.Select(x => x.CategoryName))
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="price-selectcover">
+                    <div class="selectcover">
+                        <div>
+                            <span class="english-label">select a cover version</span>
+                            <span class="sinhala-label">ඔබට අවශ්‍ය කවර වර්ගය තෝරන්න</span>
+                        </div>
+                        @if (book.Property != null)
+                        {
+                            int index = 0;
+                            <select id="select-book-property" name="">
+                                @foreach (BookProperties bookProperty in book.Property)
+                                {
+                                    if (index == 0)
+                                    {
+                                        <option selected value="@bookProperty.Id">@bookProperty.Title</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@bookProperty.Id">@bookProperty.Title</option>
+                                    }
+                                    index = index + 1;
+
+                                }
+                            </select>
+                        }
+                    </div>
+                    @if (book.Property != null)
+                    {
+                        int indexJ = 0;
+                        foreach (BookProperties bookProperty in book.Property)
+                        {
+                            BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(book.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
+                            if (indexJ == 0)
+                            {
+                                <div class="price-wrapper bp-price-wrapper book-details-@bookProperty.Id">
+                                    @if (promo != null && promo.DiscountValue > 0)
+                                    {
+                                        <div class="price hasdiscount">Rs.@bookProperty.Price</div>
+                                        <div class="discount-price">Rs. @promo.BookPriceAfterDiscount</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="price hasdiscount" style="color:#ffffff;">Rs. @bookProperty.Price</div>
+                                        <div class="discount-price">Rs. @bookProperty.Price</div>
+                                    }
+
+                                <div class="addtocart addtocart-@bookProperty.Id">
+                                    <input type="number" class="bp-quantity" data-id="@bookProperty.Id" id="quantity-@bookProperty.Id" name="quantity-@bookProperty.Id" min="1" max="@(book.MaximumItemPerOrder>0?book.MaximumItemPerOrder:999)" value="1">
+                                    @if (book.MaximumItemPerOrder > 0)
+                                    {
+                                        <small>Available only @book.MaximumItemPerOrder item(s) per order</small>
+                                    }
+
+                                    <button id="bp-btn-addtocart-@bookProperty.Id" class="@(HTMLHelper.isCartEnabled(book.SaleType,bookProperty.NumberOfCopies)?"btn-addtocart add-to-cart":"addto-cart-dissabled")" data-book_id="@book.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">Add to Cart</button>
+                                </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="price-wrapper bp-price-wrapper book-details-@bookProperty.Id" style="display:none">
+                                    @if (promo != null && promo.DiscountValue > 0)
+                                    {
+                                        <div class="price hasdiscount">Rs.@bookProperty.Price</div>
+                                        <div class="discount-price">Rs. @promo.BookPriceAfterDiscount</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="price hasdiscount" style="color:#ffffff;">Rs. @bookProperty.Price</div>
+                                        <div class="discount-price">Rs. @bookProperty.Price</div>
+                                    }
+
+                                    <div class="addtocart addtocart-@bookProperty.Id">
+                                        <input type="number" class="bp-quantity" data-id="@bookProperty.Id" id="quantity-@bookProperty.Id" name="quantity-@bookProperty.Id" min="1" max="999" value="1">
+                                        <button id="bp-btn-addtocart-@bookProperty.Id" class="@(HTMLHelper.isCartEnabled(book.SaleType,bookProperty.NumberOfCopies)?"btn-addtocart add-to-cart":"addto-cart-dissabled")" data-book_id="@book.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">Add to Cart</button>
+                                    </div>
+                                </div>
+                            }
+                            indexJ = indexJ + 1;
+
+
+                        }
+                    }
+
+
+                </div>
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(book.YoutubeUrl))
+        {
+            <div class="bookcat-col">
+                <h3 class="acordian-tab">About Book</h3>
+                <div class="book-overview" id="bookvdo">
+                    <iframe width="560" height="315" src="@book.YoutubeUrl.Replace("watch?v=","embed/")" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+                </div>
+            </div>
+        }
+        <div class="bookcat-col active contentblock">
+            <h3 class="acordian-tab">Community Reviews</h3>
+            <div class="book-overview reviewblock">
+                <div class="reviewtop">
+                    <div class="row-one">
+                        <div class="rating-details">
+                            <div class="rating">
+                                Rating details <div class="stars small" data-rating="@RecentRate"></div>
+                            </div>
+                        </div>
+                        <div class="review-count">
+                            @rateCount rating(s)
+                        </div>
+                    </div>
+                    <div class="row-two">
+                        <div class="reviewabout">User Name will appear with your review in book page.</div>
+                        <div class="rating-block"></div>
+                        <span class="writeareview">Write a review</span>
+                    </div>
+                </div>
+
+                @if (reviews != null)
+                {
+                    <div class="revives">
+                        <ul>
+                            @foreach (ReviewVM r in reviews)
+                            {
+                                <li>
+                                    <span class="raters-details">
+
+                                        @if (r.Reviewer != null && !r.isanonymous)
+                                        {
+                                            <span class="name">
+                                                <span>@r.Reviewer.FirstName </span>
+                                                Rated it
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="name">
+                                                <span>Anonymously </span>
+                                                Rated it
+                                            </span>
+                                        }
+
+                                        <span class="rating-details">
+                                            <span class="rating">
+                                                Rating details <span class="stars small" data-rating="@r.value"></span>
+                                            </span>
+                                        </span>
+                                        <span class="date">@r.CreatedDate.ToString("dd/MM/yyyy")</span>
+                                    </span>
+                                    @if (r.isspolier)
+                                    {
+                                        <span id="spoil-message">
+                                            This is spolier, Please click on this if you wish to read.
+                                        </span>
+                                        <span id="spoil-message-content" class="display-none">
+                                            @r.UserComment
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            @r.UserComment
+                                        </span>
+                                    }
+
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+
+
+
+            </div>
+        </div>
+        @if (Authorsbooks != null && Authorsbooks.Count > 0)
+        {
+            <div class="bookcat-col active">
+                <h3 class="acordian-tab">Books by <a href="/authors/@book.AuthorId">@book.AuthorName</a></h3>
+                <div class="book-overview" id="booksby">
+                    @foreach (BookVMTile b in Authorsbooks)
+                    {
+                        BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
+                        BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
+                        <div class="item">
+                            <div class="item-inner">
+                                @if (promo != null)
+                                {
+                                    if (promo.PromotionMethods == (int)PromotionMethods.DeductFromFinalAmount)
+                                    {
+                                        <div class="discount-pers">Offer<br />Off</div>
+
+                                    }
+                                    else if (promo.PromotionMethods == (int)PromotionMethods.FixedAmount)
+                                    {
+                                        <div class="discount-pers">@promo.DiscountValue<br />Off</div>
+
+                                    }
+                                    else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
+                                    {
+                                        <div class="discount-pers">@promo.DiscountValue%<br />Off</div>
+
+                                    }
+                                }
+                                <div class="viewmore-discprice">
+                                    <a href="/book/@HTMLHelper.GetUrl(b.Url,b.Id)" class="viewmore"></a>
+                                    @if (promo != null && promo.DiscountValue > 0)
+                                    {
+                                        <div class="discounted-price">-Rs.@promo.DiscountAmount </div>
+                                    }
+                                </div>
+                                <div class="book-image">
+                                    @if (b.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName))
+                                    {
+                                        <img src="@Url.Action("Thumbnail", "Utility", new { FileName = "~/Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName })"
+                                             class="img-fluid"
+                                             title="@b.BookName"
+                                             alt="muses @b.BookName" />
+                                        @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@b.FrontCover.FileName?w=160&h=100" alt="@b.BookName" />*@
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Content/images/no-image-book.jpg" alt="@b.BookName" />
+                                    }
+
+                                </div>
+                                <div class="book-name-author ">
+                                    <div class="name">
+                                        <span class="sinhala">@b.LocalBookName</span>
+                                        @*- <span class="english">@b.BookName</span>*@
+                                    </div>
+                                </div>
+                                <div class="book-name-author">
+                                    <div class="author">
+                                        <span class="sinhala">@b.LocalAuthorName</span>
+                                        @*- <span class="english">@b.AuthorName</span>*@
+                                    </div>
+                                </div>
+
+                                <div class="category">
+                                    @foreach (Category c in b.Categories.Take(2))
+                                    {
+                                        <span class="cat-name">@c.CategoryName</span>
+                                    }
+                                </div>
+                                <div class="rating">
+                                    <div class="stars" data-rating="@BusinessHandlerUserReviews.GetBookRating(b.Id)"></div>
+                                </div>
+                                @{
+                                    if (bookProperty != null)
+                                    {
+                                        if (promo != null)
+                                        {
+                                            if (promo.DiscountAmount > 0)
+                                            {
+                                                <div class="price hasdiscount">Rs.@promo.BookPrice </div>
+                                                <div class="discount-price">Rs.@promo.BookPriceAfterDiscount </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="discount-price">Rs.@bookProperty.Price </div>
+                                            }
+                                        }
+                                        <div class="@(HTMLHelper.isCartEnabled(b.SaleType,bookProperty.NumberOfCopies)?"addto-cart btn-active add-to-cart":"addto-cart btn-active add-to-cart tile-addto-cart-dissabled")" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
+                                            Add to Cart
+                                            <div class="icon"></div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
+                                        <div class="addto-cart btn-active add-to-cart tile-addto-cart-dissabled">
+                                            Add to Cart
+                                            <div class="icon"></div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        @if (Suggestionbooks != null && Suggestionbooks.Count > 0)
+        {
+            <div class="bookcat-col active">
+                <h3 class="acordian-tab">You may also like</h3>
+                <div class="book-overview" id="youmaylike">
+                    @foreach (BookVMTile b in Suggestionbooks)
+                    {
+                        BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
+                        BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
+                        <div class="item">
+                            <div class="item-inner">
+                                @if (promo != null)
+                                {
+                                    if (promo.PromotionMethods == (int)PromotionMethods.DeductFromFinalAmount)
+                                    {
+                                        <div class="discount-pers">Offer<br />Off</div>
+
+                                    }
+                                    else if (promo.PromotionMethods == (int)PromotionMethods.FixedAmount)
+                                    {
+                                        <div class="discount-pers">@promo.DiscountValue<br />Off</div>
+
+                                    }
+                                    else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
+                                    {
+                                        <div class="discount-pers">@promo.DiscountValue%<br />Off</div>
+
+                                    }
+                                }
+                                <div class="viewmore-discprice">
+                                    <a href="/book/@HTMLHelper.GetUrl(b.Url,b.Id)" class="viewmore"></a>
+                                    @if (promo != null && promo.DiscountValue > 0)
+                                    {
+                                        <div class="discounted-price">-Rs.@promo.DiscountAmount </div>
+                                    }
+                                </div>
+                                <div class="book-image">
+                                    @if (b.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName))
+                                    {
+                                        <img src="@Url.Action("Thumbnail", "Utility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+b.FrontCover.FileName})"
+                                             class="img-fluid"
+                                             title="@b.BookName"
+                                             alt="muses @b.BookName" />
+                                        @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@b.FrontCover.FileName?w=160&h=100" alt="@b.BookName" />*@
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Content/images/no-image-book.jpg" alt="@b.BookName" />
+                                    }
+
+                                </div>
+                                <div class="book-name-author ">
+                                    <div class="name">
+                                        <span class="sinhala">@b.LocalBookName</span>
+                                        @*- <span class="english">@b.BookName</span>*@
+                                    </div>
+                                </div>
+                                <div class="book-name-author">
+                                    <div class="author">
+                                        <span class="sinhala">@b.LocalAuthorName</span>
+                                        @*- <span class="english">@b.AuthorName</span>*@
+                                    </div>
+                                </div>
+
+                                <div class="category">
+                                    @foreach (Category c in b.Categories.Take(2))
+                                    {
+                                        <span class="cat-name">@c.CategoryName</span>
+                                    }
+                                </div>
+                                <div class="rating">
+                                    <div class="stars" data-rating="@BusinessHandlerUserReviews.GetBookRating(b.Id)"></div>
+                                </div>
+                                @{
+                                    if (bookProperty != null)
+                                    {
+                                        if (promo != null)
+                                        {
+                                            if (promo.DiscountAmount > 0)
+                                            {
+                                                <div class="price hasdiscount">Rs.@promo.BookPrice </div>
+                                                <div class="discount-price">Rs.@promo.BookPriceAfterDiscount </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="discount-price">Rs.@bookProperty.Price </div>
+                                            }
+                                        }
+                                        <div class="@(HTMLHelper.isCartEnabled(b.SaleType,bookProperty.NumberOfCopies)?"addto-cart btn-active add-to-cart":"addto-cart btn-active add-to-cart tile-addto-cart-dissabled")" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
+                                            Add to Cart
+                                            <div class="icon"></div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
+                                        <div class="addto-cart btn-active add-to-cart tile-addto-cart-dissabled">
+                                            Add to Cart
+                                            <div class="icon"></div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+
+    </div>
+    <div class="reviewform-wrapper">
+        <form class="reviewform">
+            <div class="innerblock">
+                @if (!string.IsNullOrEmpty(uid))
+                {
+                    <div id="rvw-comment-area">
+                        <textarea id="user-review" class="textreview"></textarea>
+                        <input type="checkbox" id="isspolier" name="isspolier" value="1">
+                        <label for="spoliers">Hide my entire review because of spoliers</label><br>
+                        <input type="checkbox" id="isanonymous" name="isanonymous" value="1">
+                        <label for="anonymous">Post as an anonymous </label><br>
+                        <button id="submit-review" class="submit btn-common" data-userid="@uid" data-objType="@((int)ObjectTypes.Book)" data-val="1" data-bookid="@book.Id">Submit Review</button>
+                    </div>
+
+                }
+                else
+                {
+                    <h4>Please login to review this item.</h4>
+
+                }
+                <h4 id="" class=" submited-success display-none">Your comment submitted to approve.</h4>
+                <h6 class=" submited-success display-none">If comment not validate our terms and conditions, comment will be removed.</h6>
+                <div class="btn-close"></div>
+            </div>
+
+        </form>
+    </div>
+    <div class="booksample-wrapper">
+        <div class="booksample">
+            <div class="innerblock">
+                <div class="sample">
+                    @if (book.Property != null && book.Property.FirstOrDefault() != null && book.Property.FirstOrDefault().FreeReadPDFMediaId > 0)
+                    {
+                        Media m = BusinessHandlerMedia.Get(book.Property.FirstOrDefault().FreeReadPDFMediaId);
+                        string domainName = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
+                        domainName = domainName.Replace("https://", "").Replace("http://", "");
+                        if (m != null && HTMLHelper.isImageExist("Content/UploadFiles/PDF/" + m.FileName))
+                        {
+                            <iframe src="https://docs.google.com/gview?url=@domainName/Content/UploadFiles/PDF/@m.FileName&embedded=true" style="width:740px; height:500px;" frameborder="0"></iframe>
+
+                        }
+                        else
+                        {
+                            <iframe src="https://docs.google.com/gview?url=http://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf&embedded=true" style="width:740px; height:500px;" frameborder="0"></iframe>
+                        }
+
+                    }
+                    else
+                    {
+                        <iframe src="https://docs.google.com/gview?url=http://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf&embedded=true" style="width:740px; height:500px;" frameborder="0"></iframe>
+                    }
+                    @*<img src="/Content/images/sample.jpg" />*@
+                </div>
+                <div class="btn-close"></div>
+            </div>
+        </div>
+    </div>
+    @foreach (KeyValuePair<string, string> entry in Images)
+    {
+        Console.WriteLine(entry.Key + " : " + entry.Value);
+        <div class="lightbox-target" id="@entry.Key">
+            <img src="@entry.Value/@entry.Key" />
+            <a class="lightbox-close" href="#book-image"></a>
+        </div>       
+    }
+
+
+</body>
+</html>
+

@@ -1,0 +1,52 @@
+﻿
+
+@{
+    ViewBag.Title = "Create Publisher";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create Publisher</h2>
+
+<form id="form-add-publisher" method="post" action="/Admin/Publisher/CreatePublisherProfile" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Name</label>
+        <input type="text" class="form-control" id="Name" name="Name" placeholder="Name" required>
+    </div>
+    <div class="form-group">
+        <label>Name(Sinhala)</label>
+        <input type="text" class="form-control" id="LocalName" name="LocalName" placeholder="Name(Sinhala)" required>
+    </div>
+    <div class="form-group">
+        <label>Email address</label>
+        <input type="email" class="form-control" id="Email" name="Email" placeholder="Enter email" >
+    </div>
+    <div class="form-group">
+        <label>Description</label>
+        <textarea type="text" class="form-control" id="Description" name="Description" placeholder="Description" ></textarea>
+    </div>
+    <div class="form-group">
+        <label>Contact Number</label>
+        <input type="text" class="form-control" id="ContactNumber" name="ContactNumber" placeholder="Contact Number">
+    </div>
+    <div class="form-group">
+        <label>External URL</label>
+        <input type="text" class="form-control" id="ExternalURL" name="ExternalURL" placeholder="FB,Twitter,Linkedin etc." />
+    </div>
+    <div class="form-group">
+        <label>Profile Image (278px * 318px)</label>
+        <input type="file" class="form-control-file author_prof" id="ImageFile" name="ImageFile">
+        <div>
+            <img id="temp_img_author_prof" style="height:100px;" class="img-thumbnail" src="~/Content/images/NoImage.jpg" alt="Profile Image" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Cover Image</label>
+        <input type="file" class="form-control-file author_cover" id="ImageFile_Cover" name="ImageFile_Cover">
+        <div>
+            <img id="temp_img_author_cover" style="height:100px;" class="img-thumbnail" src="~/Content/images/NoImage.jpg" alt="Profile Image" />
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+

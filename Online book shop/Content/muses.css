@@ -1,0 +1,363 @@
+﻿
+.text-justify {
+    text-align: justify;
+}
+.display-none{
+    display:none;
+}
+#love-book, #no-love-book{
+    cursor:pointer;
+}
+.special-offer-bk-name {
+    font-size: 24px;
+    font-family: "open_sansbold";
+    color: #02ace6;
+}
+.padding-small-bottom{
+    padding-bottom:15px;
+}
+.padding-small-top {
+    padding-top: 15px;
+}
+.float-right{
+    float:right;
+}
+.open-button {
+    background-color: #555;
+    color: white;
+    padding: 16px 20px;
+    border: none;
+    cursor: pointer;
+    opacity: 0.8;
+    position: fixed;
+    bottom: 23px;
+    right: 28px;
+    width: 280px;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    /*right: 15px;*/
+    border: 2px solid #e20b0b;
+    border-radius: 5px;
+    z-index: 9;
+   /* margin-bottom: 5%;*/
+    margin: 50px;
+}
+
+/* Add styles to the form container */
+.form-container {
+   /* max-width: 300px;*/
+    padding: 10px;
+    background-color: white;
+}
+
+    /* Full-width input fields */
+    .form-container input[type=text], .form-container input[type=password] {
+        width: 100%;
+        padding: 15px;
+        margin: 5px 0 22px 0;
+        border: none;
+        background: #f1f1f1;
+    }
+
+        /* When the inputs get focus, do something */
+        .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+            background-color: #ddd;
+            outline: none;
+        }
+
+
+    /* Add some hover effects to buttons */
+    .form-container .btn:hover, .open-button:hover {
+        opacity: 1;
+    }
+#muses-voucher table{
+    width:100%;
+}
+.margin-bottom-25{
+    margin-bottom:25px;
+}
+.float-right{
+    float:right;
+}
+.close-modal {
+    top: 10px !important;
+    right: 10px !important;
+    
+}
+.page-number {
+    cursor: pointer;
+    /* background-color: #bdb5b573;*/
+    color: #fff;
+    background: #bdb5b573;
+    padding: 7px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 0 7px;
+}
+#ex1 {
+    overflow-y: scroll;
+}
+.min-height-150px{
+    min-height:150px;
+}
+.topright {
+    position: absolute;
+    top: -7px;
+    right: -3px;
+    font-size: 24px;
+    color: red;
+    z-index: 100;
+}
+.margin-top-5px{
+    margin-top:5px;
+}
+.y-scroll{
+    overflow-y:scroll;
+}
+.hidden{
+    display: none;
+}
+.editable-text-box{
+    background-color:white;
+}
+.alert {
+    padding: 10px;
+    background-color: #f44336;
+    color: white;
+    margin-top:10px;
+    margin-bottom:10px;
+    text-align:center;
+    width:100%;
+}
+.link-bold-text-danger{
+    font-size:1.5em;
+}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.lightbox-target {
+    position: fixed;
+    top: -100%;
+    width: 100%;
+    background: rgba(0,0,0,.7);
+    width: 100%;
+    opacity: 0;
+    -webkit-transition: opacity .5s ease-in-out;
+    -moz-transition: opacity .5s ease-in-out;
+    -o-transition: opacity .5s ease-in-out;
+    transition: opacity .5s ease-in-out;
+    overflow: hidden;
+}
+.lightbox-target img {
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 0%;
+    max-width: 0%;
+    border: 3px solid white;
+    box-shadow: 0px 0px 8px rgba(0,0,0,.3);
+    box-sizing: border-box;
+    -webkit-transition: .5s ease-in-out;
+    -moz-transition: .5s ease-in-out;
+    -o-transition: .5s ease-in-out;
+    transition: .5s ease-in-out;
+}
+
+/* Styles the close link, adds the slide down transition */
+
+a.lightbox-close {
+    display: block;
+    width: 50px;
+    height: 50px;
+    box-sizing: border-box;
+    background: white;
+    color: black;
+    text-decoration: none;
+    position: absolute;
+    top: -80px;
+    right: 0;
+    -webkit-transition: .5s ease-in-out;
+    -moz-transition: .5s ease-in-out;
+    -o-transition: .5s ease-in-out;
+    transition: .5s ease-in-out;
+}
+
+    /* Provides part of the "X" to eliminate an image from the close link */
+
+    a.lightbox-close:before {
+        content: "";
+        display: block;
+        height: 30px;
+        width: 1px;
+        background: black;
+        position: absolute;
+        left: 26px;
+        top: 10px;
+        -webkit-transform: rotate(45deg);
+        -moz-transform: rotate(45deg);
+        -o-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    /* Provides part of the "X" to eliminate an image from the close link */
+
+    a.lightbox-close:after {
+        content: "";
+        display: block;
+        height: 30px;
+        width: 1px;
+        background: black;
+        position: absolute;
+        left: 26px;
+        top: 10px;
+        -webkit-transform: rotate(-45deg);
+        -moz-transform: rotate(-45deg);
+        -o-transform: rotate(-45deg);
+        transform: rotate(-45deg);
+    }
+
+/* Uses the :target pseudo-class to perform the animations upon clicking the .lightbox-target anchor */
+
+.lightbox-target:target {
+    opacity: 1;
+    top: 0;
+    bottom: 0;
+}
+
+    .lightbox-target:target img {
+        max-height: 100%;
+        max-width: 100%;
+    }
+
+    .lightbox-target:target a.lightbox-close {
+        top: 0px;
+    }
+.outofprint {
+    background-color: #f18607;
+}
+.availability-in-2d {
+    background-color: #5f9ea0;
+}
+.availability-in-2w {
+    background-color: cornflowerblue;
+}
+.addto-cart-dissabled {
+    background: #9a9696;
+    color: #fff;
+    font-size: 16px;
+    font-family: "open_sansbold";
+    height: 40px;
+    border: 0;
+    border-radius: 0 5px 5px 0;
+    padding: 0 15px;
+    cursor: pointer;
+}
+.tile-addto-cart-dissabled {
+    display: block;
+    opacity: 1;
+   /* bottom: 30px;*/
+    padding: 10px 40px 10px 20px;
+    background: #9a9696;
+    color: #fff;
+    font-family: "open_sansbold";
+    text-transform: uppercase;
+    font-size: 14px;
+    margin: 10px 0;
+    cursor: pointer;
+    position: relative;
+}
+.msg-availability {
+    color: #9a9696;
+}
+.margin-left-negative-15px{
+    margin-left:-15px;
+}
+.overflow-hidden{
+    overflow:hidden;
+}
+.border-info{
+    border:solid 1px;
+}
+.social-icons li.whatsapp {
+    background-position: 0px 0;
+}
+.delivery-method-radio {
+    width: 20px;
+    height: 20px;
+    margin: 0px;
+}
+footer .footer .social-share .social-icons li.pintrest {
+    background-position: -152px 0;
+}
+@media screen and (max-width: 768px) {
+    .container {
+        margin-top: 20px;
+    }
+    .news-bar{
+        margin-top:100px;
+    }
+}
+
+.news {
+    width: 160px
+}
+
+.news-scroll a {
+    text-decoration: none
+}
+
+.dot {
+    height: 6px;
+    width: 6px;
+    margin-left: 3px;
+    margin-right: 3px;
+    margin-top: 2px !important;
+    background-color: rgb(207, 23, 23);
+    border-radius: 50%;
+    display: inline-block
+}
+div.modal-content {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /*text-align: center;*/
+}
+.alert-warning {
+    padding: 10px;
+    background-color: #dc6f2f;
+    color: white;
+    /* margin-top: 10px; */
+    margin-bottom: 10px;
+    text-align: center;
+    width: 100%;
+}
+.added-failed-msg {
+    max-width: 240px;
+    max-height: 60px;
+    padding: 10px 20px;
+    background: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    color: #fff;
+    background: #d71923;
+    z-index: 14;
+}

@@ -1,0 +1,23 @@
+﻿@using Online_book_shop.Models;
+@{
+    ViewBag.Title = "Index";
+    Article content = ViewBag.page;
+}
+
+<div class="container common-template">
+    <div class="col-lg-12">
+        <div class="col-lg-4">
+            <img src="~/Content/UploadFiles/Images/ProfilePicture/@content.MainImage.FileName" />
+            
+        </div>
+        <div class="col-lg-8 italic bold ">
+            <h4>"@content.Summary"</h4>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        @Html.Raw(content.Content)
+    </div>
+    
+   
+</div>
+

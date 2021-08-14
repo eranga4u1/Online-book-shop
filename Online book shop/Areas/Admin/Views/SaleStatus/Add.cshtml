@@ -1,0 +1,29 @@
+﻿
+
+    @{Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; }
+
+<form id="form-add-category" method="post" action="/Admin/SaleStatus/Add" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Display Title</label>
+        <input type="text" class="form-control" id="DisplayText" name="DisplayText" placeholder="Display Text">
+    </div>
+    <div class="form-group">
+        <label>Background Color</label>
+        <input type="text" class="form-control" id="BackGroundColor" name="BackGroundColor" placeholder="Background Color">
+    </div>
+    <div class="form-group">
+        <label>Font Color</label>
+        <input type="text" class="form-control" id="ForeColor" name="ForeColor" placeholder="Fore Color"/>
+    </div>
+    <div class="form-group">
+        <label>Cart Enable</label>
+        <div class="select">
+            <select id="isAddToCartEnables" class="form-control" name="isAddToCartEnables">
+                <option value="True">Enable</option>
+                <option value="False">Dissable</option>
+            </select>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

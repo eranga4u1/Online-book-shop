@@ -1,0 +1,11 @@
+﻿@using Online_book_shop.Models;
+@{
+    ViewBag.Title = "Index";
+    Content content = ViewBag.page;
+}
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<div class="container contact" style="margin-top:25px;">
+    
+    <div class="col-lg-12 ">@Html.Raw(content.HTMLContent)</div>
+</div>
+

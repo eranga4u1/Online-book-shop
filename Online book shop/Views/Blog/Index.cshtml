@@ -1,0 +1,83 @@
+﻿@using Online_book_shop.Models;
+@using Online_book_shop.Models.ViewModel;
+@using Online_book_shop.Handlers.Helper;
+@using Online_book_shop.Handlers.Business;
+@{
+    Author author = ViewBag.Author;
+    List<Article> articles = ViewBag.blogs != null ? ViewBag.blogs : new List<Article>();
+    int TotalNumberOfItems = ViewBag.TotalNumberOfBooks != null ? ViewBag.TotalNumberOfBooks : 0;
+
+    ViewBag.Title = "Blog";
+    // Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="blog-wrapper">
+    <div class="container">
+        @*<div class="pagination">
+                <a class="prev">&lt;&lt; Previous</a>
+                <div class="currentpage">1</div>
+                <a class="Next">Next &gt;&gt; </a>
+            </div>*@
+        <div class="blog">
+            @foreach (Article a in articles)
+            {
+                Media m = BusinessHandlerMedia.Get(a.MainPictureMediaId);
+            <div class="item">
+                @if (m != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/ProfilePicture/" + m.FileName))
+                {
+                    <div class="image" style="background-image:url('/Content/UploadFiles/Images/ProfilePicture/@m.FileName')">
+                        <h3 class="padded-multiline">
+                            <span>
+                                @a.Title
+                            </span>
+                        </h3>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="image" style="background-image:url('/Content/UploadFiles/Images/ProfilePicture/c8811ace-0b4f-4213-a585-cf1bbbd562be.jpg')">
+                        <h3 class="padded-multiline">
+                            <span>
+                                @a.Title
+                            </span>
+                        </h3>
+                    </div>
+
+
+                }
+                <div class="content">
+                    <p>
+                        @a.Summary
+                    </p>
+                    <span class="find-more"><a href="/blog/@a.Id">Find more</a></span>
+                </div>
+            </div>
+            }
+
+        </div>
+        @if (TotalNumberOfItems < 12)
+        { 
+                int page = 0;
+                if (Request.QueryString["page"] != null)
+                {
+                    page = Convert.ToInt32(Request.QueryString["page"]);
+                }
+        <div class="pagination">
+            @if (!(page == 0 || page == 1))
+            {
+                <a class="prev" href="/blog&page=" @(page - 1)>&lt;&lt; Previous</a>
+            }
+            @if (page != 0)
+            {
+                <div class="currentpage">@page</div>
+
+            }
+            @if (!(page * 12 == TotalNumberOfItems || (page + 1) * 12 > TotalNumberOfItems))
+            {
+                <a class="Next" href="/blog&page=" @(page + 1)>Next &gt;&gt; </a>
+            }
+        </div>
+           }
+    </div>
+</div>
+

@@ -1,0 +1,25 @@
+﻿@using Online_book_shop.Models;
+@using Online_book_shop.Models.ViewModel;
+@{
+    Order order = ViewBag.Order;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>OrderConfirmation</title>
+</head>
+<body>
+    <div class="container">
+        <div class="succsess-message">
+            <p>@ViewBag.Message : Your Order Has Submited successfully. <a target="_blank" href="/Invoice/Find?uid=@order.UId">
+    Please follow this link for view your
+    invoice.
+</a></p>
+            <p>Reference for further enquiries: @order.UId</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+﻿@using Online_book_shop.Models;
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    Content content = ViewBag.ContentPage;
+}
+
+<h2>Edit</h2>
+
+<script src="https://cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
+<h2>Create Content Page</h2>
+
+<form id="form-add-content-page" method="post" action="/Admin/Content/Edit" enctype="multipart/form-data">
+    <input type="hidden" value="@content.Id" name="Id" id="Id" />
+    <div class="form-group">
+        <label>Title</label>
+        <input value="@content.Title" type="text" class="form-control" id="Title" name="Title" placeholder="Title">
+    </div>
+    <div class="form-group">
+        <label>URL Substring</label>
+        <input type="text" value="@content.URLSubString" class="form-control" id="URLSubString" name="URLSubString" placeholder="URL Substring">
+    </div>
+    <div class="form-group">
+        <label>Content</label>
+        <textarea type="text" class="form-control" id="HTMLContent" name="HTMLContent" placeholder="HTML Content">@content.HTMLContent</textarea>
+        <script>
+            CKEDITOR.replace('HTMLContent');
+        </script>
+    </div>
+    <div class="form-group text-right">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+</form>

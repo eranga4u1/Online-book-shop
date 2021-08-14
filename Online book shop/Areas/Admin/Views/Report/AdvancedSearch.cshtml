@@ -1,0 +1,300 @@
+﻿@using Online_book_shop.Models;
+@using Online_book_shop.Handlers.Business;
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    //List<Order> List = ViewBag.orders;
+    //int pageCount = ViewBag.pageCount;
+    List<DeliverStatus> deliveryStatus = BusinessHandlerDeliveryStatus.GetAllActiveDeliverStatus();
+    string status = "";
+    string type = "";
+    if (Request.QueryString["deliveryStatus"] != null)
+    {
+        status = deliveryStatus.Where(x => x.Id == int.Parse(Request.QueryString["deliveryStatus"])).FirstOrDefault().DisplayText;
+    }
+    if (Request.QueryString["OrderType"] != null && Request.QueryString["OrderType"] == "0")
+    {
+        type = "Pre Orders";
+    }
+    if (Request.QueryString["OrderType"] != null && Request.QueryString["OrderType"] == "1")
+    {
+        type = "Daily Orders";
+    }
+    double timeOffset = BusinessHandlerConfigurations.GetTimeOffSet();
+}
+
+<div class="panel panel-default">
+    <div class="panel-heading">ADVANCED ORDER SEARCH</div>
+    <div class="panel-body">
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+
+                    <tbody>
+                        <tr class="bg-warning bold">
+                            <td width="30%">Filter by status</td>
+                            <td width="30%">Filter By Type</td>
+                            <td>Select Date Range</td>
+
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="select " style="width:75%">
+                                    @if (Request.QueryString["deliveryStatus"] != null)
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            @*<option value="-1">All</option>*@
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+                                                if (int.Parse(Request.QueryString["deliveryStatus"]) == s.Id)
+                                                {
+                                                    <option value="@s.Id" selected>@s.DisplayText</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@s.Id">@s.DisplayText</option>
+                                                }
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            @*<option selected value="-1">All</option>*@
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+
+                                                <option value="@s.Id">@s.DisplayText</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="select " style="width:75%">
+                                    @if (Request.QueryString["OrderType"] != null)
+                                    {
+                                        if (Request.QueryString["OrderType"] == "0")
+                                        {
+                                            <select class="form-control" id="OrderfilteringType">
+                                                <option value="@((int)OrderType.DailyOrder)">Daily Orders</option>
+                                                <option value="@((int)OrderType.PreOrder)" selected>Pre Orders</option>
+                                            </select>
+                                        }
+                                        else
+                                        {
+                                            <select class="form-control" id="OrderfilteringType">
+                                                <option value="@((int)OrderType.DailyOrder)" selected>Daily Orders</option>
+                                                <option value="@((int)OrderType.PreOrder)">Pre Orders</option>
+                                            </select>
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" id="OrderfilteringType">
+                                            <option value="@((int)OrderType.DailyOrder)" selected>Daily Orders</option>
+                                            <option value="@((int)OrderType.PreOrder)">Pre Orders</option>
+                                        </select>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                @{
+                                    string startdt = "2018-01-01 04:00:00";
+                                    string enddt = "2018-03-01 04:00:00";
+                                    if (string.IsNullOrEmpty(Request.QueryString["StartDate"]))
+                                    {
+                                        startdt = "2021-01-01";
+                                    }
+                                    else
+                                    {
+                                        startdt = Request.QueryString["StartDate"];
+                                    }
+                                    if (string.IsNullOrEmpty(Request.QueryString["EndDate"]))
+                                    {
+                                        enddt = DateTime.Now.AddDays(1).ToString("yyyy-MM-dd");
+                                    }
+                                    else
+                                    {
+                                        enddt = Request.QueryString["EndDate"];
+                                    }
+                                }
+                                <div class="c-datepicker-date-editor J-datepicker-range mt10" style="margin-top:15px;">
+                                    <i class="c-datepicker-range__icon kxiconfont icon-clock"></i>
+                                    <input placeholder="Start" name="" id="start-date" class="c-datepicker-data-input" value="@startdt">
+                                    <span class="c-datepicker-range-separator">-</span>
+                                    <input placeholder="End" name="" id="end-date" class="c-datepicker-data-input" value="@enddt">
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="bg-warning">
+                            <td width="30%">Filter by Payment Method</td>
+                            <td width="30%">Filter by Delivery Type</td>
+                            <td>Filter by Delivery Status</td>
+
+                        </tr>
+                        <tr>
+                            <td width="30%">
+                                <div class="select " style="width:75%">
+                                    @if (Request.QueryString["deliveryStatus"] != null)
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            @*<option value="-1">All</option>*@
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+                                                if (int.Parse(Request.QueryString["deliveryStatus"]) == s.Id)
+                                                {
+                                                    <option value="@s.Id" selected>@s.DisplayText</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@s.Id">@s.DisplayText</option>
+                                                }
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            @*<option selected value="-1">All</option>*@
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+
+                                                <option value="@s.Id">@s.DisplayText</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                            </td>
+                            <td width="30%">
+                                <div class="select " style="width:75%">
+                                    @if (Request.QueryString["deliveryStatus"] != null)
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            @*<option value="-1">All</option>*@
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+                                                if (int.Parse(Request.QueryString["deliveryStatus"]) == s.Id)
+                                                {
+                                                    <option value="@s.Id" selected>@s.DisplayText</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@s.Id">@s.DisplayText</option>
+                                                }
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            @*<option selected value="-1">All</option>*@
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+
+                                                <option value="@s.Id">@s.DisplayText</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <div class="select " style="width:75%">
+                                    @if (Request.QueryString["deliveryStatus"] != null)
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            @*<option value="-1">All</option>*@
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+                                                if (int.Parse(Request.QueryString["deliveryStatus"]) == s.Id)
+                                                {
+                                                    <option value="@s.Id" selected>@s.DisplayText</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@s.Id">@s.DisplayText</option>
+                                                }
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            @*<option selected value="-1">All</option>*@
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+
+                                                <option value="@s.Id">@s.DisplayText</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                            </td>
+
+                        </tr>
+                        <tr class="bg-warning bold">
+                            <td width="30%">Filter by Payment Status</td>
+                            <td width="30%"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td width="30%">
+                                <div class="select " style="width:75%">
+                                    @if (Request.QueryString["deliveryStatus"] != null)
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            @*<option value="-1">All</option>*@
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+                                                if (int.Parse(Request.QueryString["deliveryStatus"]) == s.Id)
+                                                {
+                                                    <option value="@s.Id" selected>@s.DisplayText</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@s.Id">@s.DisplayText</option>
+                                                }
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        <select class="form-control" id="OrderfilteringStatus">
+                                            @*<option selected value="-1">All</option>*@
+                                            @foreach (DeliverStatus s in deliveryStatus)
+                                            {
+
+                                                <option value="@s.Id">@s.DisplayText</option>
+                                            }
+                                        </select>
+                                    }
+                                </div>
+                            </td>
+                            <td width="30%">
+                               
+                            </td>
+                            <td class="text-right">
+                              
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer text-right">
+
+            <button class="btn btn-success" id="filter-orders"> Search</button>
+
+            <a data-toggle="tooltip" data-placement="top" title="Download filtered results" href="/Admin/Report/DownloadExcell?deliveryStatus=@Request.QueryString["deliveryStatus"]&OrderType=@Request.QueryString["OrderType"]&StartDate=@startdt&EndDate=@enddt">
+                <strong>
+                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>Import Result To Excell Sheet
+                </strong>
+            </a>        
+    </div>
+</div>
+    
+
+

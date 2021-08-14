@@ -1,0 +1,112 @@
+﻿@model Online_book_shop.Models.Address
+@using Online_book_shop.Models;
+@{
+    Layout = null;
+    var cartId = Request.QueryString["cart_id"];
+    //List<DeliveryCharge> courierCharges = ViewBag.CourierCharges;
+    List<string> countries = ViewBag.Countries;
+    List<string> district = ViewBag.District;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    @*<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />*@
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+
+    }
+    <div class="col-lg-6" style="padding:25px;">
+        <div class="panel panel-danger">
+            <div class="panel-heading text-center">
+                <h4 class="text-danger">UPDATE ADDRESS</h4>
+            </div>
+            <div class="panel-body">
+                <form id="frm-add-new-address" method="post" class="form-popup">
+                    <div class="col-sm-12">
+                        <input type="hidden" id="ref" value="@cartId" />
+                        <input type="hidden" id="addressId" name="" value="@Model.Id" />
+                        <div class="form-group">
+                            <input class="form-control" placeholder="First name" type="text" id="FirstName" value="@Model.FirstName" name="FirstName">
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" placeholder="Last name" type="text" id="LastName" value="@Model.LastName" name="LastName">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Company" id="Company" value="@Model.Company" name="Company">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" id="AddressLine01" class="form-control" placeholder="Address Line 01" value="@Model.AddressLine01" name="AddressLine01" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="AddressLine02" class="form-control" placeholder="Address Line 02" value="@Model.AddressLine02" name="AddressLine02">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="AddressLine03" class="form-control" placeholder="Address Line 03" value="@Model.AddressLine03" name="AddressLine03">
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" id="ContactNumber1" class="form-control" placeholder="Contact Number" value="@Model.ContactNumber1" name="ContactNumber1">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="ContactNumber2" class="form-control" placeholder="Contact Number 2" value="@Model.ContactNumber2" name="ContactNumber2">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="EmailAddress" class="form-control" placeholder="Email Address" value="@Model.EmailAddress" name="EmailAddress" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="City" class="form-control" placeholder="City" value="@Model.City" name="City">
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="PostalCode" class="form-control" placeholder="Postal Code" value="@Model.PostalCode" name="PostalCode">
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="Country" name="Country">
+                                @*<option value="All" selected>--Select Country--</option>*@
+                                @foreach (string country in countries)
+                                {
+                                    <option value="@country" @(Model.Country == country ? "selected" : "")>@country</option>
+                                }
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+
+                            <select class="form-control" name="District" id="shoping-cart-district-selection">
+                                @*<option value="All">--Select District--</option>*@
+                                @foreach (string d in district)
+                                {
+                                    <option value="@d" @(Model.District == d ? "selected" : "")>@d</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="State" id="State" value="@Model.State" name="State">
+                        </div>
+                        <div class="form-group">
+                            <input style="margin-bottom:25px;" class="right float-right btn btn-danger" id="add_new_address" data-type="@ViewBag.Type"  type="button" value="Update">
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/PopupScript.js"></script>
+<script src="~/Scripts/SiteScript.js"></script>

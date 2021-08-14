@@ -1,0 +1,135 @@
+﻿
+@using Online_book_shop.Models;
+@using Online_book_shop.Models.ViewModel;
+@using Online_book_shop.Handlers.Helper;
+@using Online_book_shop.Handlers.Business;
+@{
+    List<Author> authors = ViewBag.authors != null ? ViewBag.authors : new List<Author>();
+    int TotalNumberOfItems = ViewBag.TotalAuthors != null ? ViewBag.TotalAuthors : 0;
+
+    ViewBag.Title = "Authors";
+    // Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="blog-wrapper">
+    <div class="container">
+        @{
+            int CurrentPage = 1;
+            if (Request.QueryString["page"] != null && Convert.ToInt32(Request.QueryString["page"]) > 1)
+            {
+                CurrentPage = Convert.ToInt32(Request.QueryString["page"]);
+            }
+            Pager _pager = HTMLHelper.GetPager(CurrentPage, TotalNumberOfItems);
+
+            <div class="pagination">
+                @if (_pager.Prev.isEnable)
+                {
+                    <a class="prev" href="/authors?page=@_pager.Prev.LinkPageId#authors-work">&lt;&lt; Previous</a>
+                }
+                else
+                {
+                    <a class="prev" style="background-color: #bdb5b573;">&lt;&lt; Previous</a>
+                }
+                @foreach (var i in _pager.LinkedPages.OrderBy(x => x))
+                {
+                    if (i == CurrentPage)
+                    {
+                        <div class="currentpage">@i</div>
+                    }
+                    else
+                    {
+                        <div class="currentpage page-number" style="background-color:#bdb5b573"  data-url="/authors?page=@i#authors-work">@i</div>
+                    }
+
+                }
+
+
+                @if (_pager.Next.isEnable)
+                {
+                    <a class="Next" href="/authors?page=@_pager.Next.LinkPageId#authors-work">Next &gt;&gt; </a>
+                }
+                else
+                {
+                    <a class="Next" style="background-color: #bdb5b573;">Next &gt;&gt; </a>
+                }
+
+            </div>
+
+        }
+        <div class="blog">
+            <div class="bookcat-col active">
+                <div class="authorwork book-overview" id="authors-work">
+                    @foreach (Author a in authors)
+                    {
+                        Media m = a.ProfileImage;
+                        <div class="item">
+                            <div class="item-inner">
+
+                                <div class="viewmore-discprice">
+                                    <a href="/authors/@a.Id" class="viewmore"></a>
+                                    <div class="discounted-price">View Profile</div>
+                                </div>
+                                <div class="book-image">
+                                    @if (m != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/ProfilePicture/" + m.FileName))
+                                    {
+                                        <img src="/Content/UploadFiles/Images/ProfilePicture/@m.FileName" alt="Muses Author @a.Name">
+
+                                    }
+                                    else
+                                    {
+                                        <img src="/Content/images/no-image-book.jpg" alt="Muses Author @a.Name">
+
+                                    }
+
+                                </div>
+                                @*<div class="book-name-author ">
+                                    <div class="name"><span class="sinhala">T0001</span> - <span class="english">T0001</span></div>
+                                </div>*@
+                                <div class="book-name-author">
+                                    <div class="author"><span class="sinhala">@a.LocalName</span> @*- <span class="english">@a.LocalName</span>*@</div>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+        </div>
+        <div class="pagination">
+            @if (_pager.Prev.isEnable)
+            {
+                <a class="prev" href="/authors?page=@_pager.Prev.LinkPageId#authors-work">&lt;&lt; Previous</a>
+            }
+            else
+            {
+                <a class="prev" style="background-color: #bdb5b573;">&lt;&lt; Previous</a>
+            }
+            @foreach (var i in _pager.LinkedPages.OrderBy(x => x))
+            {
+                if (i == CurrentPage)
+                {
+                    <div class="currentpage">@i</div>
+                }
+                else
+                {
+                    <div class="currentpage page-number" style="background-color:#bdb5b573" data-url="/authors?page=@i#authors-work">@i</div>
+                }
+
+            }
+
+
+            @if (_pager.Next.isEnable)
+            {
+                <a class="Next" href="/authors?page=@_pager.Next.LinkPageId#authors-work">Next &gt;&gt; </a>
+            }
+            else
+            {
+                <a class="Next" style="background-color: #bdb5b573;">Next &gt;&gt; </a>
+            }
+
+        </div>
+    </div>
+</div>
+
+

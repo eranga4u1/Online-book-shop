@@ -1,0 +1,283 @@
+﻿@using Online_book_shop.Models;
+@using Online_book_shop.Handlers.Business;
+@{
+    ViewBag.Title = "UpdateDeliveryCharges";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<string> district = ViewBag.District;
+    List<string> countries = ViewBag.Countries;
+    List<DeliveryCharge> srilankapostalCharges = BusinessHandlerDeliveryCharges.GetDeliveryCharges(DeliveryTypes.Postal_Service);
+    List<DeliveryCharge> srilankaCourierCharges = BusinessHandlerDeliveryCharges.GetDeliveryCharges(DeliveryTypes.Currier_Service);
+    List<DeliveryCharge> foreignAirmailCharges = BusinessHandlerDeliveryCharges.GetDeliveryCharges(DeliveryTypes.Foreign_Airmail);
+    List<DeliveryCharge> emsCharges = BusinessHandlerDeliveryCharges.GetDeliveryCharges(DeliveryTypes.EMS);
+}
+
+<h2>Delivery Charges</h2>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">Sri Lanka Post</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Start Weight(g)</th>
+                    <th scope="col">End Weight(g)</th>
+                    <th scope="col">District</th>
+                    <th scope="col">Cost(LKR)</th>
+                    <th>Is this dynamic</th>
+                    <th>Slice by gram</th>
+                    <th>Unit Price Per Gram</th>
+                    <th scope="col">Operations</th>
+                </tr>
+            </thead>
+            @if (srilankapostalCharges != null)
+            {
+                foreach (var option in srilankapostalCharges)
+                {
+                <tr>
+                    <td scope="col"> @option.StartWeightByGrams </td>
+                    <td scope="col"> @option.EndWeightByGrams </td>
+                    <td scope="col"> @option.Area</td>
+                    <td scope="col"> @option.Amount</td>
+                    <td>@(option.isDynamic?"Yes":"No")</td>
+                    <td>@option.SliceByGrams</td>
+                    <td>@option.UnitPricePerSlice</td>
+                    <td scope="col"> <button class="btn btn-danger btn-sm rmv-delivery-charge-config" data-id="@option.Id" data-type="contact_numbers">Remove</button></td>
+                </tr>
+                }
+            }
+            <tr>
+                <td scope="col"> <input style="width:100px" id="srilankapostalCharges_StartWeightByGrams" type="number" value="" /></td>
+                <td scope="col"> <input style="width:100px" id="srilankapostalCharges_EndWeightByGrams" type="number" value="" /></td>
+                <td scope="col" > 
+                    <div >
+                        <select class=form-control id="srilankapostalCharges_district">
+                            <option value="All">All</option>
+                            @foreach (string d in district)
+                            {
+                                <option value="@d">@d</option>
+                            }
+                        </select>
+                    </div>
+                    
+                </td>
+                <td scope="col"> <input style="width:100px" id="srilankapostalCharges_in_amount" type="number" value="" /> </td>
+                <td>
+                    <select id="srilankapostalCharges_in_sliceType">
+                        <option value="0">Static</option>
+                        <option  value="1">Dynamic</option>
+                    </select>
+                </td>
+                <td>
+                    <input style="width:100px" id="srilankapostalCharges_slicebygram" type="number" value="" />
+                </td>
+                <td>
+                    <input style="width:100px" id="srilankapostalCharges_unitpriceperslice" type="number" value="" />
+                </td>
+                <td scope="col"> <button class="btn btn-info btn-sm update-srilankapostalCharges" data-type="contact_numbers">Add</button></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">Sri Lanka Courier Service</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Start Weight(g)</th>
+                    <th scope="col">End Weight(g)</th>
+                    <th scope="col">District</th>
+                    <th scope="col">Cost(LKR)</th>
+                    <th>Is this dynamic</th>
+                    <th>Slice by gram</th>
+                    <th>Unit Price Per Gram</th>
+                    <th scope="col">Operations</th>
+                </tr>
+            </thead>
+            @if (srilankapostalCharges != null)
+            {
+                foreach (var option in srilankaCourierCharges)
+                {
+                    <tr>
+                        <td scope="col"> @option.StartWeightByGrams </td>
+                        <td scope="col"> @option.EndWeightByGrams </td>
+                        <td scope="col"> @option.Area</td>
+                        <td scope="col"> @option.Amount</td>
+                        <td>@(option.isDynamic?"Yes":"No")</td>
+                        <td>@option.SliceByGrams</td>
+                        <td>@option.UnitPricePerSlice</td>
+                        <td scope="col"> <button class="btn btn-danger btn-sm rmv-delivery-charge-config" data-id="@option.Id" data-type="contact_numbers">Remove</button></td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td scope="col"> <input style="width:100px" id="srilankaCourierCharges_StartWeightByGrams" type="number" value="" /></td>
+                <td scope="col"> <input style="width:100px" id="srilankaCourierCharges_EndWeightByGrams" type="number" value="" /></td>
+                <td scope="col">
+                    <div>
+                        <select class=form-control id="srilankaCourierCharges_district">
+                            <option value="All">All</option>
+                            @foreach (string d in district)
+                            {
+                                <option value="@d">@d</option>
+                            }
+                        </select>
+                    </div>
+
+                </td>
+                <td scope="col"> <input style="width:100px" id="srilankaCourierCharges_in_amount" type="number" value="" /> </td>
+                <td>
+                    <select id="srilankaCourierCharges_in_sliceType">
+                        <option value="0">Static</option>
+                        <option value="1">Dynamic</option>
+                    </select>
+                </td>
+                <td>
+                    <input style="width:100px" id="srilankaCourierCharges_slicebygram" type="number" value="" />
+                </td>
+                <td>
+                    <input style="width:100px" id="srilankaCourierCharges_unitpriceperslice" type="number" value="" />
+                </td>
+                <td scope="col"> <button class="btn btn-info btn-sm update-srilankaCourierCharges" data-type="contact_numbers">Add</button></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">Foreign Airmail</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Start Weight(g)</th>
+                    <th scope="col">End Weight(g)</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">Cost(LKR)</th>
+                    <th>Is this dynamic</th>
+                    <th>Slice by gram</th>
+                    <th>Unit Price Per Gram</th>
+                    <th scope="col">Operations</th>
+                </tr>
+            </thead>
+            @if (foreignAirmailCharges != null)
+            {
+                foreach (var option in foreignAirmailCharges)
+                {
+                    <tr>
+                        <td scope="col"> @option.StartWeightByGrams </td>
+                        <td scope="col"> @option.EndWeightByGrams </td>
+                        <td scope="col"> @option.Country</td>
+                        <td scope="col"> @option.Amount</td>
+                        <td>@(option.isDynamic?"Yes":"No")</td>
+                        <td>@option.SliceByGrams</td>
+                        <td>@option.UnitPricePerSlice</td>
+                        <td scope="col"> <button class="btn btn-danger btn-sm rmv-delivery-charge-config" data-id="@option.Id" data-type="contact_numbers">Remove</button></td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td scope="col"> <input style="width:100px" id="foreignAirmailCharges_StartWeightByGrams" type="number" value="" /></td>
+                <td scope="col"> <input style="width:100px" id="foreignAirmailCharges_EndWeightByGrams" type="number" value="" /></td>
+                <td scope="col">
+                    <div>
+                        <select class=form-control id="foreignAirmailCharges_country">
+                            <option value="All">All</option>
+                            @foreach (string d in countries)
+                            {
+                                <option value="@d">@d</option>
+                            }
+                        </select>
+                    </div>
+
+                </td>
+                <td scope="col"> <input style="width:100px" id="foreignAirmailCharges_in_amount" type="number" value="" /> </td>
+                <td>
+                    <select id="foreignAirmailCharges_in_sliceType">
+                        <option value="0">Static</option>
+                        <option value="1">Dynamic</option>
+                    </select>
+                </td>
+                <td>
+                    <input style="width:100px" id="foreignAirmailCharges_slicebygram" type="number" value="" />
+                </td>
+                <td>
+                    <input style="width:100px" id="foreignAirmailCharges_unitpriceperslice" type="number" value="" />
+                </td>
+                <td scope="col"> <button class="btn btn-info btn-sm update-foreignAirmailCharges" data-type="contact_numbers">Add</button></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">Expedited Mail Service (EMS)</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Start Weight(g)</th>
+                    <th scope="col">End Weight(g)</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">Cost(LKR)</th>
+                    <th>Is this dynamic</th>
+                    <th>Slice by gram</th>
+                    <th>Unit Price Per Gram</th>
+                    <th scope="col">Operations</th>
+                </tr>
+            </thead>
+            @if (foreignAirmailCharges != null)
+            {
+                foreach (var option in foreignAirmailCharges)
+                {
+                    <tr>
+                        <td scope="col"> @option.StartWeightByGrams </td>
+                        <td scope="col"> @option.EndWeightByGrams </td>
+                        <td scope="col"> @option.Country</td>
+                        <td scope="col"> @option.Amount</td>
+                        <td>@(option.isDynamic?"Yes":"No")</td>
+                        <td>@option.SliceByGrams</td>
+                        <td>@option.UnitPricePerSlice</td>
+                        <td scope="col"> <button class="btn btn-danger btn-sm rmv-delivery-charge-config" data-id="@option.Id" data-type="contact_numbers">Remove</button></td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td scope="col"> <input style="width:100px" id="emsCharges_StartWeightByGrams" type="number" value="" /></td>
+                <td scope="col"> <input style="width:100px" id="emsCharges_EndWeightByGrams" type="number" value="" /></td>
+                <td scope="col">
+                    <div>
+                        <select class=form-control id="emsCharges_country">
+                            <option value="All">All</option>
+                            @foreach (string d in countries)
+                            {
+                                <option value="@d">@d</option>
+                            }
+                        </select>
+                    </div>
+
+                </td>
+                <td scope="col"> <input style="width:100px" id="emsCharges_in_amount" type="number" value="" /> </td>
+                <td>
+                    <select id="emsCharges_in_sliceType">
+                        <option value="0">Static</option>
+                        <option value="1">Dynamic</option>
+                    </select>
+                </td>
+                <td>
+                    <input style="width:100px" id="emsCharges_slicebygram" type="number" value="" />
+                </td>
+                <td>
+                    <input style="width:100px" id="emsCharges_unitpriceperslice" type="number" value="" />
+                </td>
+                <td scope="col"> <button class="btn btn-info btn-sm update-emsCharges" data-type="contact_numbers">Add</button></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+

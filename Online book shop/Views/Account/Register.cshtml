@@ -1,0 +1,51 @@
+﻿@model Online_book_shop.Models.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+}
+<div class="container">
+    <div class="col-sm-4 registration-form">
+        <h2>@ViewBag.Title.</h2>
+
+        @using (Html.BeginForm("Register", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" ,id="frm-register"}))
+    {
+        @Html.AntiForgeryToken()
+        <h4>Create a new account.</h4>
+        <hr />
+        @Html.ValidationSummary("", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+            <div class="">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control col-md-12", id = "login_email" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.Password, new { @class = "control-label" })
+            <div class="">
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control col-md-12 password passwordstrenght" ,id="pass-word"})
+            </div>
+            <div class="eye-icon"></div>
+            <div class="password-hint">
+                The Password must be at least 6 characters long.
+            </div>
+        </div>
+        
+        <div id="password-strength-status"></div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.ConfirmPassword, new { @class = "control-label" })
+            <div class="">
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control col-md-12 password" })
+            </div>
+            <div class="eye-icon"></div>
+        </div>
+        <div class="form-group">
+            <div class="">
+                <input type="submit" class="btn btn-default" value="Register" />
+            </div>
+        </div>
+    }
+    </div>
+</div>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+

@@ -1,0 +1,56 @@
+﻿@using Online_book_shop.Models;
+@using Online_book_shop.Handlers.Business;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<Content> list = ViewBag.AllContent;
+    double timeOffset = BusinessHandlerConfigurations.GetTimeOffSet();
+}
+
+<h2>Content Pages</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th colspan="3" scope="col"><input class="col-lg-12" id="searchInput" type="text" placeholder="Search.."></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"><a href="/Admin/Content/Create" class="btn btn-info">New Content</a></th>
+        </tr>
+    </thead>
+    <thead>
+        <tr>
+            <th scope="col">Content Id</th>
+            <th scope="col">Title</th>
+            <th scope="col">URL</th>
+            <th scope="col">Created date</th>
+            <th scope="col">Operation</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (list != null)
+        {
+            foreach (Content content in list)
+            {
+                <tr class="author-card">
+                    <th scope="row">@content.Id</th>
+                    <td>@content.Title</td>
+                    <td>@content.URLSubString</td>
+                    <td>@content.CreatedDate.AddHours(timeOffset).ToString("yyyy/MM/dd h:mm tt")</td>
+                    <td>
+                        <a href="/Admin/Content/Edit/@content.Id" class="btn-sm btn-info">Edit</a>
+                        @if (content.isDeleted)
+                        {
+                            <a href="/Admin/Content/ShowItem/@content.Id" class="btn-sm btn-warning">Show In Site</a>
+                        }
+                        else
+                        {
+                            <a href="/Admin/Content/HideItem/@content.Id" class="btn-sm btn-danger">Hide From Site</a>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+
+    </tbody>
+</table>

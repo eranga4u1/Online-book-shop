@@ -1,0 +1,23 @@
+﻿@{Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml"; }
+@{
+    ViewBag.Title = "AddCategory";
+}
+
+<h2>New Category</h2>
+
+<form id="form-add-category" method="post" action="/Admin/Category/AddCategory" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Category Name</label>
+        <input type="text" class="form-control" id="CategoryName" name="CategoryName" placeholder="Category Name">
+    </div>
+    <div class="form-group">
+        <label>Category Name (Sinhala)</label>
+        <input type="text" class="form-control" id="LocalCategoryName" name="LocalCategoryName" placeholder="Category Name (Sinhala)">
+    </div>
+    <div class="form-group">
+        <label>Description</label>
+        <textarea type="text" class="form-control" id="CategoryDescription" name="CategoryDescription" placeholder="Category Description Name"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

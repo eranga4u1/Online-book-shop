@@ -1,0 +1,244 @@
+﻿@using Newtonsoft.Json;
+@using Online_book_shop.Models;
+@using Online_book_shop.Handlers.Business;
+@using Online_book_shop.Models.ViewModel;
+@using Online_book_shop.Handlers.Helper;
+@using Online_book_shop.Models;
+@{
+    ViewBag.Title = "Orders";
+    Cart cart = ViewBag.Cart;
+    List<DeliveryCharge> postalCharges = ViewBag.PostalDeliveryCharges;  
+    List<DeliveryCharge> courierCharges = ViewBag.CourierCharges;
+
+}
+
+
+@if (cart.Items != null)
+    {
+<div class="container carttable">
+    <div class="margin-bottom-25">
+        <table style="width:100%">
+            <tr>
+                <th>Book Image</th>
+                <th>Book Name</th>
+                <th>&nbsp;</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Discount</th>
+                <th>Net Total</th>
+                <th>Actions</th>
+            </tr>
+            @foreach (Cart_Book cb in cart.Items)
+            {
+                BookVMTile b = BusinessHandlerBook.GetSearchedBookForView(cb.BookId);
+                //List<BookProperties>bp = BusinessHandlerBookProperties.GetByBookId(cb.BookId);
+                <tr>
+                    <td>
+                        <div class="book-image" style="width:80px;">
+                            @if (b.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName))
+                            {
+                                <img src="~/Content/UploadFiles/Images/BookFrontCover/@b.FrontCover.FileName?w=160&h=100" alt="@b.BookName" />
+                            }
+                            else
+                            {
+                                <img src="~/Content/images/no-image-book.jpg" alt="@b.BookName" />
+                            }
+
+                        </div>
+                    </td>
+                    <td>@b.BookName</td>
+                    <td>
+                        <select class="bookProperty" id="bookProperty_@cb.BookId">
+                            @foreach (BookProperties p in b.Property)
+                            {
+                                ChangeBookPropertyVM model = new ChangeBookPropertyVM
+                                {
+                                    bookId = cb.BookId,
+                                    OldbookPropertyId = cb.BookPropertyId,
+                                    NewpropertyId = p.Id
+                                };
+                                if (cb.BookPropertyId == p.Id)
+                                {
+                                    <option data-book_id="@cb.BookId" data-book_prop_id="@p.Id" data-selected-book_prop_id="@cb.BookPropertyId" value="@JsonConvert.SerializeObject(model)" selected>@p.Title</option>
+                                }
+                                else
+                                {
+                                    <option data-book_id="@cb.BookId" data-book_prop_id="@p.Id" data-selected-book_prop_id="@cb.BookPropertyId" value="@JsonConvert.SerializeObject(model)">@p.Title</option>
+                                }
+
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        @*<select class="numberOfItems" id="numberOfItems_@cb.BookId"></select>*@
+                        <input class="numberOfItems" id="numberOfItems_@cb.BookId" data-book_id="@cb.BookId" data-max-item="@(b.MaximumItemPerOrder>0?b.MaximumItemPerOrder:999)" data-book_prop_id="@cb.BookPropertyId" type="number" min="1" max="100" value="@cb.NumberOfItems" />Item(s)
+                    </td>
+                    <td>@cb.AmountBeforeDiscount</td>
+                    <td>@cb.Discount</td>
+                    <td>@cb.AmountAfterDiscount</td>
+                    <td><span class="btn-remove-wrapper"><span class="close rounded black"></span><input type="button" value="Remove" data-book_id="@cb.BookId" data-book_prop_id="@cb.BookPropertyId" class="btn btn-danger btn-sm remove-from-cart" /></span></td>
+                </tr>
+
+            }
+            <tr class="grandtotal">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>@cart.Items.Sum(x => x.NumberOfItems) Item(s)</td>
+                <td>@cart.AmountBeforeDiscount</td>
+                <td>@cart.Discount</td>
+                <td>@cart.AmountAfterDiscount</td>
+                <td></td>
+            </tr>
+
+        </table>
+      
+    </div>
+    <div class="bookcat-col">
+        <h3 class="acordian-tab">Use Muses Voucher Code</h3>
+        <div class="book-overview" id="muses-voucher">
+            <table>
+                <tr>
+                    <td><input class="col-sm-5 voucher-code" type="text" placeholder="Add Voucher Code" /></td>
+                    <td><input type="button" value="Add" id="add-voucher-code" class="btn-common" /></td>
+                </tr>
+            </table>
+
+        </div>
+    </div>
+    <div class="bookcat-col">
+        <h3 class="acordian-tab">Estimate your delivery cost</h3>
+        @{ 
+            List<DeliveryMethod> deliveryMethods= BusinessHandlerConfigurations.GetDeliveryMethods();
+            bool isPostEnable = BusinessHandlerConfigurations.DeliveryMethodstatusById(deliveryMethods,(int)DeliveryTypes.Postal_Service);
+            bool isCourierEnable = BusinessHandlerConfigurations.DeliveryMethodstatusById(deliveryMethods, (int)DeliveryTypes.Currier_Service);
+        }
+        <div class="book-overview" id="muses-voucher">
+
+                        <div class="col-lg-6">
+                            <h4>If you wish to estimate your delivery cost, choose your destination</h4>
+                            <table class="col-lg-12">
+                                <tr>
+                                    <td class="col-lg-6">
+                                        @*@if (isPostEnable)
+                                        {*@
+                                            <input type="radio" id="post" name="delivery_method" checked value="post">
+                                            <label>Post Service/තැපැල් සේවය හරහා</label><br>
+                                        @*}*@
+
+                                    </td>
+                                    <td class="col-lg-6">
+                                        @*@if (isCourierEnable)
+                                        {*@
+                                            <input type="radio" id="courier" name="delivery_method"  value="courier">
+                                            <label>Courier Service/කුරියර් සේවය </label><br>
+                                        @*}*@
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-lg-6">
+                                        <label>Country:</label>
+                                    </td>
+                                    <td class="col-lg-6">
+                                        <select id="country" name="country">
+                                            @{
+                                                List<string> countryList = BusinessHandlerDeliveryCharges.GetEnabledCountryForDelivery();
+                                                if (countryList != null)
+                                                {
+                                                    foreach (string c in countryList)
+                                                    {
+                                                        if (c== "Sri Lanka")
+                                                        {
+                                                            <option id="origin-country" value="@c" selected>@c</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@c">@c</option>
+                                                        }
+
+                                                    }
+
+                                                }
+                                            }
+                                           
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr id="shoping-cart-district-selection-row">
+                                    <td class="col-lg-6"><label>District:</label></td>
+                                    <td class="col-lg-6">
+                                        <select name="AreaId" id="shoping-cart-district-selection">
+                                            @foreach (DeliveryCharge d in courierCharges)
+                                            {
+                                                if (!d.isDynamic)
+                                                {
+                                                    <option data-charge="@d.Amount" value="@d.Area">@d.Area</option>
+                                                }
+
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div class="col-lg-6">
+                            <h4>Shipping Estimate</h4>
+                            <table class="col-lg-12">
+                                <tr>
+                                    <td class="col-lg-6">
+                                        Total
+                                    </td>
+                                    <td class="col-lg-6">
+                                        Rs. <span id="cart-amout">@cart.AmountAfterDiscount</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-lg-6">
+                                        Package Weight
+                                    </td>
+                                    <td class="col-lg-6">
+                                        @{
+                                            decimal weight = @BusinessHandlerShopingCart.GetTotalWeightForCart(cart);
+                                        }
+                                        <span id="cart-weight">@weight</span>  g
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-lg-6">
+                                        Delivery Cost
+                                    </td>
+                                    <td class="col-lg-6">
+                                        @{
+                                            decimal deliveryCost = BusinessHandlerDeliveryCharges.GetDeliveryCharge(weight, DeliveryTypes.Postal_Service, "Sri Lanka", "Sri Lanka");
+                                        }
+                                        Rs. <spn id="cart-delivery-cost">@deliveryCost</spn>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-lg-6">
+                                        Total With Delivery Charges
+                                    </td>
+                                    <td class="col-lg-6">
+                                        Rs.<spn id="cart-delivery-total">@(cart.AmountAfterDiscount+ deliveryCost)</spn>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+        </div>
+    </div>
+
+
+    
+    <div class="form-group continue">
+        <div class="">
+            <a href="/Delivery/"><span class="icon"></span><span class="addto-cart btn-active">Continue</span></a>
+        </div>
+    </div>
+</div>
+
+
+    }
+

@@ -1,0 +1,186 @@
+﻿
+@using Online_book_shop.Models;
+@using Online_book_shop.Models;
+@{
+    Order order = ViewBag.Order;
+    Cart cart = ViewBag.Cart;
+    List<PaymentMethod> Obj_payment_option = new List<PaymentMethod>();
+    Configuration conf_payment_option = BusinessHandlerConfigurations.GetConfigByKey("PAYMENT_METHODS");
+    if (conf_payment_option != null && !string.IsNullOrEmpty(conf_payment_option.Value))
+    {
+        Obj_payment_option = JsonConvert.DeserializeObject<List<PaymentMethod>>(conf_payment_option.Value);
+    }
+    PaymentMethod bankdeposit = Obj_payment_option.Where(x => x.EnumId == 4).FirstOrDefault();
+}
+@using Newtonsoft.Json;
+@using Online_book_shop.Models;
+@using Online_book_shop.Handlers.Business;
+@using Online_book_shop.Models.ViewModel;
+@using Online_book_shop.Handlers.Helper;
+@using Online_book_shop.Models;
+@if (cart.Items != null)
+{
+    <div class="container carttable">
+        <table style="width:100%">
+            <tr>
+                <th>Book Name</th>
+                <th>&nbsp;</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Discount</th>
+                <th>Net Total</th>
+            </tr>
+            @foreach (Cart_Book cb in cart.Items)
+            {
+                BookVMTile b = BusinessHandlerBook.GetSearchedBookForView(cb.BookId);
+                <tr>
+
+                    <td>@b.BookName</td>
+                    <td>
+                        @{
+                            BookProperties p = b.Property.Where(x => x.Id == cb.BookPropertyId).FirstOrDefault();
+                            if (p != null)
+                            {
+                                <span>@p.Title</span>
+                            }
+                            else
+                            {
+                                <span></span>
+                            }
+                        }
+                    </td>
+                    <td>
+                        <span>@cb.NumberOfItems</span>
+                    </td>
+                    <td>Rs : @cb.AmountBeforeDiscount</td>
+                    <td>Rs : @cb.Discount</td>
+                    <td>Rs : @cb.AmountAfterDiscount</td>
+                </tr>
+            }
+
+            <tr class="finaltotal-row">
+                <td></td>
+                <td></td>
+                <td>@cart.Items.Count Item(s)</td>
+                <td>Rs : @cart.AmountBeforeDiscount</td>
+                <td>Rs : @cart.Discount</td>
+                <td>Rs : @cart.AmountAfterDiscount</td>
+            </tr>
+            <tr class="">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <h4>Delivery Charges</h4>
+                    @if ((int)DeliveryTypes.Postal_Service == order.DeliveryMethod)
+                    {
+                        <span>(Postal)</span>
+                    }
+                    else if ((int)DeliveryTypes.Currier_Service == order.DeliveryMethod)
+                    {
+                        <span>(Courier)</span>
+                    }
+                    else if ((int)DeliveryTypes.In_Store_Pickup == order.DeliveryMethod)
+                    {
+                        <span>(In Stock Pickup)</span>
+                    }
+                    else if ((int)DeliveryTypes.Foreign_Airmail == order.DeliveryMethod)
+                    {
+                        <span>(Airmail)</span>
+                    }
+                    else if ((int)DeliveryTypes.EMS == order.DeliveryMethod)
+                    {
+                        <span>(EMS)</span>
+                    }
+                </td>
+                <td><h4>Rs : @order.DeliveryCharges</h4></td>
+            </tr>
+            <tr>
+                <td colspan="6">
+                    <div class="text-left">
+                        <h4>Deliver To :</h4>
+                        Pickup from store
+                        @*@order.FirstName @order.LastName<br />
+                        @order.DeliveryAddress<br />
+                        @order.EmailAddress<br />
+                        @order.ContactNumber*@
+                    </div>
+
+                </td>
+            </tr>
+            <tr></tr>
+            <tr class="grandtotal">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><h3>Total Amount</h3></td>
+                <td><h3>Rs : @(cart.AmountAfterDiscount + order.DeliveryCharges)</h3></td>
+            </tr>
+            @{
+                decimal AmountTobeCollected = cart.AmountAfterDiscount + order.DeliveryCharges;
+                if (!string.IsNullOrEmpty(cart.VoucherCode))
+                {
+                    Voucher voucher = BusinessHandlerVoucher.GetActiveVoucherByCode(cart.VoucherCode);
+
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><h4>Voucher Added (@voucher.Code)</h4></td>
+                        <td><h4>Rs : @voucher.VoucherAmount</h4></td>
+                    </tr>
+                    if ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount > -1)
+                    {
+                        AmountTobeCollected = ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount);
+                        <tr class="grandtotal">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><h3>Remaining Payment</h3></td>
+                            <td><h3>Rs : @((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount)</h3></td>
+                        </tr>
+                    }
+                    else
+                    {
+                        AmountTobeCollected = 0;
+                        <tr class="grandtotal">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><h3>Remaining Payment</h3></td>
+                            <td><h3>Rs : 0.00</h3></td>
+                        </tr>
+                    }
+
+                }
+            }
+        </table>
+        @*<div class="succsess-message">
+                    <p>
+                        @ViewBag.Message : Your Request Has Submited successfully.
+                    <a target="_blank" href="/Invoice/Find?uid=@order.UId">
+                        Please follow this link for view your
+                        invoice.
+                    </a>
+                </p>
+                <p>Reference for further enquiries: @order.UId</p>
+            </div>*@
+    <div class="col-12 margin-top-5px">
+        <strong>Please pay invoice amount (Rs. @AmountTobeCollected) to our store when you will pickup your order.Please inform reference  @order.UId  to store manager.</strong><br />
+        @Html.Raw(bankdeposit.Message)
+    </div>
+
+        <div class="form-group continue">
+            <div class="">
+                <a href="/Delivery/OrderConfirmation?Ref=@order.UId"><span class="btn-common btn-active">Confirm</span></a>
+            </div>
+        </div>
+    </div>
+}
+
+

@@ -1,0 +1,477 @@
+﻿@using Online_book_shop.Models;
+@using Online_book_shop.Models.ViewModel;
+@using Online_book_shop.Handlers.Helper;
+@using Online_book_shop.Handlers.Business;
+@{
+    Publisher publisher = ViewBag.publisher;
+    List<BookVMTile> books = ViewBag.Books != null ? ViewBag.Books : new List<BookVMTile>();
+    int NumberOfBooks = ViewBag.NumberOfBooks != null ? ViewBag.NumberOfBooks : 0;
+    List<Order> orders = ViewBag.Orders != null ? ViewBag.Orders : new List<Order>();
+    ApplicationUser user = ViewBag.User;
+    List<Address> address = ViewBag.Addreses;
+    int reviewsCount = BusinessHandlerUserReviews.GetReviewsAndCommentCount();
+    string active_tab = Request.QueryString["open"];
+    List<string> countries = ViewBag.Countries;
+    List<string> district = ViewBag.District;
+    List<DeliverStatus> deliveryStatus = BusinessHandlerDeliveryStatus.GetAllActiveDeliverStatus();
+    DeliverStatus confiremedDeliverStatuses = BusinessHandlerDeliveryStatus.GetDeliverStatusByTitle("confirmed_received");
+}
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="page-content">
+        <div class="bookcat-col  @((!string.IsNullOrEmpty(active_tab)&&active_tab=="wish-list")?"active":"")">
+            <h3 class="acordian-tab up-bookcat-col">Wish List <i class="far fa-heart"></i></h3>
+            <div class="book-overview recommended-slider" id="">
+                @if (books != null && books.Count > 0)
+                {
+                    foreach (BookVMTile b in books)
+                    {
+
+                        //  @Html.Partial("_BookTile", b)
+                        BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
+                        BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
+                        <div class="item">
+
+                            <div class="item-inner">
+                                @if (promo != null)
+                                {
+                                    if (promo.PromotionMethods == (int)PromotionMethods.DeductFromFinalAmount)
+                                    {
+                                        <div class="discount-pers">Offer<br />Off</div>
+
+                                    }
+                                    else if (promo.PromotionMethods == (int)PromotionMethods.FixedAmount)
+                                    {
+                                        <div class="discount-pers">@promo.DiscountValue<br />Off</div>
+
+                                    }
+                                    else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
+                                    {
+                                        <div class="discount-pers">@promo.DiscountValue%<br />Off</div>
+
+                                    }
+                                }
+                                <div class="viewmore-discprice">
+                                    <a href="/book/@b.Id" class="viewmore"></a>
+                                    @if (promo != null && promo.DiscountValue > 0)
+                                    {
+                                        <div class="discounted-price">-Rs.@promo.DiscountAmount </div>
+                                    }
+                                </div>
+                                <div class="book-image">
+                                    @if (b.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName))
+                                    {
+                                        <img src="@Url.Action("Thumbnail", "Utility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+b.FrontCover.FileName})"
+                                             class="img-fluid"
+                                             title="@b.BookName"
+                                             alt="muses @b.BookName" />
+                                        @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@b.FrontCover.FileName?w=160&h=100" alt="@b.BookName" />*@
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Content/images/no-image-book.jpg" alt="@b.BookName" />
+                                    }
+
+                                </div>
+
+                                <div class="book-name-author ">
+                                    <div class="name">
+                                        <span class="sinhala">@b.LocalBookName</span>
+                                        @*- <span class="english">@b.BookName</span>*@
+                                    </div>
+                                </div>
+                                @{
+                                    List<Author> mulauthors = BusinessHandlerAuthor.GetmultipleAuthors(b.Id);
+                                    if (mulauthors != null && mulauthors.Count > 0)
+                                    {
+
+                                        <div class="book-name-author">
+                                            <div class="author">
+                                                <span class="sinhala">@b.LocalAuthorName</span> <br />
+                                                @foreach (Author author in mulauthors)
+                                                {
+                                                    <span class="sinhala">@author.LocalName</span>
+                                                    @*@Html.Raw("-")
+                                                        <span class="english">@author.Name</span>*@
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="book-name-author">
+                                            <div class="author">
+                                                <span class="sinhala">@b.LocalAuthorName</span>
+                                                @*- <span class="english">@b.AuthorName</span>*@
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+
+                                <div class="category">
+                                    @foreach (Category c in b.Categories.Take(2))
+                                    {
+                                        <span class="cat-name">@c.CategoryName</span>
+                                    }
+                                </div>
+                                <div class="rating">
+                                    <div class="stars" data-rating="@BusinessHandlerUserReviews.GetBookRating(b.Id)"></div>
+                                </div>
+                                @{
+                                    if (bookProperty != null)
+                                    {
+                                        if (promo != null)
+                                        {
+                                            if (promo.DiscountAmount > 0)
+                                            {
+                                                <div class="price hasdiscount">Rs.@promo.BookPrice </div>
+                                                <div class="discount-price">Rs.@promo.BookPriceAfterDiscount </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="discount-price">Rs.@bookProperty.Price </div>
+                                            }
+                                        }
+                                        <div class="@(HTMLHelper.isCartEnabled(b.SaleType,bookProperty.NumberOfCopies)?"addto-cart btn-active add-to-cart":"addto-cart btn-active add-to-cart tile-addto-cart-dissabled")" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
+                                            Add to Cart
+                                            <div class="icon"></div>
+                                        </div>
+                                        <div class="topright remove-from-whish-list" data-bookid="@b.Id"><i class="fas fa-times-circle"></i></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
+                                        <div class="addto-cart btn-active add-to-cart tile-addto-cart-dissabled">
+                                            Add to Cart
+                                            <div class="icon"></div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-dark" role="alert">
+                        <h6>You dont have any item on your whish list.</h6>
+                    </div>
+                }
+
+            </div>
+        </div>
+        <div class="bookcat-col @((!string.IsNullOrEmpty(active_tab)&&active_tab=="address")?"active":"")">
+            <h3 class="acordian-tab up-bookcat-col">Address Book <i class="far fa-address-book"></i></h3>
+            <div class="book-overview">
+
+                <div class="col-lg-12  y-scroll">
+                    <div class="col-lg-12 row padding-small-bottom padding-small-top">
+                        <button class="btn btn-danger btn-sm float-right btn-add-new-address" data-type="user-profile-new" id="btn-add-new-address"> Add New</button>
+                    </div>
+
+
+
+                    @if (address != null)
+                    {
+                        foreach (Address a in address)
+                        {
+                            <div class="col-lg-12  padding-small-bottom padding-small-top border-info border-info margin-top-5px">
+                                <div class="col-lg-8">
+                                    <div class="col-lg-6">
+                                        <small><strong>@a.FirstName @a.LastName <br /></strong></small><br />
+                                        @a.ContactNumber1 @a.ContactNumber2<br />
+                                        @a.EmailAddress
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <small>@a.AddressLine01, @a.AddressLine02</small> <br />
+                                        <small> @a.AddressLine03</small>  <br />
+                                        <small>@a.Country</small> <br />
+
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-4">
+                                    <button class="btn @(a.isDefaultAddress?"bg-success":"bg-info") set-default" id="set-default-@a.Id" data-id="@a.Id" title="Make default address"><i class="far fa-check-square"></i></button>
+                                    @*<button class="btn bg-info edit-address" data-id="@a.Id" title="Edit address" data-type="user-profile-edit"><i class="fas fa-cogs"></i></button>*@
+                                    <button class="btn bg-info remove-address" data-id="@a.Id" title="Remove address"><i class="fa fa-trash"></i></button>
+                                </div>
+                            </div>
+
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-dark" role="alert">
+                            <h6>You dont have any address on your address list.</h6>
+                        </div>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <div class="bookcat-col">
+            <h3 class="acordian-tab up-bookcat-col">Recent Orders <i class="fas fa-shipping-fast"></i></h3>
+            <div class="book-overview">
+                @if (orders != null && orders.Count > 0)
+                {
+                    <div class="col-lg-12 y-scroll">
+                        @foreach (Order o in orders)
+                        {
+
+                            <div class="col-lg-12  padding-small-bottom padding-small-top border-info border-info margin-top-5px">
+
+                                @*<div class="col-lg-12 text-right">
+                                        <small>(@((int)(DateTime.Now - o.CreatedDate).TotalDays) day(s) ago)</small>
+                                    </div>*@
+                                <div class="col-lg-4 col-md-12 col-sm-12 border-right">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <small class="mb-1"><strong>Order ID :</strong> #@o.Id </small>
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(o.WaybillId))
+                                    {
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <small class="mb-1"><strong>Waybill ID :</strong> #@o.WaybillId </small>
+                                        </div>
+                                    }
+
+                                    <small><strong>Delivery Address:</strong></small>
+                                    <small class="text-muted"> @o.DeliveryAddress</small>
+                                </div>
+                                <div class="col-lg-4 col-md-12 col-sm-12 border-right">
+                                    @{
+                                        Cart c = HTMLHelper.GetCart(o.CartId);
+                                        if (c != null)
+                                        {
+                                            <div class="col-lg-12"><small><strong>Number Of Item:</strong>@c.Items.Count()</small></div>
+                                            <div class="col-lg-12"><small><strong>Amount:</strong>@c.AmountAfterDiscount (Delivery: @o.DeliveryCharges)</small></div>
+                                        }
+                                    }
+
+                                    <div class="col-lg-12">
+                                        <strong>Status:</strong>
+                                        @{
+                                            DeliverStatus status = deliveryStatus.Where(x => x.Id == o.DeliveryStatus).FirstOrDefault();
+                                            if (status != null)
+                                            {
+                                                <span class="badge badge-info">@status.DisplayText</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-danger">Issue Occured, Please Call Us</span>
+                                            }
+
+                                            @*if (o.DeliveryStatus == 0)
+                                                {
+                                                    <span class="badge badge-danger">You haven't complete order yet</span>
+                                                }
+                                                else if (o.DeliveryStatus == 1)
+                                                {
+                                                    <span class="badge badge-info">Order Confirmed By Client</span>
+                                                }
+                                                else if (o.DeliveryStatus == 2)
+                                                {
+                                                    <span class="badge badge-warning">Processing Order</span>
+                                                }
+                                                else if (o.DeliveryStatus == 3)
+                                                {
+                                                    <span class="badge badge-primary">Dispatched From Store</span>
+                                                }
+                                                else if (o.DeliveryStatus == 4)
+                                                {
+                                                    <span class="badge badge-success">Successfully Delivered</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-danger">Issue Occured, Please Call Us</span>
+                                                }*@
+                                        }
+
+                                    </div>
+                                </div>
+                                <div class="col-lg-4 col-md-12 col-sm-12 text-right">
+                                    <small class="float-right col-lg-12 ">(@((int)(DateTime.Now - o.CreatedDate).TotalDays) day(s) ago)</small>
+
+                                    <div class="col-lg-12">
+                                        <a class="btn bg-info" href="https://koombiyodelivery.lk/Track/track_id?id=@o.WaybillId&phone=@o.ContactNumber" title="Track This Order"><i class="fas fa-search-location"></i></a>
+                                        <a class="btn bg-info" target="_blank" href="/Invoice/Find?uid=@o.UId" title="Show Invoice"><i class="fas fa-file-invoice-dollar"></i></a>
+                                    </div>
+                                    @if (confiremedDeliverStatuses !=null && o.DeliveryStatus != confiremedDeliverStatuses.Id)
+                                    {
+                                        <div class="col-lg-12">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input up-delivery-status-dd" data-order-id="@o.Id" type="checkbox" id="DeliveryStatus_4" value="16">
+                                           <strong><label class="form-check-label" for="DeliveryStatus_4">I Recieved This Package</label></strong>
+                                            </div>
+                                        </div>
+                                    }
+
+
+                                </div>
+
+                            </div>
+
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-dark" role="alert">
+                        <h6>You dont order any item from this account yet.</h6>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+        <div class="bookcat-col @((string.IsNullOrEmpty(active_tab) || active_tab=="profile")?"active":"")">
+            <h3 class="acordian-tab up-bookcat-col">Profile  <i class="fas fa-user-circle"></i> </h3>
+            <div class="book-overview" id="muses-deliveryform-billing">
+                <div class="panel  col-lg-12">
+                    <div class="panel-heading">
+                        <h5>
+                            @orders.Count, Orders,  @books.Count Item in Wish List,  and @reviewsCount
+                            Reviews & Comments
+                        </h5>
+                    </div>
+                    <hr />
+                    <div class="panel-body">
+
+                        <div class="form-group row">
+                            <label for="staticName" class="col-sm-2 col-form-label">Name</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly class="form-control-plaintext" id="staticName" value="@(string.IsNullOrEmpty(user.NickName)? user.FirstName+" "+user.LastName:user.NickName)">
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                <button class="btn btn-sm btn-warning hidden update-user-name">Update</button>
+                                <button class="btn bg-info edit-user-name" title="Edit name"><i class="far fa-edit"></i></button>
+                                @*<button class="btn bg-info" title="Remove address"><i class="fa fa-trash"></i></button>*@
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+                            <div class="col-sm-8">
+                                <input type="text" readonly class="form-control-plaintext" id="staticEmail" value="@user.Email">
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                <button class="btn btn-sm btn-warning hidden update-user-email">Update</button>
+                                <button class="btn bg-info edit-user-email" title="Edit email"><i class="far fa-edit"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="staticName" class="col-sm-2 col-form-label">Birthday</label>
+                            <div class="col-sm-8">
+                                <label class="col-form-label" id="lblstaticbday">@((user.Birthday !=null)?user.Birthday.ToString("dd/mm/yyyy"):"Not Set")</label>
+                                <input type="date" class="form-control-plaintext col-sm-3 hidden" id="staticbday" value="">
+                            </div>
+                            <div class="col-sm-2 text-right">
+                                <button class="btn btn-sm btn-warning hidden update-user-bday">Update</button>
+                                <button class="btn bg-info edit-user-bday" title="Edit B'day"><i class="far fa-edit"></i></button>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputPassword" class="col-sm-2 col-form-label">Password</label>
+                            <div class="col-sm-8">
+                                <a href="/Manage/ChangePassword" target="_blank">Follow this link to reset password.</a>
+                                @*<input type="password" class="form-control" id="inputPassword" placeholder="Password">*@
+                            </div>
+                            @*<div class="col-sm-2 text-right">
+                                    <button class="btn bg-info" title="Edit address"><i class="far fa-edit"></i></button>
+                                </div>*@
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 margin-bottom-25 pop-up-content" style="display:none;" id="form-new-address" tabindex="-1" role="dialog" aria-labelledby="new address">
+
+        <div class="modal-content">
+            <div class="modal-container col-lg-12">
+                <h3>New Address</h3>
+                <form id="frm-address">
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="fname">First Name</label>
+                        <input type="text" id="FirstName" name="FirstName" placeholder="Your name..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="lname">Last Name</label>
+                        <input type="text" id="LastName" name="LastName" placeholder="Your last name..">
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Contact Number ( ex: - 07xxxxxxxx )</label>
+                        <input type="text" id="ContactNumber1" name="ContactNumber1" placeholder="Contact Number..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Additional Contact Number ( ex: - 07xxxxxxxx )</label>
+                        <input type="text" id="ContactNumber2" name="ContactNumber2" placeholder="Additional Contact Numbere..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Address Line 01</label>
+                        <input type="text" id="AddressLine01" name="AddressLine01" placeholder="Address Line 01..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Address Line 02</label>
+                        <input type="text" id="AddressLine02" name="AddressLine02" placeholder="Address Line 02..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Address Line 03</label>
+                        <input type="text" id="AddressLine03" name="AddressLine03" placeholder="Address Line 03..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">City/State</label>
+                        <input type="text" id="City" name="City" placeholder="City/State..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Email</label>
+                        <input type="text" id="EmailAddress" name="EmailAddress" placeholder="Email..">
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Postal code</label>
+                        <input type="text" id="PostalCode" name="PostalCode" placeholder="Postal code..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label id="lbl-district" for="District">District</label><br />
+                        <select id="District" name="District" class="col-lg-12">
+                            <option value="not selected">--Select--</option>
+                            @foreach (string d in district)
+                            {
+                                <option value="@d">@d</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="country">Country</label><br />
+                        <select id="Country" name="Country" class="col-lg-12">
+                            <option value="not selected">--Select--</option>
+                            @foreach (string country in countries)
+                            {
+                                <option @(country == "Sri Lanka" ? "selected" : "") value="@country">@country</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 text-right">
+                        <button type="button" class="btn margin-top-5px margin-bottom-25 btn-danger close-pop-up">Cancel</button>
+                        <button type="button" class="btn margin-top-5px margin-bottom-25 btn-info btn-update-address" data-type="user-profile-new">Update Address Book</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+

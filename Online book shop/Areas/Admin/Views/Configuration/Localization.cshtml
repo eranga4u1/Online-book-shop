@@ -1,0 +1,345 @@
+﻿@using Online_book_shop.Models.ViewModel;
+@using Online_book_shop.Handlers.Business;
+<script src="https://cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
+@{
+    ViewBag.Title = "Localization";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<ContactNumber> Obj__contactNumbers = ViewBag.ContactNumbers;
+    List<EmailAddress> Obj__emailAddress = ViewBag.EmailAddress;
+    List<MusesAddress> Obj_address = ViewBag.Address;
+    List<PaymentMethod> Obj_payment_option = ViewBag.PaymentMethods;
+    InstantMessage Obj_instant_message = ViewBag.InstantMessage;
+    List<DeliveryMethod> Obj_delivery_types = ViewBag.Delivery_Types;
+    List<string> Obj_book_property_types = ViewBag.BookPropertyTypes;
+}
+
+<h3>Manage Site Custom Settings </h3>
+<button class="collapsible"> EDIT CONTACT NUMBERS</button>
+<div class="collapsible-pannel-content  collapsible-pannel">
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Number</th>
+                    <th scope="col">Shows In Contact</th>
+                    <th scope="col">Shows In Home</th>
+                    <th scope="col">Operations</th>
+                </tr>
+            </thead>
+            @if (Obj__contactNumbers != null)
+            {
+                foreach (var number in Obj__contactNumbers)
+                {
+                    <tr>
+                        <td scope="col"> @number.TitleForNumber </td>
+                        <td scope="col"> @number.NumberValue </td>
+                        <td scope="col"> @(number.ShowsOnContactPage ? "Enabled" : "Dissabled")</td>
+                        <td scope="col"> @(number.ShowsOnHomePage ? "Enabled" : "Dissabled") </td>
+                        <td scope="col"> <button class="btn btn-danger btn-sm rmv-contact-config" data-id="@number.NumberValue" data-type="contact_numbers">Remove</button></td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td scope="col"> <input id="contact_numbers_title" type="text" value="" /></td>
+                <td scope="col"> <input id="contact_numbers_value" type="text" value="" /></td>
+                <td scope="col"> <input id="contact_numbers_show_in_contact" type="checkbox" value="" /></td>
+                <td scope="col"> <input id="contact_numbers_show_in_home" type="checkbox" value="" /> </td>
+                <td scope="col"> <button class="btn btn-info btn-sm update-contact-config" data-type="contact_numbers">Add</button></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<button class="collapsible"> EDIT EMAIL ADDRESS</button>
+<div class="collapsible-pannel-content  collapsible-pannel">
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Shows In Contact</th>
+                    <th scope="col">Shows In Home</th>
+                    <th scope="col">Operations</th>
+                </tr>
+            </thead>
+            @if (Obj__emailAddress != null)
+            {
+                foreach (var number in Obj__emailAddress)
+                {
+                    <tr>
+                        <td scope="col"> @number.TitleForEmail </td>
+                        <td scope="col"> @number.EmailValue </td>
+                        <td scope="col"> @(number.ShowsOnContactPage?"Enabled":"Dissabled")</td>
+                        <td scope="col"> @(number.ShowsOnHomePage?"Enabled":"Dissabled") </td>
+                        <td scope="col"> <button class="btn btn-danger btn-sm rmv-contact-config" data-id="@number.EmailValue" data-type="contact_emails">Remove</button></td>
+                    </tr>
+                }
+            }
+
+            <tr>
+                <td scope="col"> <input id="contact_emails_title" type="text" value="" /></td>
+                <td scope="col"> <input id="contact_emails_value" type="text" value="" /></td>
+                <td scope="col"> <input id="contact_emails_show_in_contact" type="checkbox" value="" /></td>
+                <td scope="col"> <input id="contact_emails_show_in_home" type="checkbox" value="" /> </td>
+                <td scope="col"> <button class="btn btn-info btn-sm update-contact-config" data-type="contact_emails">Add</button></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<button class="collapsible"> EDIT ADDRESS</button>
+<div class="collapsible-pannel-content  collapsible-pannel">
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Shows In Contact</th>
+                    <th scope="col">Shows In Home</th>
+                    <th scope="col">Operations</th>
+                </tr>
+            </thead>
+            @if (Obj_address != null)
+            {
+                foreach (var number in Obj_address)
+                {
+                    <tr>
+                        <td scope="col"> @number.TitleForAddress </td>
+                        <td scope="col"> @number.AddressValue </td>
+                        <td scope="col"> @(number.ShowsOnContactPage?"Enabled":"Dissabled")</td>
+                        <td scope="col"> @(number.ShowsOnHomePage?"Enabled":"Dissabled") </td>
+                        <td scope="col"> <button class="btn btn-danger btn-sm rmv-contact-config" data-id="@number.AddressValue" data-type="contact_address">Remove</button></td>
+                    </tr>
+                }
+            }
+
+            <tr>
+                <td scope="col"> <input id="contact_address_title" type="text" value="" /></td>
+                <td scope="col"> <textarea id="contact_address_value"></textarea> </td>
+                <td scope="col"> <input id="contact_address_show_in_contact" type="checkbox" value="" /></td>
+                <td scope="col"> <input id="contact_address_show_in_home" type="checkbox" value="" /> </td>
+                <td scope="col"> <button class="btn btn-info btn-sm update-contact-config" data-type="contact_address">Add</button></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+
+<button class="collapsible">EDIT PAYMENT OPTIONS</button>
+<div class="collapsible-pannel-content  collapsible-pannel">
+
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Message</th>
+                    <th scope="col">Enable/Dissable</th>
+                    <th scope="col">Operation</th>
+                </tr>
+            </thead>
+            @if (Obj_payment_option != null)
+            {
+                foreach (var option in Obj_payment_option)
+                {
+                    <tr>
+                        <td scope="col"> @option.EnumId </td>
+                        <td scope="col"><input style="width:100%;" class="form-control" id="payment-method-title-@option.EnumId" type="text" value="@option.Title" /> </td>
+                        <td scope="col">
+                            <textarea rows="2" style="width:100%;" class="form-control" id="payment-method-message-@option.EnumId">@option.Message</textarea>
+                        </td>
+                        <td scope="col"> <input id="payment-method-enable-@option.EnumId" type="checkbox" @(option.isEnable ? "Checked" : "") value="" /> </td>
+                        <td>
+                            <button class="btn btn-info btn-sm update-payment-method" data-id="@option.EnumId">Update</button>
+                        </td>
+                    </tr>
+                }
+            }
+
+
+        </table>
+
+    </div>
+</div>
+
+<button class="collapsible">EDIT INSTANT MESSAGE</button>
+<div class="collapsible-pannel-content  collapsible-pannel">
+
+    <div class="panel-body">
+        <form>
+            <div class="form-group">
+                <label>Instant Message</label>
+                <div>
+                    <textarea class="form-control" name="update-instant-message" id="update-instant-message">@(!string.IsNullOrEmpty(Obj_instant_message.Message)? Obj_instant_message.Message:"")</textarea>
+                    <script>
+                        CKEDITOR.replace('update-instant-message');
+                    </script>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Background Color</label>
+                <div>
+                    <input type="text" class="form-control" id="bg-instant-message" value="@(!string.IsNullOrEmpty(Obj_instant_message.BackgroundColor)? Obj_instant_message.BackgroundColor:"")" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Font Color</label>
+                <div>
+                    <input type="text" class="form-control" id="fc-instant-message" value="@(!string.IsNullOrEmpty(Obj_instant_message.FontColor)? Obj_instant_message.FontColor:"")" />
+                </div>
+            </div>
+
+            <button id="btn-update-instant-message" class="btn btn-danger btn-sm float-right">Update</button>
+        </form>
+
+    </div>
+</div>
+
+<button class="collapsible"> EDIT BOOK PROPERTY TYPES</button>
+<div class="collapsible-pannel-content  collapsible-pannel">
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Operations</th>
+                </tr>
+            </thead>
+            @if (Obj_book_property_types != null)
+            {
+                foreach (var name in Obj_book_property_types)
+                {
+                    <tr>
+                        <td scope="col"> @name </td>
+                        <td scope="col"> <a href="/Admin/Configuration/RemoveBookPropertyType?title=@name" class="btn btn-danger btn-sm rmv-contact-config" data-id="@name" data-type="contact_emails">Remove</a></td>
+                    </tr>
+                }
+            }
+
+            <tr>
+                <td scope="col"> <input id="book_property_title" type="text" value="" /></td>
+                <td scope="col"> <button class="btn btn-info btn-sm book_property-config" data-type="book_property">Add</button></td>
+            </tr>
+        </table>
+
+    </div>
+</div>
+@*<div class="panel panel-primary">
+        <div class="panel-heading" id="delivery_methods">Manage Delivery Methods</div>
+        @{
+            DeliveryMethod dm1=  Obj_delivery_types.Where(x => x.Id == (int)DeliveryTypes.Postal_Service).FirstOrDefault();
+            DeliveryMethod dm2 = Obj_delivery_types.Where(x => x.Id == (int)DeliveryTypes.Currier_Service).FirstOrDefault();
+            DeliveryMethod dm3 = Obj_delivery_types.Where(x => x.Id == (int)DeliveryTypes.In_Store_Pickup).FirstOrDefault();
+            DeliveryMethod dm4 = Obj_delivery_types.Where(x => x.Id == (int)DeliveryTypes.Foreign_Airmail).FirstOrDefault();
+            DeliveryMethod dm5 = Obj_delivery_types.Where(x => x.Id == (int)DeliveryTypes.EMS).FirstOrDefault();
+        }
+        <div class="panel-body">
+            <form>
+                <table class=" table">
+                    <tr>
+                        <td>@((int)DeliveryTypes.Postal_Service)</td>
+                        <td>Post Service/තැපැල් සේවය හරහා</td>
+                        <td>
+                            @if (dm1.isEnable)
+                            {
+                                <span>Enabled</span>
+                                <a class="btn btn-sm btn-warning" href="/Admin/Configuration/UpdateDeliveryMethod?Id=@((int)DeliveryTypes.Postal_Service)&isEnable=false"> Dissable </a>
+
+                            }
+                            else
+                            {
+                                <span>Dissabled</span>
+                                <a class="btn btn-sm btn-success" href="/Admin/Configuration/UpdateDeliveryMethod?Id=@((int)DeliveryTypes.Postal_Service)&isEnable=true">Enable</a>
+
+                            }
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>@((int)DeliveryTypes.Currier_Service)</td>
+                        <td> Courier Service/කුරියර් සේවය</td>
+                        <td>
+                            @if (dm2.isEnable)
+                            {
+                                <span>Enabled</span>
+                                <a class="btn btn-sm btn-warning" href="/Admin/Configuration/UpdateDeliveryMethod?Id=@((int)DeliveryTypes.Currier_Service)&isEnable=false">Dissable </a>
+
+                            }
+                            else
+                            {
+                                <span>Dissabled</span>
+                                <a class="btn btn-sm btn-success" href="/Admin/Configuration/UpdateDeliveryMethod?Id=@((int)DeliveryTypes.Currier_Service)&isEnable=true">Enable</a>
+
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@((int)DeliveryTypes.In_Store_Pickup)</td>
+                        <td>In Stock Pickup</td>
+                        <td>
+                            @if (dm3.isEnable)
+                            {
+                                <span>Enabled</span>
+                                <a class="btn btn-sm btn-warning" href="/Admin/Configuration/UpdateDeliveryMethod?Id=@((int)DeliveryTypes.In_Store_Pickup)&isEnable=false">Dissable </a>
+
+
+                            }
+                            else
+                            {
+                                <span>Dissabled</span>
+                                <a class="btn btn-sm btn-success" href="/Admin/Configuration/UpdateDeliveryMethod?Id=@((int)DeliveryTypes.In_Store_Pickup)&isEnable=true">Enable</a>
+
+                            }
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@((int)DeliveryTypes.Foreign_Airmail)</td>
+                        <td>Foregn Air mail</td>
+                        <td>
+                            @if (dm4.isEnable)
+                            {
+                                <span>Enabled</span>
+                                <a class="btn btn-sm btn-warning" href="/Admin/Configuration/UpdateDeliveryMethod?Id=@((int)DeliveryTypes.Foreign_Airmail)&isEnable=false">Dissable </a>
+
+
+                            }
+                            else
+                            {
+                                <span>Dissabled</span>
+                                <a class="btn btn-sm btn-success" href="/Admin/Configuration/UpdateDeliveryMethod?Id=@((int)DeliveryTypes.Foreign_Airmail)&isEnable=true">Enable</a>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@((int)DeliveryTypes.EMS)</td>
+                        <td>EMS</td>
+                        <td>
+                            @if (dm5.isEnable)
+                            {
+                                <span>Enabled</span>
+                                <a class="btn btn-sm btn-warning" href="/Admin/Configuration/UpdateDeliveryMethod?Id=@((int)DeliveryTypes.EMS)&isEnable=false">Dissable </a>
+
+
+                            }
+                            else
+                            {
+                                <span>Dissabled</span>
+                                <a class="btn btn-sm btn-success" href="/Admin/Configuration/UpdateDeliveryMethod?Id=@((int)DeliveryTypes.EMS)&isEnable=true">Enable</a>
+                            }
+
+
+                        </td>
+                    </tr>
+                </table>
+
+            </form>
+
+        </div>
+    </div>*@

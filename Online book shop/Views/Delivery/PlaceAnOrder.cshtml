@@ -1,0 +1,293 @@
+﻿@using Newtonsoft.Json;
+@using Online_book_shop.Models;
+@using Online_book_shop.Handlers.Business;
+@using Online_book_shop.Models.ViewModel;
+@using Online_book_shop.Handlers.Helper;
+@using Online_book_shop.Models;
+@{
+    Order order = ViewBag.Order;
+    Cart cart = ViewBag.Cart;
+    string MerchantId = ViewBag.MerchantId;
+    string PayHereUrl = ViewBag.PayHereUrl;
+    Address billing_address= BusinessHandlerAddress.GetAddress(order.BillingAddressId);
+    Address delivery_address = BusinessHandlerAddress.GetAddress(order.DeliveryAddressId);
+    List<PaymentMethod> Obj_payment_option = new List<PaymentMethod>();
+    Configuration conf_payment_option = BusinessHandlerConfigurations.GetConfigByKey("PAYMENT_METHODS");
+    if (conf_payment_option != null && !string.IsNullOrEmpty(conf_payment_option.Value))
+    {
+        Obj_payment_option = JsonConvert.DeserializeObject<List<PaymentMethod>>(conf_payment_option.Value);
+    }
+    PaymentMethod paymentObj = Obj_payment_option.Where(x => x.EnumId == order.PaymentMethod).FirstOrDefault();
+    decimal remainingAmount = cart.AmountAfterDiscount;
+}
+@*<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />*@
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+  
+    @if (cart.Items != null)
+    {
+        <div class="container carttable">
+            <table style="width:100%">
+                <tr>
+                    <th>Book Name</th>
+                    <th>&nbsp;</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Discount</th>
+                    <th>Net Total</th>
+                </tr>
+                @foreach (Cart_Book cb in cart.Items)
+                {
+                    BookVMTile b = BusinessHandlerBook.GetSearchedBookForView(cb.BookId);
+                    <tr>
+
+                        <td>@b.BookName</td>
+                        <td>
+                            @{
+                                BookProperties p = b.Property.Where(x => x.Id == cb.BookPropertyId).FirstOrDefault();
+                                if (p != null)
+                                {
+                                    <span>@p.Title</span>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                }
+                            }
+                        </td>
+                        <td>
+                            <span>@cb.NumberOfItems</span>
+                        </td>
+                        <td>Rs : @cb.AmountBeforeDiscount</td>
+                        <td>Rs : @cb.Discount</td>
+                        <td>Rs : @cb.AmountAfterDiscount</td>
+                    </tr>
+                }
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>@cart.Items.Count Item(s)</td>
+                    <td>Rs : @cart.AmountBeforeDiscount</td>
+                    <td>Rs : @cart.Discount</td>
+                    <td>Rs : @cart.AmountAfterDiscount</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <h4>Delivery Charges</h4>
+                        @if ((int)DeliveryTypes.Postal_Service == order.DeliveryMethod)
+                        {
+                            <span>(Postal)</span>
+                        }
+                        else if ((int)DeliveryTypes.Currier_Service == order.DeliveryMethod)
+                        {
+                            <span>(Courier)</span>
+                        }
+                        else if ((int)DeliveryTypes.In_Store_Pickup == order.DeliveryMethod)
+                        {
+                            <span>(In Stock Pickup)</span>
+                        }
+                        else if ((int)DeliveryTypes.Foreign_Airmail == order.DeliveryMethod)
+                        {
+                            <span>(Airmail)</span>
+                        }
+                        else if ((int)DeliveryTypes.EMS == order.DeliveryMethod)
+                        {
+                            <span>(EMS)</span>
+                        }
+                    </td>
+                    <td><h4>Rs : @order.DeliveryCharges</h4></td>
+                </tr>
+                <tr class="grandtotal">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><h3>Total Amount</h3></td>
+                    <td><h3>Rs : @(cart.AmountAfterDiscount + order.DeliveryCharges)</h3></td>
+                </tr>
+                @{
+                    decimal AmountTobeCollected = cart.AmountAfterDiscount + order.DeliveryCharges;
+                    if (!string.IsNullOrEmpty(cart.VoucherCode))
+                    {
+                        Voucher voucher = BusinessHandlerVoucher.GetActiveVoucherByCode(cart.VoucherCode);
+                        remainingAmount = (cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount;
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><h4>Voucher Added (@voucher.Code)</h4></td>
+                            <td><h4>Rs : @voucher.VoucherAmount</h4></td>
+                        </tr>
+                        if ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount > -1)
+                        {
+                            AmountTobeCollected = ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount);
+                            <tr class="grandtotal">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><h3>Remaining Payment</h3></td>
+                                <td><h3>Rs : @((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount)</h3></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            AmountTobeCollected = 0;
+                            <tr class="grandtotal">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><h3>Remaining Payment</h3></td>
+                                <td><h3>Rs : 0.00</h3></td>
+                            </tr>
+                        }
+
+                    }
+                }
+            </table>
+            @{
+                string domain = Request.Url.ToString().Replace(Request.Url.AbsolutePath, "");
+                string formSubmitUrl = PayHereUrl;
+                if (remainingAmount < 0 || remainingAmount == 0)
+                {
+                    formSubmitUrl = "/Delivery/OrderConfirmation?Ref=" + order.UId;
+                }
+            }
+            <form id="frm-payment-details" method="post" action="@formSubmitUrl">
+                <input type="hidden" name="merchant_id" value="@MerchantId">    <!-- Replace your Merchant ID -->
+                <input type="hidden" name="return_url" value="@domain/Payment/PaymentResponse?state=done">
+                <input type="hidden" name="cancel_url" value="@domain/Payment/PaymentResponse?state=cancel">
+                <input type="hidden" name="notify_url" value="@domain/Payment/PaymentResponse?state=notify">
+                <input type="hidden" name="order_id" value="@order.UId">
+                <input type="hidden" name="items" value="Online Muses Book Store : @order.UId"><br>
+                <input type="hidden" name="currency" value="LKR">
+                <input type="hidden" name="amount" value="@AmountTobeCollected">
+
+
+                <div class="col-lg-12">
+                    <div class="col-lg-4">
+                        <h3>Billing Address</h3>
+                        @*<div>@billing_address.FirstName @billing_address.LastName</div>*@
+                        <div>@order.BillingAddress</div>
+                        <div>@order.EmailAddress</div>
+                        <div>@billing_address.ContactNumber1</div>
+                        <div>@billing_address.ContactNumber2</div>
+                    </div>
+                    <div class="col-lg-4">
+                        <h3>Deliver Address</h3>
+                        <div>@delivery_address.FirstName @delivery_address.LastName</div>
+                        <div>@order.DeliveryAddress</div>
+                        <div>@delivery_address.EmailAddress</div>
+                        <div>@delivery_address.ContactNumber1</div>
+                        <div>@delivery_address.ContactNumber2</div>
+                    </div>
+                    <div class="col-lg-4">
+
+                    </div>
+                </div>
+                @if (!string.IsNullOrEmpty(paymentObj.Message))
+                {
+                    <div class="col-lg-12">
+                        <div class="alert alert-info bg-info h5" role="alert">
+                            <strong>Payment:</strong> @Html.Raw(paymentObj.Message.Replace("\n", "<br />"))
+                        </div>
+                    </div>
+                }
+                <div class="col-lg-12">
+
+                    <div class="form-check float-right margin-top-5px">
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckAgreed">
+                        <label class="form-check-label" for="flexCheckAgreed">
+                            <strong>
+                                I have read and agreed to the terms and conditions and privacy
+                                policy.
+                            </strong>
+                        </label>
+                    </div>
+
+                </div>
+                <div class="col-lg-12">
+                    <a href="/Delivery?order=@order.UId"><strong class="text-danger font-weight-bolder link-bold-text-danger"><i class="fas fa-backward"></i> Go Back</strong></a>
+                    <input id="cp-confirm-btn" data-order-id="@order.Id" disabled class="btn float-right po-confirm-btn" type="submit" value="Pay">
+                </div>
+                <input type="hidden" name="first_name" value="@billing_address.FirstName">
+                <input type="hidden" name="last_name" value="@billing_address.LastName"><br>
+                <input type="hidden" name="email" value="@billing_address.EmailAddress">
+                <input type="hidden" name="phone" value="@billing_address.ContactNumber1"><br>
+                <input type="hidden" name="address" value="@order.BillingAddress">
+                <input type="hidden" name="city" value="@billing_address.City">
+                <input type="hidden" name="country" value="@billing_address.Country">
+            </form>
+
+
+
+        </div>
+    }
+</div>
+
+@*<form method="post" action="/Delivery/Payment">
+
+        <div class="row">
+            <div class="col-50">
+                <h3>Billing Address</h3>
+                <label>
+                    <input type="checkbox" checked="checked" name="sameadr"> Billing address same as delivery
+                </label>
+                <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+                <input type="text" id="name" name="name" value="@order.FirstName @order.LastName" placeholder="John M. Doe">
+                <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                <input type="text" id="email" name="email" value="@order.EmailAddress" placeholder="john@example.com">
+                <label for="adr"><i class="fa fa-address-card-o"></i> Address</label>
+                <input type="text" id="adr" name="address" value="@order.DeliveryAddress" placeholder="542 W. 15th Street">
+                <label for="city"><i class="fa fa-institution"></i> City</label>
+                <input type="text" id="city" name="city" value="@order.AreaId" placeholder="New York">
+
+                <div class="row">
+                    <div class="col-50">
+                        <label for="state">State</label>
+                        <input type="text" id="state" value="@order.AreaId" name="state" placeholder="NY">
+                    </div>
+                    <div class="col-50">
+                            <label for="zip">Zip</label>
+                            <input type="text" id="zip" name="zip" placeholder="10001">
+                        </div>
+                </div>
+            </div>
+
+            <div class="col-50">
+                <h3>Payment</h3>
+                <label for="fname">Accepted Cards</label>
+                <div class="icon-container">
+                    <i class="fa fa-cc-visa" style="color:navy;"></i>
+                    <i class="fa fa-cc-amex" style="color:blue;"></i>
+                    <i class="fa fa-cc-mastercard" style="color:red;"></i>
+                    <i class="fa fa-cc-discover" style="color:orange;"></i>
+                </div>
+                <label for="cname">Name on Card</label>
+                <input type="text" id="cname" name="cardname" placeholder="John More Doe">
+                <label for="ccnum">Credit card number</label>
+                <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
+                <label for="expmonth">Exp Month</label>
+                <input type="text" id="expmonth" name="expmonth" placeholder="September">
+                <div class="row">
+                    <div class="col-50">
+                        <label for="expyear">Exp Year</label>
+                        <input type="text" id="expyear" name="expyear" placeholder="2018">
+                    </div>
+                    <div class="col-50">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" name="cvv" placeholder="352">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <input type="submit" value="Continue to checkout" class="btn">
+    </form>*@

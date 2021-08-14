@@ -1,0 +1,15 @@
+﻿@using Online_book_shop.Models;
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    DeliverStatus obj = ViewBag.DeliverStatus;
+}
+
+<form id="form-add-category" method="post" action="/Admin/DeliverStatus/Edit" enctype="multipart/form-data">
+    <input type="hidden" name="Id" value="@obj.Id" />
+    <div class="form-group">
+        <label>Display Title</label>
+        <input type="text" value="@obj.DisplayText" class="form-control" id="DisplayText" name="DisplayText" placeholder="Display Text">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

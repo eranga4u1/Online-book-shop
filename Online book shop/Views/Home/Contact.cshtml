@@ -1,0 +1,96 @@
+﻿@using Online_book_shop.Models.ViewModel;
+@{
+    ContactVM contactVM = ViewBag.contactVM ;
+}
+
+    <div class="container contact">
+        <h2>CONTACT US</h2>
+        <div class="col-lg-12 row" style="padding-bottom:40px;">
+            @contactVM.Description
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <address>
+                    @if (!string.IsNullOrEmpty(contactVM.AddressLine1))
+                    {
+                        @contactVM.AddressLine1 <br />
+                    }
+                    @if (!string.IsNullOrEmpty(contactVM.AddressLine2))
+                    {
+                        @contactVM.AddressLine2<br />
+                    }
+                    @if (!string.IsNullOrEmpty(contactVM.AddressLine3))
+                    {
+                        @contactVM.AddressLine3 <br />
+                    }
+                    @if (!string.IsNullOrEmpty(contactVM.Phone1))
+                    {
+                        <abbr title="Phone">P:</abbr>
+                        @contactVM.Phone1
+                    }
+                    @if (!string.IsNullOrEmpty(contactVM.Phone2))
+                    {
+                        <abbr title="Phone">P:</abbr>
+                        @contactVM.Phone2
+                    }
+                    @if (!string.IsNullOrEmpty(contactVM.Phone3))
+                    {
+                        <abbr title="Phone">P:</abbr>
+                        @contactVM.Phone3
+                    }
+
+                </address>
+
+                <address>
+                    @if (!string.IsNullOrEmpty(contactVM.Email1))
+                    {
+                        <strong>Support:</strong> <a href="mailto:@contactVM.Email1">@contactVM.Email1</a><br />
+                    }
+                    @if (!string.IsNullOrEmpty(contactVM.Email2))
+                    {
+                        <strong>Marketing:</strong> <a href="mailto:@contactVM.Email2">@contactVM.Email2</a><br />
+                    }
+                    @if (!string.IsNullOrEmpty(contactVM.Email3))
+                    {
+                        <strong>Other:</strong> <a href="mailto:@contactVM.Email3">@contactVM.Email3</a><br />
+                    }
+                    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
+                </address>
+            </div>
+            <div class="col-sm-8">
+                <div class="contactus-form-wrapper">
+                    <form action="/Home/SendContactUsEmail" method="post" class="contact-form  col-sm-8">
+                        <div class="form-group">
+                            <label class="control-label" for="yourName">Your Name</label>
+                            <div class="">
+                                <input class="form-control" data-val="" data-val-required="Your name field is required." id="yourname" name="yourname" type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="Email">Email</label>
+                            <div class="">
+                                <input class="form-control" data-val="true" data-val-email="The Email field is not a valid e-mail address." data-val-required="The Email field is required." id="Email" name="Email" type="text" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="contactnumber">Contact Number</label>
+                            <div class="">
+                                <input class="form-control" id="contactnumber" name="contactnumber" type="number" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="message">Message</label>
+                            <div class="">
+                                <textarea class="message" name="message"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="">
+                                <input type="submit" class="btn btn-default" value="Submit">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>        
+    </div>

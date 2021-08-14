@@ -1,0 +1,583 @@
+﻿@using Online_book_shop.Handlers.Business;
+@using Online_book_shop.Models;
+@using Online_book_shop.Models.ViewModel;
+@{
+    ViewBag.Title = "Index";
+    int selected_delivery_address = 0;
+    int selected_billing_address = 0;
+    string selected_country = "Sri Lanka";
+    string selected_district = "colombo";
+
+    List<DeliveryCharge> postalCharges = ViewBag.PostalDeliveryCharges;
+    List<DeliveryCharge> courierCharges = ViewBag.CourierCharges;
+    List<string> countries = ViewBag.Countries;
+    List<string> district = ViewBag.District;
+    ApplicationUser user = ViewBag.User;
+    Cart cart = ViewBag.Cart;
+    List<PaymentMethod> Obj_payment_option = ViewBag.PaymenOption;
+    List<Address> address = ViewBag.Addreses;
+    Address default_address = address != null ? (address.Where(x => x.isDefaultAddress).FirstOrDefault()) : null;
+    Order order = null;
+    if (!string.IsNullOrEmpty(Request.QueryString["order"]))
+    {
+        order = BusinessHandlerDelivery.Get(Request.QueryString["order"]);
+    }else if(Session["cart"] != null)
+    {
+        Cart _cart = Session["cart"] as Cart;
+        if(_cart !=null &&  !string.IsNullOrEmpty(_cart.OrderId)) {
+            order = BusinessHandlerDelivery.Get(_cart.OrderId);
+        }
+    }
+    if (default_address != null)
+    {
+        selected_delivery_address = default_address.Id;
+        selected_billing_address = default_address.Id;
+        selected_country = default_address.Country;
+        selected_district = default_address.District;
+    }
+    else if (address != null && address.Count > 0)
+    {
+        selected_delivery_address = address.FirstOrDefault().Id;
+        selected_billing_address = address.FirstOrDefault().Id;
+        selected_country = address.FirstOrDefault().Country;
+        selected_district = address.FirstOrDefault().District;
+    }
+    string active_tab = Request.QueryString["open"];
+
+
+
+
+    List<string> countryList = BusinessHandlerDeliveryCharges.GetEnabledCountryForDelivery();
+    if (order != null)
+    {
+        selected_delivery_address = order.DeliveryAddressId;
+        selected_billing_address = order.BillingAddressId;
+    }
+    if (!string.IsNullOrEmpty(Request.QueryString["open"]) && (Request.QueryString["open"] == "delivery_address" || Request.QueryString["open"] == "billing_address"))
+    {
+        if (!string.IsNullOrEmpty(Request.QueryString["delivery"]) && Request.QueryString["open"] == "delivery_address")
+        {
+            selected_delivery_address = int.Parse(Request.QueryString["delivery"]);
+
+        }
+        else if (!string.IsNullOrEmpty(Request.QueryString["billing"]))
+        {
+            selected_billing_address = int.Parse(Request.QueryString["billing"]);
+        }
+    }
+
+    Address obj_address = BusinessHandlerAddress.GetAddress(selected_delivery_address);
+    if (!string.IsNullOrEmpty(Request.QueryString["billing"]))
+    {
+        selected_billing_address = Convert.ToInt32(Request.QueryString["billing"]);
+    }
+}
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
+
+
+    <form id="frm-delivery-details" action="/Delivery/PlaceAnOrder" method="post" class="deliveryform page-content">
+        @if (order != null)
+        {
+            <input type="hidden" value="@order.UId" name="UId" />
+        }
+        <div class="bookcat-col @((string.IsNullOrEmpty(active_tab) || active_tab=="billing_address")?"active":"")">
+            <h3 class="acordian-tab up-acordian-tab" id="up-acordian-tab-ba">Account And Billing Details</h3>
+            <div class="book-overview" id="muses-deliveryform-billing">
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            @*<input type="radio" class="form-control" id="billing_address_book" name="billing_address_selection" checked value="billing_from_book">*@
+                            <div class="form-group">
+                                <label> Use Existing Address</label>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <select id="billing_address_selected_address" class="address_selection form-control" name="BillingAddressId">
+                                    @if (address != null)
+                                    {
+
+                                        foreach (var a in address)
+                                        {
+                                            if (selected_billing_address > 0)
+                                            {
+                                                <option @((a.Id == selected_billing_address) ? "selected" : "") value="@a.Id">@a.FirstName @a.LastName (@a.AddressLine01,@a.AddressLine02,@a.AddressLine03,@a.City)</option>
+
+                                            }
+                                            else
+                                            {
+                                                <option @(a.isDefaultAddress ? "selected" : "") value="@a.Id">@a.FirstName @a.LastName (@a.AddressLine01,@a.AddressLine02,@a.AddressLine03,@a.City)</option>
+
+                                            }
+                                        }
+
+                                    }
+
+                                </select>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="btn btn-danger btn-sm btn-add-new-address" data-type="billing">Use New Billing Address</span>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+        <div class="bookcat-col @((!string.IsNullOrEmpty(active_tab)&&active_tab=="delivery_address")?"active":"")">
+            <h3 class="acordian-tab up-acordian-tab" id="up-acordian-tab-dd">Delivery Details</h3>
+            <div class="book-overview" id="muses-deliveryform-delivery">
+                <table style="width:100%">
+                    <tr>
+                        <td>
+                            @*<input type="radio" id="delivery_address_book" name="delivery_address_selection" checked value="delivery_from_book">*@
+                            <div class="form-group">
+                                <label> Use Existing Address</label>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <select class="address_selection form-control delivery-form-delivery_address" id="delivery_address_selected_address" name="DeliveryAddressId">
+                                    @if (address != null)
+                                    {
+                                        foreach (var a in address)
+                                        {
+                                            if (selected_delivery_address > 0)
+                                            {
+                                                if (a.Id == selected_delivery_address)
+                                                {
+                                                    selected_district = a.District;
+                                                    <option selected value="@a.Id">@a.FirstName @a.LastName (@a.AddressLine01,@a.AddressLine02,@a.AddressLine03,@a.City)</option>
+
+                                                }
+                                                else
+                                                {
+                                                    <option value="@a.Id">@a.FirstName @a.LastName (@a.AddressLine01,@a.AddressLine02,@a.AddressLine03,@a.City)</option>
+                                                }
+
+                                            }
+                                            else
+                                            {
+
+                                                if (a.isDefaultAddress)
+                                                {
+                                                    selected_district = a.District;
+                                                    <option selected value="@a.Id">@a.FirstName @a.LastName (@a.AddressLine01,@a.AddressLine02,@a.AddressLine03,@a.City)</option>
+
+                                                }
+                                                else
+                                                {
+                                                    <option value="@a.Id">@a.FirstName @a.LastName (@a.AddressLine01,@a.AddressLine02,@a.AddressLine03,@a.City)</option>
+
+                                                }
+
+                                            }
+                                        }
+
+                                    }
+                                    else
+                                    {
+
+                                    }
+                                </select>
+                            </div>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="btn btn-danger btn-sm btn-add-new-address" data-type="delivery">Use New Delivery Address</span>
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+        <div class="bookcat-col  @((!string.IsNullOrEmpty(active_tab)&&active_tab=="delivery_method")?"active":"")">
+            <h3 class="acordian-tab up-acordian-tab" id="up-acordian-tab-dm">Delivery Methods</h3>
+            <div class="book-overview" id="muses-deliveryform-delivery-methods">
+                @if (order != null)
+                {
+                    <input id="DeliveryMethod" type="hidden" name="DeliveryMethod" value="@order.DeliveryMethod" />
+                }
+                else
+                {
+                    <input id="DeliveryMethod" type="hidden" name="DeliveryMethod" value="1" />
+                }
+
+
+                <div class="col-lg-12">
+                    <div class="col-lg-6">
+                        <h6>If you wish to estimate your delivery cost, choose your delivery method.</h6>
+                        <div id="df-delivery_method">
+                            @if (obj_address != null && obj_address.Country != "Sri Lanka")
+                            {
+                                <div class="col-lg-12">
+                                    <input type="radio" id="post" name="delivery_method" checked value="post">
+                                    <label>Post Service/තැපැල් සේවය හරහා</label><br />
+                                    (තැපෑලෙන් පොත් ගෙන්වා ගැනීමේදී මුදල් ගෙවීම පළමුව සිදු කළ යුතුය. මෙහිදී Cash on delivery සේවාව ක්‍රියාත්මක නොවේ.)
+                                    (* ඔබ යොමුකරන්නේ පෙර ඇනවුමක් නම් සහ මුදල් ගෙවන ආකරය Bank Deposit හෝ Online Tranfer නම්, පෙර ඇනවුම් බාරගන්නා අවසාන දිනයට පෙර මුදල් ගෙවීම සිදු කළ යුතුය.)
+                                </div>
+                            }
+                            else if (default_address != null && default_address.Country != "Sri Lanka")
+                            {
+                                <div class="col-lg-12">
+                                    <input type="radio" id="post" name="delivery_method" checked value="post">
+                                    <label>Post Service/තැපැල් සේවය හරහා</label><br />
+                                    (තැපෑලෙන් පොත් ගෙන්වා ගැනීමේදී මුදල් ගෙවීම පළමුව සිදු කළ යුතුය. මෙහිදී Cash on delivery සේවාව ක්‍රියාත්මක නොවේ.)
+                                    (* ඔබ යොමුකරන්නේ පෙර ඇනවුමක් නම් සහ මුදල් ගෙවන ආකරය Bank Deposit හෝ Online Tranfer නම්, පෙර ඇනවුම් බාරගන්නා අවසාන දිනයට පෙර මුදල් ගෙවීම සිදු කළ යුතුය.)
+                                </div>
+                            }
+                            else if (order != null)
+                            {
+                                <div class="col-lg-12">
+                                    <input type="radio" id="post" name="delivery_method" @((order.DeliveryMethod == (int)DeliveryTypes.Postal_Service) ? "checked" : "") value="post">
+                                    <label>Post Service/තැපැල් සේවය හරහා</label><br />
+                                    (තැපෑලෙන් පොත් ගෙන්වා ගැනීමේදී මුදල් ගෙවීම පළමුව සිදු කළ යුතුය. මෙහිදී Cash on delivery සේවාව ක්‍රියාත්මක නොවේ.)
+                                    (* ඔබ යොමුකරන්නේ පෙර ඇනවුමක් නම් සහ මුදල් ගෙවන ආකරය Bank Deposit හෝ Online Tranfer නම්, පෙර ඇනවුම් බාරගන්නා අවසාන දිනයට පෙර මුදල් ගෙවීම සිදු කළ යුතුය.)
+                                </div>
+                                <div class="col-lg-12">
+                                    <input type="radio" id="courier" @((order.DeliveryMethod == (int)DeliveryTypes.Currier_Service) ? "checked" : "") name="delivery_method" value="courier">
+                                    <label>Courier Service/කුරියර් සේවය </label><br />
+                                    (මුදල් ගෙවීම පොත් ලැබුණු පසුව හෝ පොත් ලැබීමට පෙර සිදුකළ හැකිය.)
+                                </div>
+                                if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 4).FirstOrDefault() != null)
+                                {
+                                    <div class="col-lg-12">
+                                        <input type="radio" id="courier" @((order.DeliveryMethod == (int)DeliveryTypes.In_Store_Pickup) ? "checked" : "") name="delivery_method" value="in_store_pickup">
+                                        <label>In-store pickup (Ganemulla shop)</label><br />
+                                    </div>
+                                }
+
+                            }
+                            else
+                            {
+                                <div class="col-lg-12">
+                                    <input type="radio" id="post" name="delivery_method" value="post">
+                                    <label>Post Service/තැපැල් සේවය හරහා</label><br />
+                                    (තැපෑලෙන් පොත් ගෙන්වා ගැනීමේදී මුදල් ගෙවීම පළමුව සිදු කළ යුතුය. මෙහිදී Cash on delivery සේවාව ක්‍රියාත්මක නොවේ.)
+                                    (* ඔබ යොමුකරන්නේ පෙර ඇනවුමක් නම් සහ මුදල් ගෙවන ආකරය Bank Deposit හෝ Online Tranfer නම්, පෙර ඇනවුම් බාරගන්නා අවසාන දිනයට පෙර මුදල් ගෙවීම සිදු කළ යුතුය.)
+                                </div>
+                                <div class="col-lg-12">
+                                    <input type="radio" id="courier" name="delivery_method" checked value="courier">
+                                    <label>Courier Service/කුරියර් සේවය </label><br />
+                                    (මුදල් ගෙවීම පොත් ලැබුණු පසුව හෝ පොත් ලැබීමට පෙර සිදුකළ හැකිය.)
+                                </div>
+                                if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 4).FirstOrDefault() != null)
+                                {
+                                    <div class="col-lg-12">
+                                        <input type="radio" id="In_Store_Pickup" name="delivery_method" value="in_store_pickup">
+                                        <label>In-store pickup (Ganemulla shop)</label>
+                                    </div>
+                                }
+
+                            }
+
+                        </div>
+
+                        @if (selected_delivery_address > 0)
+                        {
+                            <input type="hidden" name="country" id="country" value="@obj_address.Country" />
+                            <input type="hidden" name="AreaId" id="shoping-cart-district-selection" value="@selected_district" />
+                        }
+                        else if (default_address != null)
+                        {
+                            <input type="hidden" name="country" id="country" value="@default_address.Country" />
+                            <input type="hidden" name="AreaId" id="shoping-cart-district-selection" value="@default_address.District" />
+                        }
+                        else
+                        {
+                            <input type="hidden" name="country" id="country" value="Sri Lanka" />
+                            <input type="hidden" name="AreaId" id="shoping-cart-district-selection" value="Colombo" />
+                        }
+
+
+                    </div>
+                    <div class="col-lg-6">
+                        <h6>Shipping Estimate</h6>
+                        <table class="col-lg-12">
+                            <tr>
+                                <td class="col-lg-6">
+                                    Total
+                                </td>
+                                <td class="col-lg-6">
+                                    Rs. <span id="cart-amout">@cart.AmountAfterDiscount</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-lg-6">
+                                    Package Weight
+                                </td>
+                                <td class="col-lg-6">
+                                    @{
+                                        decimal weight = @BusinessHandlerShopingCart.GetTotalWeightForCart(cart);
+                                    }
+                                    <span id="cart-weight">@weight</span>  g
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-lg-6">
+                                    Delivery Cost
+                                </td>
+                                <td class="col-lg-6">
+                                    @{
+                                        decimal deliveryCost = BusinessHandlerDeliveryCharges.GetDeliveryCharge(weight, DeliveryTypes.Currier_Service, selected_district, selected_country);
+                                    }
+
+                                    @if (order != null)
+                                    {
+                                        deliveryCost = order.DeliveryCharges;
+                                    }
+
+                                    Rs. <span id="cart-delivery-cost">@deliveryCost</span>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-lg-6">
+                                    Total With Delivery Charges
+                                </td>
+                                <td class="col-lg-6">
+                                    Rs.<spn id="cart-delivery-total">@(cart.AmountAfterDiscount+ deliveryCost)</spn>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                @*<div class="col-lg-12">
+                        <label>Special Note</label>
+                        <textarea id="delivery_special_note" name="DeliverySpecialNote"></textarea>
+                    </div>*@
+
+            </div>
+        </div>
+        @if (!string.IsNullOrEmpty(cart.VoucherCode))
+        {
+            Voucher voucher = BusinessHandlerVoucher.GetActiveVoucherByCode(cart.VoucherCode);
+            if (voucher.VoucherAmount > cart.AmountAfterDiscount || voucher.VoucherAmount == cart.AmountAfterDiscount)
+            {
+                <div id="payment-section" class="bookcat-col @((!string.IsNullOrEmpty(active_tab)&&active_tab=="payment_method")?"active":"")">
+                    <h3 class="acordian-tab up-acordian-tab" id="up-acordian-tab-pm">Payment Methods</h3>
+                    <div class="book-overview" id="muses-deliveryform-payment-methods">
+                        <h5>Your final amount will be deducted from added voucher.</h5>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div id="payment-section" class="bookcat-col @((!string.IsNullOrEmpty(active_tab)&&active_tab=="payment_method")?"active":"")">
+                    <h3 class="acordian-tab up-acordian-tab" id="up-acordian-tab-pm">Payment Methods</h3>
+                    <div class="book-overview" id="muses-deliveryform-payment-methods">
+                        <input type="hidden" name="PaymentMethod" id="PaymentMethod" value="1" />
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                @{
+
+                                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 0).FirstOrDefault() != null)
+                                    {
+                                        <div id="cod-section" class=@((order !=null && order.DeliveryMethod==(int)DeliveryTypes.Currier_Service)?"":"display-none")>
+                                            <input type="radio" id="payment_methods_cod" @((order != null && order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery) ? "checked" : "") name="payment_methods" value="0">
+                                            <label> Cash on delivery</label>
+                                        </div>
+                                    }
+                                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 2).FirstOrDefault() != null)
+                                    {
+                                        <div>
+                                            <input type="radio" id="payment_methods_bank_transfer" @((order != null && order.PaymentMethod == (int)PaymentMethods.Bank_Deposit) ? "checked" : "") name="payment_methods" value="2">
+                                            <label>Bank deposit/ Online transfer</label>
+                                        </div>
+                                    }
+                                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 3).FirstOrDefault() != null)
+                                    {
+                                        <div>
+                                            <input type="radio" id="payment_methods_ez_cash" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.Ez_cash) ? "checked" : "") value="3">
+                                            <label>EzCash</label>
+                                        </div>
+                                    }
+                                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 4).FirstOrDefault() != null)
+                                    {
+                                        <div id="isp-section" class=@((order !=null && order.DeliveryMethod==(int)DeliveryTypes.In_Store_Pickup)?"":"display-none")>
+                                            <input type="radio" id="payment_methods_in-store payment" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.In_store_payment) ? "checked" : "") value="4">
+                                            <label>In-store payment</label>
+                                        </div>
+                                    }
+                                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 1).FirstOrDefault() != null)
+                                    {
+                                        <div>
+                                            <input type="radio" id="payment_methods_credit_card" name="payment_methods" @((order == null || (order != null && order.PaymentMethod == (int)PaymentMethods.Online_Payment) ? "checked" : "")) value="1">
+                                            <label>Credit Debit cards</label>
+                                        </div>
+                                    }
+
+                                }
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label>Special Note</label>
+                                    <textarea name="PaymentSpecialNote" id="payment_special_note">@(order !=null?order.PaymentSpecialNote:"")</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            }
+            <input type="hidden" id="voucher-amount" value="@voucher.VoucherAmount" />
+        }
+        else
+        {
+            <div id="payment-section" class="bookcat-col @((!string.IsNullOrEmpty(active_tab)&&active_tab=="payment_method")?"active":"")">
+                <h3 class="acordian-tab up-acordian-tab" id="up-acordian-tab-pm">Payment Methods</h3>
+                <div class="book-overview" id="muses-deliveryform-payment-methods">
+                    <input type="hidden" name="PaymentMethod" id="PaymentMethod" value="1" />
+                    <div class="col-lg-12">
+                        <div class="col-lg-6">
+                            @{
+
+                                if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 0).FirstOrDefault() != null)
+                                {
+                                    <div id="cod-section" class=@(((order !=null && order.DeliveryMethod==(int)DeliveryTypes.Currier_Service && order.DeliveryMethod!=(int)DeliveryTypes.Postal_Service)) || order ==null?"":"display-none")>
+                                        <input type="radio" id="payment_methods_cod" @((order != null && order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery) ? "checked" : "") name="payment_methods" value="0">
+                                        <label> Cash on delivery</label>
+                                    </div>
+                                }
+                                if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 2).FirstOrDefault() != null)
+                                {
+                                    <div>
+                                        <input type="radio" id="payment_methods_bank_transfer" @((order != null && order.PaymentMethod == (int)PaymentMethods.Bank_Deposit) ? "checked" : "") name="payment_methods" value="2">
+                                        <label>Bank deposit/ Online transfer</label>
+                                    </div>
+                                }
+                                if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 3).FirstOrDefault() != null)
+                                {
+                                    <div>
+                                        <input type="radio" id="payment_methods_ez_cash" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.Ez_cash) ? "checked" : "") value="3">
+                                        <label>EzCash</label>
+                                    </div>
+                                }
+                                if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 4).FirstOrDefault() != null)
+                                {
+                                    <div id="isp-section" class=@((order !=null && order.DeliveryMethod==(int)DeliveryTypes.In_Store_Pickup)?"":"display-none")>
+                                        <input type="radio" id="payment_methods_in-store payment" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.In_store_payment) ? "checked" : "") value="4">
+                                        <label>In-store payment</label>
+                                    </div>
+                                }
+                                if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 1).FirstOrDefault() != null)
+                                {
+                                    <div>
+                                        <input type="radio" id="payment_methods_credit_card" name="payment_methods" @((order == null || (order != null && order.PaymentMethod == (int)PaymentMethods.Online_Payment) ? "checked" : "")) value="1">
+                                        <label>Credit Debit cards</label>
+                                    </div>
+                                }
+
+                            }
+
+                        </div>
+                        <div class="col-lg-6">
+                            <div>
+                                <label>Special Note</label>
+                                <textarea name="PaymentSpecialNote" id="payment_special_note">@(order !=null?order.PaymentSpecialNote:"")</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <input type="hidden" id="voucher-amount" value="0" />
+        }
+
+
+        <input class="float-right" type="submit" value="Next Step">
+    </form>
+    <div class="col-lg-12 margin-bottom-25 pop-up-content" style="display:none;" id="form-new-address" tabindex="-1" role="dialog" aria-labelledby="new address">
+
+        <div class="modal-content">
+            <div class="modal-container col-lg-12">
+                <h3>New Address</h3>
+                <form id="frm-address">
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="fname">First Name</label>
+                        <input type="text" id="FirstName" name="FirstName" placeholder="Your name..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="lname">Last Name</label>
+                        <input type="text" id="LastName" name="LastName" placeholder="Your last name..">
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Contact Number ( ex: - 07xxxxxxxx )</label>
+                        <input type="text" id="ContactNumber1" name="ContactNumber1" placeholder="Contact Number..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Additional Contact Number ( ex: - 07xxxxxxxx )</label>
+                        <input type="text" id="ContactNumber2" name="ContactNumber2" placeholder="Additional Contact Numbere..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Address Line 01</label>
+                        <input type="text" id="AddressLine01" name="AddressLine01" placeholder="Address Line 01..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Address Line 02</label>
+                        <input type="text" id="AddressLine02" name="AddressLine02" placeholder="Address Line 02..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Address Line 03</label>
+                        <input type="text" id="AddressLine03" name="AddressLine03" placeholder="Address Line 03..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">City/State</label>
+                        <input type="text" id="City" name="City" placeholder="City/State..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Email</label>
+                        <input type="text" id="EmailAddress" name="EmailAddress" placeholder="Email..">
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="subject">Postal code</label>
+                        <input type="text" id="PostalCode" name="PostalCode" placeholder="Postal code..">
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label id="lbl-district" for="District">District</label><br />
+                        <select id="District" name="District" class="col-lg-12">
+                            <option value="not selected">--Select--</option>
+                            @foreach (string d in district)
+                            {
+                                <option value="@d">@d</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12">
+                        <label for="country">Country</label><br />
+                        <select id="Country" name="Country" class="col-lg-12">
+                            <option value="not selected">--Select--</option>
+                            @foreach (string country in countries)
+                            {
+                                <option @(country == "Sri Lanka" ? "selected" : "") value="@country">@country</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 text-right">
+                        <button type="button" class="btn margin-top-5px margin-bottom-25 btn-danger close-pop-up">Cancel</button>
+                        <button type="button" class="btn margin-top-5px margin-bottom-25 btn-info btn-update-address" data-type="user-profile-new">Update Address Book</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+

@@ -1,0 +1,46 @@
+﻿@using Online_book_shop.Handlers.Business;
+@{
+    var order = ViewBag.Order;
+}
+
+<!DOCTYPE html>
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>OrderConfirmation</title>
+</head>
+<body>
+    <div class="container">
+        <div class="succsess-message">
+
+            @if (order != null)
+            {
+                if (ViewBag.Message != null)
+                {
+                    <p>ViewBag.Message</p>
+                }
+                else
+                {
+                    <p></p>
+                }
+                <p>
+                    Your Order Has Submited successfully.  <a target="_blank" href="/Invoice/Find?uid=@order.UId">
+                        Please follow this link for view your invoice.
+                    </a>
+                </p>
+                <p>Reference for further enquiries: @order.UId</p>
+            }
+            else
+            {
+                BusinessHandlerMPLog.Log(LogType.Message,"Order is null and cant show invoice id to this user", "Payment Response", "Payment Response page") ;
+                <p> Your order has placed, Our Agent will contact you soon.</p>
+            }
+
+
+
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,482 @@
+﻿@using Online_book_shop.Models;
+@using Microsoft.AspNet.Identity;
+@using Online_book_shop.Handlers.Business;
+@using Online_book_shop.Models.ViewModel;
+<!DOCTYPE html>
+<html>
+@{
+    var controllerName = HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString();
+    int ActiveMenu = BusinessHandlerActiveMenu.GetActiveMenuByController(controllerName.ToLower(), ViewBag.MethodName != null ? ViewBag.MethodName : null);
+    List<MenuItem> menus = BusinessHandlerConfigurations.GetHomeTopNavigationMenus();
+    List<MenuItem> footermenus = BusinessHandlerConfigurations.GetHomeFooterNavigationMenus();
+    SocialNetworkURLs SNU = BusinessHandlerConfigurations.GetSocialMediaURLs();
+    List<Author> allAuthors = BusinessHandlerAuthor.GetAuthors();
+    string Obj__contactNumbers = BusinessHandlerConfigurations.GetHomeContactNumber();
+   
+    MetaData metaData = ViewBag.MetaValues;
+}
+<head>
+    @*SEO Section*@
+
+    <title>Muses Books - @((metaData !=null &&!string.IsNullOrEmpty(metaData.Title))? metaData.Title : "TODAY A READER TOMORROW A LEADER")</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="description" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Description))? metaData.Description : " Muses Publishing House (Pvt) Ltd is recognized as one of the most dynamic and creative Publishing House in Sri Lanka. Established in 2017, the company prides itself being a leader consistently at the forefront of innovation and technological advancement. Muses Publishing House also uses digital technology to create unique reading experience and expand the reach of their authors. Popular among the readers as MusesBooks, the company places strong emphasis on catering the distinct taste of the Sri Lankan reading community.")">
+    <meta name="keywords" content="Muses,Books,Online Book Store,Worldwide Delivery,Muses Publisher @((metaData !=null &&!string.IsNullOrEmpty(metaData.Keywords))? metaData.Keywords : "")">
+    <meta name="author" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Author))? metaData.Author : " Muses Publishing House")">
+    <meta name=”robots” content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Robots))? metaData.Robots : "index, follow")">
+
+    <meta property="og:url" content="@Request.Url.ToString()" />
+    <meta property="og:type" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Type))? metaData.Type : "article")" />
+    <meta property="og:title" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Title))? metaData.Title : " Muses Books - TODAY A READER TOMORROW A LEADER")" />
+    <meta property="og:description" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Description))? metaData.Description : " Muses Publishing House (Pvt) Ltd is recognized as one of the most dynamic and creative Publishing House in Sri Lanka. Established in 2017, the company prides itself being a leader consistently at the forefront of innovation and technological advancement. Muses Publishing House also uses digital technology to create unique reading experience and expand the reach of their authors. Popular among the readers as MusesBooks, the company places strong emphasis on catering the distinct taste of the Sri Lankan reading community.")" />
+    <meta property="og:image" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Image))? metaData.Image : "https://www.musesbooks.com/Content/images/logo.png")" />
+
+
+
+    @if (Request.Url.AbsoluteUri.ToString().Contains("musesbooks"))
+    {
+        <meta name="facebook-domain-verification" content="lx5ao3oy8ks7gvmvpg31do6j5won9m" />
+    }
+    else if (Request.Url.AbsoluteUri.ToString().Contains("musespublishers"))
+    {
+        <meta name="facebook-domain-verification" content="xlb2rv8u6j2yezpn4kx9wmhhfylvbi" />
+    }
+    <!-- Facebook Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '177069973990436');
+        fbq('track', 'PageView');
+    </script>
+    <noscript>
+        <img height="1" width="1" src="https://www.facebook.com/tr?id=177069973990436&ev=PageView&noscript=1" />
+    </noscript>
+    <!-- End Facebook Pixel Code -->
+    @*End SEO Section*@
+    @if (controllerName == "Delivery")
+    {
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    }
+
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
+    <link href="~/Content/fonts/fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="~/Content/css/slick.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/css/grid.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/css/slick-theme.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/css/muses-main.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/css/responsive.css" />
+    <link href="~/Content/muses.css" rel="stylesheet" />
+    <link href="~/Content/xzoom.css" rel="stylesheet" />
+    @*@Styles.Render("~/bundles/css")*@
+    <link rel="icon" href="~/Content/images/logo_uXb_icon.ico">
+</head>
+<body>
+    <header>
+        <div class="topbar-wrapper">
+
+            <div class="container">
+
+                <div class="topbar">
+                    <div class="online">Online Book Store - Worldwide Delivery</div>
+                    <div class="telephone">Call Us:@Obj__contactNumbers</div>
+                    <div class="social-icons-wrapper">
+                        <ul class="social-icons">
+                            <li class="fb"><a href="@(SNU !=null?SNU.fburl:"")"></a></li>
+                            <li class="insta"><a href="@(SNU !=null?SNU.instaurl:"")"></a></li>
+                            <li class="twitter"><a href="@(SNU !=null?SNU.tweeterurl:"")"></a></li>
+                            <li class="youtube"><a href="@(SNU !=null?SNU.youtubeurl:"")"></a></li>
+                            <li class="pintrest"><a href="@(SNU !=null?SNU.pintaurl:"")"></a></li>
+                            <li class="whatsapp"><a target="_blank" href="@(SNU !=null?SNU.whatsappurl:"")"></a></li>
+                        </ul>
+                    </div>
+                    <div class="authentication">
+                        <div class="signin-signup">
+                            @if (Request.IsAuthenticated)
+                            {
+                                using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+                                {
+                                    string name = User.Identity.GetUserName();
+                                    if (name.Length > 10)
+                                    {
+                                        name = name.Substring(0, 10);
+                                    }
+
+                                    @Html.AntiForgeryToken()
+                                    <div class="myprofile-block">
+                                        @Html.ActionLink("Hello " + name + "..", "UserProfile", "Account", routeValues: null, htmlAttributes: new { title = "Manage", @class = "myprofile" })
+                                        <div class="profiledropdown">
+                                            <ul>
+                                                <li><a href="/Account/UserProfile">My Profile</a></li>
+                                                <li><a href="/ShopingCart">My Cart</a></li>
+                                                @*<li><a href="/WishList">WishList</a></li>*@
+
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+                                }
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
+                                @Html.ActionLink("Login", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="container">
+            <div class="header-top">
+
+                <div class="middlebar">
+                    <div class="logo"><a href="/"><img src="~/Content/images/logo.png" alt="MusesBooks" /></a></div>
+                    <div class="slogan">TODAY A READER TOMORROW A LEADER</div>
+                    <div class="header-right">
+                        <div class="btn-mobile-search"></div>
+                        <form action="/Search/Search" method="post">
+                            <div class="search-wrapper">
+                                <span class="icon"></span>
+                                <input type="text" name="search" class="search" placeholder="Search by: ISBN/Book Name/Author/Publisher" autocomplete="off" />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="cart">
+                        <a>
+                            <div class="icon"></div>
+                            @{
+                                int itemCount = 0;
+                                decimal TotalAmount = 0;
+                                if (Session["cart"] != null)
+                                {
+                                    Cart cart = Session["cart"] as Cart;
+                                    itemCount = cart.Items != null ? cart.Items.Sum(x => x.NumberOfItems) : 0;
+                                    TotalAmount = cart.Items != null ? cart.AmountAfterDiscount : 0;
+                                    <div id="cart-item-count" class="amount">(@itemCount)&nbsp;Rs.<span id="total-amount">@Math.Round(TotalAmount, 2)</span></div>
+                                }
+                                else
+                                {
+                                    <div id="cart-item-count" class="amount">(0)&nbsp;Rs.<span id="total-amount">0.00</span></div>
+                                }
+
+                            }
+                        </a>
+                        <div class="wrapp-minicart">
+                            <div class="minicart-padding">
+                                <div class="cartheader">
+                                    <ul>
+                                        <li class="viewcart"><a href="/ShopingCart">View Cart</a></li>
+                                        <li class="checkout"><a href="/Delivery">Checkout</a></li>
+                                    </ul>
+                                </div>
+
+                                @if (Session["cart"] != null)
+                                {
+                                    Cart cart = Session["cart"] as Cart;
+                                    List<Cart_Book> cartItems = cart.Items;
+                                    //int TotalNumberOfItems = 0;
+                                    foreach (Cart_Book cb in cartItems)
+                                    {
+                                        BookVMTile b = BusinessHandlerBook.GetSearchedBookForView(cb.BookId);
+                                        <div class="books-listing">
+                                            <div class="item">
+                                                <div class="bookname">
+                                                    @b.BookName
+                                                </div>
+                                                <div class="quantity">
+                                                    x @cb.NumberOfItems
+                                                </div>
+                                                <div class="price">
+                                                    Rs. @Math.Round(cb.AmountAfterDiscount, 2)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        //TotalNumberOfItems = TotalNumberOfItems + cb.NumberOfItems;
+                                    }
+                                    <div class="summary">
+                                        <div class="row-1">
+                                            <div class="total-item">
+                                                Total Item(s)
+                                            </div>
+                                            <div class="total-count">
+                                                @cart.Items.Sum(x => x.NumberOfItems)
+                                            </div>
+                                        </div>
+                                        <div class="row-2">
+                                            <div class="total">
+                                                Total
+                                            </div>
+                                            <div class="total-price">
+                                                Rs. @Math.Round(cart.AmountAfterDiscount, 2)
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="menu-wrapper">
+            <div class="container ">
+                <div class="menu">
+                    <menu>
+                        <ul>
+                            @if (menus != null)
+                            {
+                                int counter = 0;
+                                foreach (MenuItem m in menus)
+                                {
+                                    string cls = "";
+                                    if (ActiveMenu == counter)
+                                    {
+                                        cls = "active";
+                                    }
+
+                                    if (counter == 3)
+                                    {
+
+                                        <li class="@cls author-mega-menu">
+                                            <a href="/authors" target="@m.target">
+                                                <span class="english">Authors</span>
+                                                <span class="sinhala">කතුවරු</span>
+                                            </a>
+                                            @if (m.children != null && m.children.Count > 0)
+                                            {
+                                                <ul class="submenu">
+                                                    @foreach (MenuItem sm in m.children)
+                                                    {
+                                                        <li>
+                                                            <a href="@sm.href" target="@sm.target">
+                                                                <span class="english">@sm.text</span>
+                                                                <span class="sinhala">@sm.title</span>
+                                                            </a>
+                                                            @if (sm.children != null && sm.children.Count > 0)
+                                                            {
+                                                                <ul class="submenu">
+                                                                    @foreach (MenuItem ssm in sm.children)
+                                                                    {
+                                                                        <li>
+                                                                            <a href="@ssm.href" target="@ssm.target">
+                                                                                <span class="english">@ssm.text</span>
+                                                                                <span class="sinhala">@ssm.title</span>
+                                                                            </a>
+                                                                        </li>
+
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                        </li>
+
+                                                    }
+                                                </ul>
+                                            }
+                                        </li>
+                                        @*<li class="@cls">
+                                                <a href="@m.href" target="@m.target">
+                                                    <span class="english">@m.text</span>
+                                                    <span class="sinhala">@m.title</span>
+                                                </a>
+
+                                            </li>*@
+                                    }
+                                    else
+                                    {
+                                        <li class="@cls">
+                                            <a href="@m.href" target="@m.target">
+                                                <span class="english">@m.text</span>
+                                                <span class="sinhala">@m.title</span>
+                                            </a>
+                                            @if (m.children != null && m.children.Count > 0)
+                                            {
+                                                <ul class="submenu">
+                                                    @foreach (MenuItem sm in m.children)
+                                                    {
+                                                        <li>
+                                                            <a href="@sm.href" target="@sm.target">
+                                                                <span class="english">@sm.text</span>
+                                                                <span class="sinhala">@sm.title</span>
+                                                            </a>
+                                                            @if (sm.children != null && sm.children.Count > 0)
+                                                            {
+                                                                <ul class="submenu">
+                                                                    @foreach (MenuItem ssm in sm.children)
+                                                                    {
+                                                                        <li>
+                                                                            <a href="@ssm.href" target="@ssm.target">
+                                                                                <span class="english">@ssm.text</span>
+                                                                                <span class="sinhala">@ssm.title</span>
+                                                                            </a>
+                                                                        </li>
+
+                                                                    }
+                                                                </ul>
+                                                            }
+                                                        </li>
+
+                                                    }
+                                                </ul>
+                                            }
+                                        </li>
+
+                                    }
+                                    counter++;
+                                }
+                            }
+                        </ul>
+                        <div class="megamenu">
+                            <ul>
+                                @foreach (var author in allAuthors)
+                                {
+                                    <li>
+                                        <a href="/authors/@author.FriendlyName">
+                                            @*<span class="english">@author.Name</span>*@
+                                            <span class="sinhala">@author.LocalName</span>
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                    </menu>
+                    <div class="hamburger">
+                        <svg class="ham hamRotate ham1" viewBox="0 0 100 100" width="80"><path class="line top" d="m 30,33 h 40 c 0,0 9.044436,-0.654587 9.044436,-8.508902 0,-7.854315 -8.024349,-11.958003 -14.89975,-10.85914 -6.875401,1.098863 -13.637059,4.171617 -13.637059,16.368042 v 40"></path><path class="line middle" d="m 30,50 h 40"></path><path class="line bottom" d="m 30,67 h 40 c 12.796276,0 15.357889,-11.717785 15.357889,-26.851538 0,-15.133752 -4.786586,-27.274118 -16.667516,-27.274118 -11.88093,0 -18.499247,6.994427 -18.435284,17.125656 l 0.252538,40"></path></svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    @RenderBody()
+<footer>
+    <div class="container">
+        <div class="footer">
+            <div class="links">
+                <h3>Useful Links</h3>
+
+                @if (footermenus != null)
+                {
+                    int fMenuCount = footermenus.Count;
+                    int i = (fMenuCount % 3 == 0) ? (fMenuCount / 3) : (fMenuCount / 3) + 1;
+                    for (int j = 0; j < i + 1; j++)
+                    {
+                        <div class="links-block">
+                            @foreach (MenuItem menu in footermenus.Skip(3 * j).Take(3).ToList())
+                            {
+                                <div class="link-block-col">
+                                    <h3>@menu.text </h3>
+                                    @if (menu.children != null)
+                                    {
+                                        <ul>
+                                            @foreach (MenuItem m in menu.children)
+                                            {
+                                                <li><a href="@m.href" target="@m.target">@m.text</a></li>
+                                            }
+                                        </ul>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    }
+
+                }
+
+            </div>
+            <div class="payment-method">
+                <h3>Payment Methods</h3>
+                <ul class="payments-m">
+                    <li class="visa"></li>
+                    <li class="master"></li>
+                    <li class="americanex"></li>
+                    <li class="cod"></li>
+                </ul>
+                <h3>Shipping Methods</h3>
+                <ul class="shipment-m">
+                    <li class="parcel">Parcel Post</li>
+                    <li class="courier">Courier</li>
+                </ul>
+            </div>
+            <div class="social-share">
+                <h3>Follow Us</h3>
+                <ul class="social-icons">
+                    <li class="fb"><a href="@(SNU !=null?SNU.fburl:"")"></a></li>
+                    <li class="insta"><a href="@(SNU !=null?SNU.instaurl:"")"></a></li>
+                    <li class="twitter"><a href="@(SNU !=null?SNU.tweeterurl:"")"></a></li>
+                    <li class="youtube"><a href="@(SNU !=null?SNU.youtubeurl:"")"></a></li>
+                    <li class="pintrest" style="background-position: -152px 0;"><a href="@(SNU !=null?SNU.pintaurl:"")"></a></li>
+                    <li class="whatsapp"><a target="_blank" href="@(SNU !=null?SNU.whatsappurl:"")"></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    @*http://jsfiddle.net/emreerkan/8XTqj/*@
+    <div class="footer-note">
+        <div class="container">
+            Copyright © 2021 Muses Publishing House (Pvt) Ltd. All Rights Reserved
+        </div>
+    </div>
+</footer>
+
+    @Scripts.Render("~/bundles/Scripts")
+    @RenderSection("scripts", required: false)
+
+    <script src="/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/ShopingCartScript.js"></script>
+    <script src="/Scripts/DeliveryScript.js"></script>
+    <script src="~/Scripts/bootbox.min.js"></script>
+    <script src="/Scripts/Reviews.js"></script>
+    <script src="~/Scripts/jquery-ui-1.9.0.js"></script>
+
+    <!-- jQuery Modal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+    <script src="~/Scripts/xzoom.min.js"></script>
+    <script src="~/Scripts/intlTelInput.js"></script>
+    <script src="~/Scripts/SiteScript.js"></script>
+
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
+    <script>
+        window.fbAsyncInit = function () {
+            FB.init({
+                xfbml: true,
+                version: 'v10.0'
+            });
+        };
+
+        (function (d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+
+    <!-- Your Chat Plugin code -->
+    <div class="fb-customerchat"
+         attribution="install_email"
+         page_id="201443020409758">
+    </div>
+</body>
+
+</html>
+
+<script id="mcjs">!function (c, h, i, m, p) { m = c.createElement(h), p = c.getElementsByTagName(h)[0], m.async = 1, m.src = i, p.parentNode.insertBefore(m, p) }(document, "script", "https://chimpstatic.com/mcjs-connected/js/users/7c1d9fb400543d637963e99dc/5b3141f7ebadc8bfbff872946.js")</script>

@@ -1,0 +1,75 @@
+﻿@using Online_book_shop.Models;
+@using Online_book_shop.Handlers.Helper;
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    Article article = ViewBag.Article;
+}
+<script src="https://cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
+<h2>Edit Article</h2>
+
+<form id="form-add-article" method="post" action="/Admin/Article/EditArticle" enctype="multipart/form-data">
+    <input type="hidden" value="@article.Id" name="Id" />
+    <div class="form-group">
+        <label>Title</label>
+        <input type="text" class="form-control" id="Title" name="Title" placeholder="Title" value="@article.Title">
+    </div>
+    <div class="form-group">
+        <label>Summary</label>
+        <textarea type="text" class="form-control" id="Summary" name="Summary" placeholder="Summary">@article.Summary</textarea>
+    </div>
+    <div class="form-group">
+        <label>Url</label>
+        <input type="text" class="form-control" value="@article.Url" id="Url" name="Url" placeholder="Url">
+    </div>
+    <div class="form-group">
+        <label>Content</label>
+        <textarea type="text" class="form-control" id="Content" name="Content" placeholder="Content">@article.Content</textarea>
+        <script>
+            CKEDITOR.replace('Content');
+        </script>
+    </div>
+    <div class="form-group">
+        <label>Written By</label>
+        <input type="text" class="form-control" id="WrittenBy" name="WrittenBy" value="@article.WrittenBy" placeholder="WrittenBy">
+    </div>
+    <div class="form-group">
+        <label>Update Main Image</label>
+        <input type="file" class="form-control-file author_prof" id="MainPicture" name="MainPicture">
+        <div>
+            <img id="temp_img_author_prof" style="height:100px;" class="img-thumbnail" src="~/Content/images/NoImage.jpg" alt="Profile Image" />
+        </div>
+        @if (article.MainImage != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/ProfilePicture/" + article.MainImage.FileName))
+        {
+            <img src="~/Content/UploadFiles/Images/ProfilePicture/@article.MainImage.FileName" width="100" />
+        }
+        else
+        {
+            <div class="div-square">
+                <i class="fa fa-user fa-5x"></i>
+            </div>
+        }
+    </div>
+
+    <div class="form-group">
+        <label>Update Cover Image</label>
+        <input type="file" class="form-control-file author_cover" id="CoverPicture" name="CoverPicture">
+        <div>
+            <img id="temp_img_author_cover" style="height:100px;" class="img-thumbnail" src="~/Content/images/NoImage.jpg" alt="Profile Image" />
+        </div>
+        @if (article.CoverImage != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/CoverImage/" + article.CoverImage.FileName))
+        {
+            <img src="~/Content/UploadFiles/Images/CoverImage/@article.CoverImage.FileName" width="100" />
+        }
+        else
+        {
+            <div class="div-square">
+                <i class="fa fa-user fa-5x"></i>
+            </div>
+        }
+    </div>
+    <div class="form-group text-right">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+</form>
