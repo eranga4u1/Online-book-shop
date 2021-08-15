@@ -89,8 +89,15 @@
                         <select id="LanguageId" class="form-control" name="LanguageId">
                             @foreach (Language l in ViewBag.Languages)
                             {
-                                <option value="@l.Id">@l.Name</option>
-                            }
+                                if (l.Name == "Sinhala")
+                                {
+                                    <option selected value="@l.Id">@l.Name</option>
+                                }
+                                else
+                                {
+                                    <option value="@l.Id">@l.Name</option>}
+
+                                }
 
                         </select>
                     </div>
@@ -144,7 +151,7 @@
 
                 <div class="form-group">
                     <label>Maximum Number Of Items Per Cart</label>
-                    <input type="number" min="0"  class="form-control" id="MaximumItemPerOrder" name="MaximumItemPerOrder" placeholder="Maximum Item PerOrder" />
+                    <input type="number" min="0" value="0"  class="form-control" id="MaximumItemPerOrder" name="MaximumItemPerOrder" placeholder="Maximum Item PerOrder" />
                 </div>
             </div>
 

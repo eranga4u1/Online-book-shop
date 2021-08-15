@@ -16,7 +16,7 @@ namespace Online_book_shop.Controllers
         // GET: Author
         public ActionResult Index(string id)
         {
-            int page = 0;
+            int page = 1;
             if(Request.QueryString["page"] != null)
             {
                 page = Convert.ToInt32(Request.QueryString["page"]);
@@ -34,7 +34,15 @@ namespace Online_book_shop.Controllers
                 author = BusinessHandlerAuthor.GetAuthorById(authorId);
                 if(author != null)
                 {
-                    return Redirect(string.Format("/authors/{0}", author.FriendlyName));
+                    if (page == 1)
+                    {
+                        return Redirect(string.Format("/authors/{0}", author.FriendlyName));
+                    }
+                    else
+                    {
+                        return Redirect(string.Format("/authors/{0}?page={1}", author.FriendlyName,page));
+                    }
+                   
                 }
                 
             }
@@ -53,7 +61,7 @@ namespace Online_book_shop.Controllers
             //else
             //{
                 ViewBag.TotalNumberOfBooks = books != null ? books.Count : 0;
-                ViewBag.Books = books.Skip(12 * page).Take(12).ToList();
+                ViewBag.Books = books.Skip(52 * (page-1)).Take(52).ToList();
             //}
            
             ViewBag.ActiveClass = "Author";
