@@ -706,6 +706,7 @@
     <Compile Include="Models\ViewModel\DeliveryMethod.cs" />
     <Compile Include="Models\ViewModel\Dictrict.cs" />
     <Compile Include="Models\ViewModel\District.cs" />
+    <Compile Include="Models\ViewModel\ItemProperty.cs" />
     <Compile Include="Models\ViewModel\JsonMenu.cs" />
     <Compile Include="Models\ViewModel\MenuVM.cs" />
     <Compile Include="Models\ViewModel\MetaData.cs" />
@@ -904,6 +905,7 @@
     <Content Include="libmongocrypt.so" />
     <Content Include="libmongocrypt.dylib" />
     <Content Include="Areas\Admin\Views\Report\AdvancedSearch.cshtml" />
+    <Content Include="Areas\Admin\Views\Promotion\BulkPromotion.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -1478,7 +1480,7 @@
     </ItemGroup>
     <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
-</Target>
+  </Target>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">

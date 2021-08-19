@@ -218,6 +218,16 @@ namespace Online_book_shop.Controllers
                         ViewBag.Order = order;
                     }
                 }
+                else if(order != null)
+                {
+                    ViewBag.Order = order;
+                    ViewBag.Message = "Success";
+                }
+                else
+                {
+                    ViewBag.Order = null;
+                    ViewBag.Message = string.Format( "Issue Occured please contact admin with following {0}", orderUid);
+                }
                     
                 
             }

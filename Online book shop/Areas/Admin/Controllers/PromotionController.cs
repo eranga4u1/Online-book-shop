@@ -83,5 +83,11 @@ namespace Online_book_shop.Areas.Admin.Controllers
             BusinessHandlerPromotion.Show(id);
             return RedirectToAction("Index");
         }
+        public ActionResult BulkPromotion()
+        {
+            var books = BusinessHandlerBook.GetAllBooksWithPropertyAsNewOne();
+            ViewBag.Items = books;
+            return View();
+        }
     }
 }

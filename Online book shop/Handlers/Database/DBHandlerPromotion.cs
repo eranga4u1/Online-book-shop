@@ -15,7 +15,7 @@ namespace Online_book_shop.Handlers.Database
             try
             {
                 using (var ctx = new ApplicationDbContext())
-                {
+                { 
                     ctx.Promotions.Add(promotion);
                     ctx.SaveChanges();
                 }

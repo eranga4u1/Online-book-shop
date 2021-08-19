@@ -13,13 +13,30 @@
 </head>
 <body>
     <div class="container">
-        <div class="succsess-message">
-            <p>@ViewBag.Message : Your Order Has Submited successfully. <a target="_blank" href="/Invoice/Find?uid=@order.UId">
-    Please follow this link for view your
-    invoice.
-</a></p>
-            <p>Reference for further enquiries: @order.UId</p>
-        </div>
+        @if (order != null)
+        {
+            <div class="succsess-message">
+                <p>
+                    @ViewBag.Message : Your Order Has Submited successfully.
+                    <a target="_blank" href="/Invoice/Find?uid=@order.UId">
+                        Please follow this link for view your
+                        invoice.
+                    </a>
+                </p>
+                <p>Reference for further enquiries: @order.UId</p>
+            </div>
+        }
+        else
+        {
+            <div class="succsess-message">
+                <p>
+                    @ViewBag.Message : Please submit screen shot of this page.
+                    <h3></h3>
+                </p>
+                <p>Reference for further enquiries: @Request.QueryString["Ref"]</p>
+            </div>
+        }
+
     </div>
 </body>
 </html>
