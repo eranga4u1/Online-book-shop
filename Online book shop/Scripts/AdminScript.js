@@ -958,3 +958,71 @@ $('#sync-order-desc').on("click", function (e) {
     });
     $('#sync-order-desc').show();
 });
+
+$('.btn-bulk-update-promotion').on('click', function () {
+    var srat_date = $('#startDate').val();
+    var end_date = $('#endDate').val();;
+    var percentage = $('#percentage').val();;
+    var selected_nc = $('.checkbox-nc:checked');
+    var selected_hc = $('.checkbox-hb:checked');
+    var selected_ov = $('.checkbox-ov:checked');
+    var arrselected =[];
+    $.each(selected_nc, function (index, value) {
+        arrselected.push($(this).val() + '/' + $(this).attr('data-property'));
+    });
+    $.each(selected_hc, function (index, value) {
+        arrselected.push($(this).val() + '/' + $(this).attr('data-property'));
+    });
+    $.each(selected_ov, function (index, value) {
+        arrselected.push($(this).val() + '/' + $(this).attr('data-property'));
+    });
+    //console.log(arrselected.join(", "));
+    if (arrselected.length > 0) {
+        var dialog = bootbox.dialog({
+            title: 'Wait',
+            message: "<p>Please wait until process completed.</p>",
+            size: 'large',
+            //buttons: {
+            //    cancel: {
+            //        label: "I'm a cancel button!",
+            //        className: 'btn-danger',
+            //        callback: function () {
+            //            console.log('Custom cancel clicked');
+            //        }
+            //    },
+            //    noclose: {
+            //        label: "I don't close the modal!",
+            //        className: 'btn-warning',
+            //        callback: function () {
+            //            console.log('Custom button clicked');
+            //            return false;
+            //        }
+            //    },
+            //    ok: {
+            //        label: "I'm an OK button!",
+            //        className: 'btn-info',
+            //        callback: function () {
+            //            console.log('Custom OK clicked');
+            //        }
+            //    }
+            //}
+        });
+        var model = { "StartDate": srat_date, "EndDate": end_date, "Percentage": percentage, "SelectedItems": arrselected.join(", ") };
+        $.ajax({
+            url: '/Admin/Promotion/AddBulkPromotion   ',
+            data: JSON.stringify(model),
+            type: 'POST',
+            contentType: 'application/json;',
+            dataType: 'json',
+            success: function (result) {
+                location.replace("/admin/promotion/");
+            }
+        });
+        //dialog.modal('hide');
+    } else {
+        bootbox.alert("Please select at least one book.");
+    }
+   
+    //console.log(selected_hc);
+    //console.log(selected_ov);
+});

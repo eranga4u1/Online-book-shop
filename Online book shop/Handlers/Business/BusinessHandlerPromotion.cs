@@ -123,5 +123,10 @@ namespace Online_book_shop.Handlers.Business
         {
             return DBHandlerPromotion.GetLatestPromotion();
         }
+
+        internal static bool AddNewPromotions(List<Promotion> promoList, int v)
+        {
+            return DBHandlerPromotion.AddNewPromotions(promoList,v);
+        }
     }
 }

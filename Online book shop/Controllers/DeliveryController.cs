@@ -55,91 +55,97 @@ namespace Online_book_shop.Controllers
         }
         public ActionResult PlaceAnOrder(Order order)
         {
-            Address billingAddress = BusinessHandlerAddress.GetAddress(order.BillingAddressId);
-            Address deliveryAddress = BusinessHandlerAddress.GetAddress(order.DeliveryAddressId);
-
-            order.FirstName = deliveryAddress.FirstName;
-            order.LastName = deliveryAddress.LastName;
-            order.DeliveryAddress = (!string.IsNullOrEmpty(deliveryAddress.AddressLine01) ? (deliveryAddress.AddressLine01 + ", ") : "") +
-                                    (!string.IsNullOrEmpty(deliveryAddress.AddressLine02) ? (deliveryAddress.AddressLine02 + ", ") : "") +
-                                    (!string.IsNullOrEmpty(deliveryAddress.AddressLine03) ? (deliveryAddress.AddressLine03 + ", ") : "") +
-                                    (!string.IsNullOrEmpty(deliveryAddress.City) ? (deliveryAddress.City + ", ") : "") +
-                                     (!string.IsNullOrEmpty(deliveryAddress.Country) ? (deliveryAddress.Country + ", ") : "") +
-                                     (!string.IsNullOrEmpty(deliveryAddress.PostalCode) ? (deliveryAddress.PostalCode + ", ") : "");
-
-            order.BillingAddress = (!string.IsNullOrEmpty(billingAddress.FirstName) ? (billingAddress.FirstName + " ") : "") +
-                                    (!string.IsNullOrEmpty(billingAddress.LastName) ? (billingAddress.LastName + ", ") : "") +
-                                    (!string.IsNullOrEmpty(billingAddress.AddressLine01) ? (billingAddress.AddressLine01 + ", ") : "") +
-                                    (!string.IsNullOrEmpty(billingAddress.AddressLine02) ? (billingAddress.AddressLine02 + ", ") : "") +
-                                    (!string.IsNullOrEmpty(billingAddress.AddressLine03) ? (billingAddress.AddressLine03 + ", ") : "") +
-                                    (!string.IsNullOrEmpty(billingAddress.City) ? (billingAddress.City + ", ") : "") +
-                                     (!string.IsNullOrEmpty(billingAddress.Country) ? (billingAddress.Country + ", ") : "") +
-                                     (!string.IsNullOrEmpty(billingAddress.PostalCode) ? (billingAddress.PostalCode + ", ") : "");
-
-            if (HttpContext.Session["cart"] != null)
+            if(order != null)
             {
-               Cart cart = Session["cart"] as Cart;
-                cart.SelectedDeliveryAddress = order.DeliveryAddressId;
-                cart.SelectedBillingAddress = order.BillingAddressId;
-                cart.SelectedDeliveryMethod = order.DeliveryMethod;
-                cart.SelectedPaymentMethod = order.PaymentMethod;
-                cart.AddedPaymentSpecialNote = order.PaymentSpecialNote;
-               // cart.AddedDeliverySpecialNote = BusinessHandlerReport.GetOrderDescription(cart.Id); //order.DeliverySpecialNote; ;
-            }
-            //if (order.update_ac_info == 1)
-            //{
-            //    ApplicationUser user = BusinessHandlerUser.GetApplicationUser();
-            //    user.FirstName = order.FirstName;
-            //    user.LastName = order.LastName;
-            //    user.Address = order.DeliveryAddress;
-            //    user.ContactNumber = order.ContactNumber;
-            //    user.Email = order.EmailAddress;
-            //    BusinessHandlerUser.Update(user);
-            //}
-            if (Session["cart"] != null)
-            {
-                Cart cart = Session["cart"] as Cart;
-                cart.CartStatus = (int)CartStatus.DraftCart;
-                cart=BusinessHandlerShopingCart.CheckoutStage_1(cart);
-                order.CartId =cart.Id;
-                decimal orderWeight = BusinessHandlerShopingCart.GetTotalWeightForCart(cart);
-                order.DeliveryCharges = (((DeliveryTypes)order.DeliveryMethod==DeliveryTypes.In_Store_Pickup)?0: BusinessHandlerDeliveryCharges.GetDeliveryCharge(orderWeight, (DeliveryTypes)order.DeliveryMethod, deliveryAddress.District, deliveryAddress.Country));
+                Address billingAddress = BusinessHandlerAddress.GetAddress(order.BillingAddressId);
+                Address deliveryAddress = BusinessHandlerAddress.GetAddress(order.DeliveryAddressId);
 
-               
-                Order _order=BusinessHandlerDelivery.Post(order);
-                ViewBag.Order = _order;
+                order.FirstName = deliveryAddress.FirstName;
+                order.LastName = deliveryAddress.LastName;
+                order.DeliveryAddress = (!string.IsNullOrEmpty(deliveryAddress.AddressLine01) ? (deliveryAddress.AddressLine01 + ", ") : "") +
+                                        (!string.IsNullOrEmpty(deliveryAddress.AddressLine02) ? (deliveryAddress.AddressLine02 + ", ") : "") +
+                                        (!string.IsNullOrEmpty(deliveryAddress.AddressLine03) ? (deliveryAddress.AddressLine03 + ", ") : "") +
+                                        (!string.IsNullOrEmpty(deliveryAddress.City) ? (deliveryAddress.City + ", ") : "") +
+                                         (!string.IsNullOrEmpty(deliveryAddress.Country) ? (deliveryAddress.Country + ", ") : "") +
+                                         (!string.IsNullOrEmpty(deliveryAddress.PostalCode) ? (deliveryAddress.PostalCode + ", ") : "");
 
-                cart.OrderId = _order.UId;
-                Session["cart"] = cart;
+                order.BillingAddress = (!string.IsNullOrEmpty(billingAddress.FirstName) ? (billingAddress.FirstName + " ") : "") +
+                                        (!string.IsNullOrEmpty(billingAddress.LastName) ? (billingAddress.LastName + ", ") : "") +
+                                        (!string.IsNullOrEmpty(billingAddress.AddressLine01) ? (billingAddress.AddressLine01 + ", ") : "") +
+                                        (!string.IsNullOrEmpty(billingAddress.AddressLine02) ? (billingAddress.AddressLine02 + ", ") : "") +
+                                        (!string.IsNullOrEmpty(billingAddress.AddressLine03) ? (billingAddress.AddressLine03 + ", ") : "") +
+                                        (!string.IsNullOrEmpty(billingAddress.City) ? (billingAddress.City + ", ") : "") +
+                                         (!string.IsNullOrEmpty(billingAddress.Country) ? (billingAddress.Country + ", ") : "") +
+                                         (!string.IsNullOrEmpty(billingAddress.PostalCode) ? (billingAddress.PostalCode + ", ") : "");
 
-                ViewBag.Cart = cart;
-                ViewBag.MerchantId= System.Configuration.ConfigurationManager.AppSettings["MerchantId"];
-                ViewBag.PayHereUrl= System.Configuration.ConfigurationManager.AppSettings["PayHereUrl"];
+                if (HttpContext.Session["cart"] != null)
+                {
+                    Cart cart = Session["cart"] as Cart;
+                    cart.SelectedDeliveryAddress = order.DeliveryAddressId;
+                    cart.SelectedBillingAddress = order.BillingAddressId;
+                    cart.SelectedDeliveryMethod = order.DeliveryMethod;
+                    cart.SelectedPaymentMethod = order.PaymentMethod;
+                    cart.AddedPaymentSpecialNote = order.PaymentSpecialNote;
+                    // cart.AddedDeliverySpecialNote = BusinessHandlerReport.GetOrderDescription(cart.Id); //order.DeliverySpecialNote; ;
+                }
+                //if (order.update_ac_info == 1)
+                //{
+                //    ApplicationUser user = BusinessHandlerUser.GetApplicationUser();
+                //    user.FirstName = order.FirstName;
+                //    user.LastName = order.LastName;
+                //    user.Address = order.DeliveryAddress;
+                //    user.ContactNumber = order.ContactNumber;
+                //    user.Email = order.EmailAddress;
+                //    BusinessHandlerUser.Update(user);
+                //}
+                if (Session["cart"] != null)
+                {
+                    Cart cart = Session["cart"] as Cart;
+                    cart.CartStatus = (int)CartStatus.DraftCart;
+                    cart = BusinessHandlerShopingCart.CheckoutStage_1(cart);
+                    order.CartId = cart.Id;
+                    decimal orderWeight = BusinessHandlerShopingCart.GetTotalWeightForCart(cart);
+                    order.DeliveryCharges = (((DeliveryTypes)order.DeliveryMethod == DeliveryTypes.In_Store_Pickup) ? 0 : BusinessHandlerDeliveryCharges.GetDeliveryCharge(orderWeight, (DeliveryTypes)order.DeliveryMethod, deliveryAddress.District, deliveryAddress.Country));
+
+
+                    Order _order = BusinessHandlerDelivery.Post(order);
+                    ViewBag.Order = _order;
+
+                    cart.OrderId = _order.UId;
+                    Session["cart"] = cart;
+
+                    ViewBag.Cart = cart;
+                    ViewBag.MerchantId = System.Configuration.ConfigurationManager.AppSettings["MerchantId"];
+                    ViewBag.PayHereUrl = System.Configuration.ConfigurationManager.AppSettings["PayHereUrl"];
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                if (order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery)
+                {
+                    return RedirectToAction("CashOnDelivery", new RouteValueDictionary(new { controller = "Delivery", action = "CashOnDelivery", Ref = order.UId }));
+                }
+                else if (order.PaymentMethod == (int)PaymentMethods.Bank_Deposit)
+                {
+                    return RedirectToAction("CashOnDelivery", new RouteValueDictionary(new { controller = "Delivery", action = "BankDeposit", Ref = order.UId }));
+                }
+                else if (order.PaymentMethod == (int)PaymentMethods.In_store_payment)
+                {
+                    return RedirectToAction("InStorePickup", new RouteValueDictionary(new { controller = "Delivery", action = "InStorePickup", Ref = order.UId }));
+                }
+                else
+                {
+                    ViewBag.Order = order;
+                    //ViewBag.SelectedCity =
+                    ViewBag.Cart = BusinessHandlerShopingCart.GetById(order != null ? order.CartId : 0);
+                    return View();
+                }
             }
             else
             {
-                return RedirectToAction("Index", "Home");
-            }
-            if (order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery)
-            {
-                return RedirectToAction("CashOnDelivery", new RouteValueDictionary(new { controller = "Delivery", action = "CashOnDelivery", Ref = order.UId }) );
-            }
-            else if (order.PaymentMethod == (int)PaymentMethods.Bank_Deposit)
-            {
-                return RedirectToAction("CashOnDelivery", new RouteValueDictionary(new { controller = "Delivery", action = "BankDeposit", Ref = order.UId }));
-            }
-            else if (order.PaymentMethod == (int)PaymentMethods.In_store_payment)
-            {
-                return RedirectToAction("InStorePickup", new RouteValueDictionary(new { controller = "Delivery", action = "InStorePickup", Ref = order.UId }));
-            }
-            else
-            {
-                ViewBag.Order = order;
-                //ViewBag.SelectedCity =
-                ViewBag.Cart = BusinessHandlerShopingCart.GetById(order != null ? order.CartId : 0);
-                return View();
-            }
-            
+                return RedirectToAction("NotFound", "Error");
+            }                       
         }
         public ActionResult BankDeposit(string Ref)
         {

@@ -89,5 +89,39 @@ namespace Online_book_shop.Areas.Admin.Controllers
             ViewBag.Items = books;
             return View();
         }
+
+        public JsonResult AddBulkPromotion(VMBulkPromotion model)
+        {
+            if (!string.IsNullOrEmpty(model.SelectedItems))
+            {
+                List<Promotion> promoList = new List<Promotion>();
+                string[] itemArray = model.SelectedItems.Split(',');
+                foreach(string s in itemArray)
+                {
+                   string[] p = s.Split('/');
+                    Promotion promo = new Promotion();
+                    promo.ObjectId = Convert.ToInt32(p[0]);
+                    promo.ObjectType = 0;
+                    promo.OtherParameters ="{BookPropertyId:"+ p[1] + "}";
+                    promo.PromotionTitle = "Applied Bulk Promotion";
+                    promo.PromotionDescription = "Applied Bulk Promotion";
+                    promo.PromotionTypesFor = 0;
+                    promo.PromotionMethods = 1;
+                    promo.DiscountValue = model.Percentage;
+                    promo.StartDate = model.StartDate;
+                    promo.EndDate = model.EndDate;
+                    promo.CreatedBy = BusinessHandlerAuthor.GetLoginUserId();
+                    promo.UpdatedBy = BusinessHandlerAuthor.GetLoginUserId();
+                    promo.CreatedDate = DateTime.Today;
+                    promo.UpdatedDate = DateTime.Today;
+                    promoList.Add(promo);
+                }
+               if( BusinessHandlerPromotion.AddNewPromotions(promoList, 0))
+                {
+                    return new JsonResult { Data = "success" };
+                }
+            }
+            return new JsonResult { Data = "fail" };
+        }
     }
 }

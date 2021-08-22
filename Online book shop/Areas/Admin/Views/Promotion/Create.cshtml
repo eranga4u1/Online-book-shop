@@ -22,8 +22,14 @@
             <select id="PromotionTypesFor" class="form-control" name="PromotionTypesFor">
                 @foreach (var item in Enum.GetValues(typeof(PromotionTypesFor)))
                 {
-                    <option value="@((int)item)">@item</option>
-                }
+                    if ((int)item > 0)
+                    {
+                        <option style="display:none" value="@((int)item)">@item</option> }
+                    else
+                    {
+                        <option value="@((int)item)">@item</option>}
+
+                    }
             </select>
         </div>
     </div>

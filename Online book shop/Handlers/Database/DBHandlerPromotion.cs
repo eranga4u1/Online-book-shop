@@ -15,7 +15,13 @@ namespace Online_book_shop.Handlers.Database
             try
             {
                 using (var ctx = new ApplicationDbContext())
-                { 
+                {
+                    var existingpromotions = ctx.Promotions.Where(x => !x.isDeleted && x.ObjectId == promotion.ObjectId && x.OtherParameters == promotion.OtherParameters && x.ObjectType == promotion.ObjectType);
+                    foreach (Promotion item in existingpromotions)
+                    {
+                        item.UpdatedDate = DateTime.Today;
+                        item.isDeleted = true;
+                    }
                     ctx.Promotions.Add(promotion);
                     ctx.SaveChanges();
                 }
@@ -27,13 +33,13 @@ namespace Online_book_shop.Handlers.Database
             }
         }
 
-        internal static List<Promotion> Get(bool isActive=false,bool isDeleted=false)
+        internal static List<Promotion> Get(bool isActive=true,bool isDeleted=false)
         {
             try
             {
                 using (var ctx = new ApplicationDbContext())
                 {   
-                    var promotions = isActive?ctx.Promotions.Where(p=> p.StartDate.AddDays(-1) < DateTime.Today && p.EndDate > DateTime.Today.AddDays(1) && !p.isDeleted): ctx.Promotions;
+                    var promotions = isActive?ctx.Promotions.Where(p=> (p.StartDate<= DateTime.Today) && (p.EndDate >= DateTime.Today) && !p.isDeleted): ctx.Promotions;
                     if (promotions != null)
                     {
                         return promotions.ToList();
@@ -199,6 +205,43 @@ namespace Online_book_shop.Handlers.Database
             {
                 return null;
             }
+        }
+
+        internal static bool AddNewPromotions(List<Promotion> promotions , int ObjType)
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    foreach(Promotion p in promotions)
+                    {
+                        var existingpromotions = ctx.Promotions.Where(x=> !x.isDeleted && x.ObjectId==p.ObjectId && x.OtherParameters==p.OtherParameters && x.ObjectType== ObjType);
+                        foreach(Promotion item in existingpromotions)
+                        {
+                            item.UpdatedDate = DateTime.Today;
+                            item.isDeleted = true;
+                        }
+                        var book= ctx.Books.Find(p.ObjectId);
+                        if(book != null)
+                        {
+                            p.PromotionTitle = p.PromotionTitle + " for " + book.Title;
+                            p.PromotionDescription = p.PromotionTitle + " for " + book.Title;
+                        }
+                        ctx.Promotions.Add(p);
+
+                    }
+
+                    ctx.SaveChanges();
+                                       
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
         }
     }
 }

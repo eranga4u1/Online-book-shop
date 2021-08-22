@@ -718,6 +718,7 @@
     <Compile Include="Models\ViewModel\SaleType.cs" />
     <Compile Include="Models\ViewModel\SocialNetworkURLs.cs" />
     <Compile Include="Models\ViewModel\UserDataVM.cs" />
+    <Compile Include="Models\ViewModel\VMBulkPromotion.cs" />
     <Compile Include="Models\ViewModel\VMDeliveryCharge.cs" />
     <Compile Include="Models\Voucher.cs" />
     <Compile Include="Models\VoucherUser.cs" />
