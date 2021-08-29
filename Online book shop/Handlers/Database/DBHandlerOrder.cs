@@ -208,7 +208,38 @@ namespace Online_book_shop.Handlers.Database
                 return false;
             }
         }
+        internal static bool ChangePaymentStatus(int orderId, int statusId, string note)
+        {
 
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    Order order = ctx.Orders.Where(x => x.Id == orderId).FirstOrDefault();
+                    if (order != null)
+                    {
+                        order.UpdatedDate = DateTime.UtcNow;
+                        order.UpdatedBy = BusinessHandlerAuthor.GetLoginUserId();
+                        order.PaymentStatus = statusId;
+                        if (!string.IsNullOrEmpty(note))
+                        {
+                            order.PaymentSpecialNote = string.Format("{0} Added by admin :{1}", order.PaymentSpecialNote, note);
+                        }
+                        
+                        if (ctx.SaveChanges() > 0)
+                        {
+                            BusinessHandlerMPLog.Log(LogType.StatusChanged, "DBHandlerOrder", "ChangePaymentStatus", string.Format("OrderId:{0},Status:{1}", orderId.ToString(), statusId.ToString()));
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
         internal static Order Get(int id)
         {
             try

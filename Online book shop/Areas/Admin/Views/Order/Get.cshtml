@@ -26,7 +26,7 @@
 
         <div class="panel panel-danger">
             <div class="panel-heading">
-                Update Status
+                Update Delivery Status
             </div>
             <div class="panel-body">
                 @{
@@ -54,7 +54,32 @@
             </div>
 
         </div>
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                Update Payment Status
+            </div>
+            <div class="panel-body">
+                <div class="form-group col-lg-4">
+                    <label >Select Payment Status</label>
+                    <div class="select">
+                        <select class="form-control  col-lg-4" id="select-payment-status">
+                            <option @(Model.PaymentStatus == 0 ? "selected" : "") value="0">PendingPayment</option>
+                            <option @(Model.PaymentStatus == 1 ? "selected" : "") value="1">Paid</option>
+                            <option @(Model.PaymentStatus == 2 ? "selected" : "") value="2">Waiting For Payhere Update</option>
+                        </select>
+                    </div>
+                  <input type="hidden" id="hidden-payment-status" value="@Model.PaymentStatus" />
 
+                </div>
+                <div class="form-group  col-lg-6">
+                    <label for="paymentNote">Payment Note</label>
+                    <input type="text" class="form-control" id="paymentNote" aria-describedby="paymentNote" placeholder="Enter payment note">                 
+                    <button data-order-id="@Model.Id" class="btn btn-sm btn-warning float-right update-order-payment-sttaus">Update</button>
+                </div>
+                
+            </div>
+
+        </div>
 
         <div class="col-lg-4 col-md-4 col-sm-12">
             <div class="panel panel-default">

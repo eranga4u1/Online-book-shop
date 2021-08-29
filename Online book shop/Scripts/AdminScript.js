@@ -1026,3 +1026,70 @@ $('.btn-bulk-update-promotion').on('click', function () {
     //console.log(selected_hc);
     //console.log(selected_ov);
 });
+
+$('.update-order-payment-sttaus').on('click', function (e) {
+
+    var order_id = $(this).attr("data-order-id"); ;
+    var status_id = $('#select-payment-status').val();
+    var payment_notes = $('#paymentNote').val();
+    var hidden_payment_sttaus = $('#hidden-payment-status').val();
+    var url = '/Admin/Order/ChangePaymentStatus';
+    if (status_id != hidden_payment_sttaus) {
+        bootbox.confirm({
+            message: "Do you really want to change payment status?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                console.log(result);
+                if (result) {
+
+                    var model = { "OrderId": order_id, "StatusId": status_id, "Note": payment_notes };
+                    console.log(model);
+                    $.post(url, model)
+                        .done(function (data) {
+                            location.reload();
+                        })
+                        .fail(function (data) {
+                            //console.log(data);
+                        });
+                } else {
+                    $('#select-payment-status').val(hidden_payment_sttaus);
+                }
+
+            }
+        });
+    } else {
+        bootbox.alert("Payment status not changed !");
+    }
+
+    
+});
+
+
+$('#select-author').on('change', function (e) {
+    var selected_author = $('#select-author').val();
+    
+    if (selected_author != 0) {
+        var items = $(".author_" + selected_author);
+        $('.checked_all').prop('checked', false);
+        $('.checked_hard_bind_all').prop('checked', false);
+        $('.checked_other_all').prop('checked', false);
+        $('.check-box-container').hide();
+        items.show();
+    } else {
+        $('.checked_all').prop('checked', false);
+        $('.checked_hard_bind_all').prop('checked', false);
+        $('.checked_other_all').prop('checked', false);
+        $('.check-box-container').show();
+    }
+    
+   // location.replace("/Admin/Promotion/BulkPromotion?author=" + selected_author);
+});

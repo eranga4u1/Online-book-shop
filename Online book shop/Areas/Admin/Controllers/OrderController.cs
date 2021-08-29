@@ -44,6 +44,11 @@ namespace Online_book_shop.Areas.Admin.Controllers
             bool success= BusinessHandlerOrder.ChangeStatus(model.OrderId,model.StatusId,model.TrackingId);
             return success.ToString();
         }
+        public string ChangePaymentStatus(OrderStatus model)
+        {
+            bool success = BusinessHandlerOrder.ChangePaymentStatus(model.OrderId, model.StatusId, model.Note);
+            return success.ToString();
+        }
 
         [HttpPost]
         public JsonResult BulkUpdate(Order[] orders)

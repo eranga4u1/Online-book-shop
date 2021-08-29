@@ -9,7 +9,7 @@ namespace Online_book_shop.Models.ViewModel
     {
         public int OrderId { get; set; }
         public int StatusId { get; set; }
-
+        public string Note { get; set; }
         public string TrackingId { get; set; }
     }
 }

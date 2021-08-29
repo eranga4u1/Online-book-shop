@@ -11,5 +11,6 @@ namespace Online_book_shop.Models.ViewModel
         public string Name { get; set; }
         public int ObjType { get; set; }
         public string OtherPara { get; set; }
+        public int BookAuthorId { get; set; }
     }
 }

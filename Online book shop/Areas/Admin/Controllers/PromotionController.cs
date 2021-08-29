@@ -87,6 +87,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
         {
             var books = BusinessHandlerBook.GetAllBooksWithPropertyAsNewOne();
             ViewBag.Items = books;
+            ViewBag.Authors = BusinessHandlerAuthor.GetAuthors();
             return View();
         }
 

@@ -476,7 +476,8 @@ namespace Online_book_shop.Handlers.Database
                                     Id = b.Id,
                                     Name = b.Title + " : " + a.Title,
                                     ObjType = 0,
-                                    OtherPara = "{\"BookPropertyId\":"+ a.Id + "}"
+                                    OtherPara = "{\"BookPropertyId\":"+ a.Id + "}",
+                                    BookAuthorId=b.AuthorId
                                 }) ;
                     var result = books.ToList();
 

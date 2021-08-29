@@ -34,6 +34,10 @@ namespace Online_book_shop.Handlers.Business
         {
             return DBHandlerOrder.ChangeStatus(orderId, statusId, trackingId);
         }
+        internal static bool ChangePaymentStatus(int orderId, int statusId, string note)
+        {
+            return DBHandlerOrder.ChangePaymentStatus(orderId, statusId, note);
+        }
 
         internal static List<Order> GetFiltered(int deliveryStatus, int orderType, string startDate, string endDate)
         {
