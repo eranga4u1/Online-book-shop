@@ -832,6 +832,50 @@ $('#bulkChangeStatus').on('change', function (e) {
         }
     });   
 });
+$('#bulkChangePaymentStatus').on('change', function (e) {
+    bootbox.confirm({
+        message: "Are you sure you want change selected items status?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                if ($('#bulkChangePaymentStatus').val() != "-1") {
+                    var selected = $('.bulk-edit-d-status:checkbox:checked');
+                    var statusId = $('#bulkChangePaymentStatus').val();
+                    var arr = [];
+                    $.each(selected, function (index, value) {
+                        var id = $(value).attr('data-order-id');
+                        var obj = {
+                            "Id": id,
+                            "PaymentStatus": statusId
+                        }
+                        arr.push(obj);
+                    });
+                    var model = JSON.stringify(arr);
+                    console.log(model);
+                    $.ajax({
+                        url: '/Admin/Order/BulkPaymentStatusUpdate',
+                        data: JSON.stringify(arr),
+                        type: 'POST',
+                        contentType: 'application/json;',
+                        dataType: 'json',
+                        success: function (result) {
+                            location.reload();
+                        }
+                    });
+                }
+            }
+        }
+    });
+});
 $('.add-new-district').on('click', function () {
     bootbox.confirm({
         message: "Are you sure you want add this item?",

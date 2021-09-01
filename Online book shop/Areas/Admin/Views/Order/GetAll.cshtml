@@ -154,26 +154,25 @@
     <div class="panel-heading">BULK ORDER UPDATE</div>
     <div class="panel-body">
         <div class="card">
-            <div class="card-body">
+            <div class="card-body  bg-success">
                 <table class="table table-bordered">
 
                     <tbody>
                         <tr class="text-center">
-                            <td width="50%"><strong>Update Status To</strong></td>
+                            <td width="50%"><strong>Update Delivery Status To</strong></td>
                             <td width="50%">
                                 <div class="select ">
                                     <select class="form-control" id="bulkChangeStatus">
                                         <option value="-1">--Select--</option>
                                         @foreach (DeliverStatus s in deliveryStatus)
                                         {
-
                                             <option value="@s.Id">@s.DisplayText</option>
                                         }
                                     </select>
                                 </div>
                             </td>
                         </tr>
-                        
+
                     </tbody>
                 </table>
 
@@ -181,7 +180,33 @@
             </div>
         </div>
     </div>
+    <div class="panel-body">
+        <div class="card">
+            <div class="card-body  bg-primary">
+                <table class="table table-bordered">
 
+                    <tbody>
+                        <tr class="text-center">
+                            <td width="50%"><strong>Update Payment Status To</strong></td>
+                            <td width="50%">
+                                <div class="select ">
+                                    <select class="form-control" id="bulkChangePaymentStatus">
+                                        <option value="-1">--Select--</option>
+                                        <option  value="0">PendingPayment</option>
+                                        <option  value="1">Paid</option>
+                                        <option  value="2">Waiting For Payhere Update</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
 </div>
 
 
@@ -204,6 +229,7 @@
             <th scope="col">Invoice Id</th>
             <th scope="col">Name</th>
             <th scope="col">Order state</th>
+            <th scope="col">Payment state</th>
             <th scope="col">Created date</th>
             <th scope="col">Operation</th>
         </tr>
@@ -237,6 +263,24 @@
                         </select>
                         <i class="fa fa-sort-desc" aria-hidden="true"></i>
                     </div>
+                </td>
+                <td>
+                    @if (order.PaymentStatus == 0)
+                    {
+                        <span>PendingPayment</span>
+                    }
+                    else if (order.PaymentStatus == 1)
+                    {
+                        <span>Paid</span>
+                    }
+                    else if (order.PaymentStatus == 2)
+                    {
+                        <span>Waiting For Payhere Update</span>
+                    }
+                    else
+                    {
+                        <span>@order.PaymentStatus</span>
+                    }
                 </td>
                 <td> @order.CreatedDate.AddHours(timeOffset).ToString("yyyy/MM/dd h:mm tt")</td>
                 <td>

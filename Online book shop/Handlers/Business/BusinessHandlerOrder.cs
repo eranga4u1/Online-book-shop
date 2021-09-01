@@ -64,5 +64,9 @@ namespace Online_book_shop.Handlers.Business
         {
             return DBHandlerOrder.ChangeStatus(orders);
         }
+        internal static bool ChangePaymentStatus(List<Order> orders)
+        {
+            return DBHandlerOrder.ChangePaymentStatus(orders);
+        }
     }
 }

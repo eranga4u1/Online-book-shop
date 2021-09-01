@@ -160,6 +160,38 @@ namespace Online_book_shop.Handlers.Database
             }
         }
 
+        internal static bool ChangePaymentStatus(List<Order> orders)
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    foreach (Order obj in orders)
+                    {
+                        Order order = ctx.Orders.Where(x => x.Id == obj.Id).FirstOrDefault();
+                        if (order != null)
+                        {
+                            order.UpdatedDate = DateTime.UtcNow;
+                            order.UpdatedBy = BusinessHandlerAuthor.GetLoginUserId();
+                            order.PaymentStatus = obj.PaymentStatus;
+                            BusinessHandlerMPLog.Log(LogType.StatusChanged, "DBHandlerOrder", "ChangePaymentStatus", string.Format("OrderId:{0},Status:{1}", order.Id.ToString(), obj.PaymentStatus.ToString()));                         
+                        }
+
+                    }
+                    if (ctx.SaveChanges() > 0)
+                    {
+                        return true;
+                    }
+                    return false;
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         internal static Order GetByUID(string uid)
         {
             try

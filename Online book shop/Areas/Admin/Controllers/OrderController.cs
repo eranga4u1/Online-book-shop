@@ -66,5 +66,21 @@ namespace Online_book_shop.Areas.Admin.Controllers
             jr.Data = response;
             return jr;
         }
+        [HttpPost]
+        public JsonResult BulkPaymentStatusUpdate(Order[] orders)
+        {
+            JsonResult jr = new JsonResult();
+            Dictionary<string, string> response = new Dictionary<string, string>();
+            if (orders != null && BusinessHandlerOrder.ChangePaymentStatus(orders.ToList()))
+            {
+                response.Add("state", "success");
+            }
+            else
+            {
+                response.Add("state", "failed");
+            }
+            jr.Data = response;
+            return jr;
+        }
     }
 }
