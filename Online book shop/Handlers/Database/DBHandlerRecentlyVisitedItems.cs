@@ -54,7 +54,7 @@ namespace Online_book_shop.Handlers.Database
                                                                 y in ctx.Medias on x.FrontCoverMediaId equals y.Id
                                                                 select y).ToList().FirstOrDefault()
                                               };
-                            var test = bookResults.ToList<BookVMTile>();
+                           // var test = bookResults.ToList<BookVMTile>();
                             return bookResults != null ? bookResults.ToList<BookVMTile>() : null;
                         }
                     }

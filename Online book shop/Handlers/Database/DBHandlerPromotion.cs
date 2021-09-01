@@ -192,7 +192,7 @@ namespace Online_book_shop.Handlers.Database
             {
                 using (var ctx = new ApplicationDbContext())
                 {
-                    var promotions = ctx.Promotions.Where(p =>p.StartDate <= DateTime.Today && p.EndDate >= DateTime.Today).Take(5);
+                    var promotions = ctx.Promotions.Where(p =>p.StartDate <= DateTime.Today && p.EndDate >= DateTime.Today && !p.isDeleted).Take(5);
                     if (promotions != null)
                     {
                         return promotions.Take(5).ToList();

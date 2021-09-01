@@ -8,214 +8,158 @@
     List<Author> searchedAuthors = ViewBag.SearchedAuthors;
     List<Publisher> searchedPublishers = ViewBag.SearchedPublishers;
     List<Category> searchedCategories = ViewBag.SearchedCategories;
+    int totalResults = 0;
 }
 
 <div class="">
     <div class="container">
-        @if (searchedBooks != null && searchedBooks.Count > 0)
+        @if (searchedBooks != null)
         {
-            <div class="bookcat-col active">
-                <h3>Books</h3>
-                <div class="row">
-                    <div class="authorwork book-overview" id="">
-                        @foreach (BookVMTile b in searchedBooks)
-                        {
-                            BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
-                            BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
-                            <div class="item col-lg-3">
-                                <div class="item-inner">
-                                    @if (promo != null)
-                                    {
-                                        if (promo.PromotionMethods == (int)PromotionMethods.DeductFromFinalAmount)
-                                        {
-                                            <div class="discount-pers">Offer<br />Off</div>
-
-                                        }
-                                        else if (promo.PromotionMethods == (int)PromotionMethods.FixedAmount)
-                                        {
-                                            <div class="discount-pers">@promo.DiscountValue<br />Off</div>
-
-                                        }
-                                        else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
-                                        {
-                                            <div class="discount-pers">@promo.DiscountValue%<br />Off</div>
-
-                                        }
-                                    }
-                                    <div class="viewmore-discprice">
-                                        <a href="/book/@b.Id" class="viewmore"></a>
-                                        @if (promo != null && promo.DiscountValue > 0)
-                                        {
-                                            <div class="discounted-price">-Rs.@promo.DiscountAmount/=</div>
-                                        }
-                                    </div>
-                                    <div class="book-image">
-                                        @if (b.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName))
-                                        {
-                                            <img src="@Url.Action("Thumbnail", "Utility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+b.FrontCover.FileName})"
-                                                 class="img-fluid"
-                                                 title="@b.BookName"
-                                                 alt="muses @b.BookName" />
-                                            @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@b.FrontCover.FileName?w=160&h=100" alt="@b.BookName" />*@
-                                        }
-                                        else
-                                        {
-                                            <img src="~/Content/images/no-image-book.jpg" alt="@b.BookName" />
-                                        }
-
-                                    </div>
-                                    <div class="book-name-author ">
-                                        <div class="name"><span class="sinhala">@b.LocalBookName</span></div>
-                                    </div>
-                                    <div class="book-name-author">
-                                        <div class="author"><span class="sinhala">@b.LocalAuthorName</span></div>
-                                    </div>
-
-                                    <div class="category">
-                                        @foreach (Category c in b.Categories.Take(2))
-                                        {
-                                            <span class="cat-name">@c.CategoryName</span>
-                                        }
-                                    </div>
-                                    <div class="rating">
-                                        <div class="stars" data-rating="@BusinessHandlerUserReviews.GetBookRating(b.Id)"></div>
-                                    </div>
-                                    @{
-                                        if (bookProperty != null)
-                                        {
-                                            if (promo != null)
-                                            {
-                                                if (promo.DiscountAmount > 0)
-                                                {
-                                                    <div class="price hasdiscount">Rs.@promo.BookPrice/=</div>
-                                                    <div class="discount-price">Rs.@promo.BookPriceAfterDiscount/=</div>
-                                                }
-                                                else
-                                                {
-                                                    <div class="discount-price">Rs.@bookProperty.Price/=</div>
-                                                }
-                                            }
-                                            <div class="addto-cart btn-active add-to-cart" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
-                                                Add to Cart
-                                                <div class="icon"></div>
-                                            </div>
-                                        }
-                                        else
-                                        {
-                                            <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
-                                            <div class="addto-cart btn-active">
-                                                Add to Cart
-                                                <div class="icon"></div>
-                                            </div>
-                                        }
-                                    }
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-
-            </div>
+            totalResults = totalResults + searchedBooks.Count;
+        }
+        @if (searchedAuthors != null)
+        {
+            totalResults = totalResults + searchedAuthors.Count;
         }
 
-        @if (searchedAuthors != null && searchedAuthors.Count > 0)
+        @if (totalResults < 1)
         {
-            <div class="bookcat-col active">
-                <h3>Authors</h3>
-                <div class="row">
-                    <div class="authorwork book-overview" id="authors-work">
-                        @foreach (Author a in searchedAuthors)
-                        {
-                            Media m = a.ProfileImage;
-                            <div class="item">
-                                <div class="item-inner">
-
-                                    <div class="viewmore-discprice">
-                                        <a href="/authors/@a.Id" class="viewmore"></a>
-                                        <div class="discounted-price">View Profile</div>
-                                    </div>
-                                    <div class="book-image">
-                                        @if (m != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/ProfilePicture/" + m.FileName))
-                                        {
-                                            <img src="/Content/UploadFiles/Images/ProfilePicture/@m.FileName" alt="Muses Author @a.Name">
-
-                                        }
-                                        else
-                                        {
-                                            <img src="/Content/images/no-image-book.jpg" alt="Muses Author @a.Name">
-
-                                        }
-
-                                    </div>
-                                    @*<div class="book-name-author ">
-                        <div class="name"><span class="sinhala">T0001</span> - <span class="english">T0001</span></div>
-                    </div>*@
-                                    <div class="book-name-author">
-                                        <div class="author"><span class="sinhala">@a.LocalName</span> @*- <span class="english">@a.LocalName</span>*@</div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        }
-
-                    </div>
+                <div class="succsess-message">
+                    <h3>
+                        No results found                        
+                    </h3>
+                    
                 </div>
-            </div>
-
         }
-        @*@if (searchedPublishers != null && searchedPublishers.Count > 0)
-        {
-            <div class="bookcat-col">
-                <h3>Publishers</h3>
-                <div class="row">
-                    <div class="bookcat-col active" id="">
-                        @foreach (Publisher publisher in searchedPublishers)
-                        {
-                            <div class="item col-sm-3">
-                                <a href="/publisher/@publisher.Id">
-                                    <div class="item-inner">
-                                        <div class="book-image">
-                                            @if (publisher.ProfileImage != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/ProfilePicture/" + publisher.ProfileImage.FileName))
-                                            {
-                                                <img src="~/Content/UploadFiles/Images/ProfilePicture/@publisher.ProfileImage.FileName?w=160&h=100" alt="@publisher.ProfileImage.FileName" />
-                                            }
-                                            else
-                                            {
-                                                <img src="~/Content/images/no-image-book.jpg" alt="@publisher.Name" />
-                                            }
-
-                                        </div>
-                                        <div class="book-name-author sinhala">
-                                            <div class="name">@publisher.LocalName</div>
-                                        </div>
-                                        <div class="book-name-author english">
-                                            <div class="name">@publisher.Name</div>
-                                        </div>
-                                    </div>
-                                </a>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        }
-        @if (searchedCategories != null && searchedCategories.Count > 0)
-        {
-            <div class="book-overview">
-                <h3>Categories</h3>
-                <ul class="category">
-                    <li>Category 1</li>
-                    <li>Category 2</li>
-                    <li>Category 3</li>
-                    <li>Category 4</li>
-                    <li>Category 5</li>
-                </ul>
-                @foreach (Category category in searchedCategories)
+                else
                 {
-                    //Category image(Random book image) and name / page url goes here(add some static data)
-                }
+                    if (searchedBooks != null && searchedBooks.Count > 0)
+                    {
+    <div class="bookcat-col active">
+        <h3>Books</h3>
+        <div class="row">
+            <div class="authorwork book-overview" id="">
+                @foreach (BookVMTile b in searchedBooks)
+                {
+                    BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
+                    BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
+    <div class="item col-lg-3">
+        <div class="item-inner">
+            @if (promo != null)
+            {
+                if (promo.PromotionMethods == (int)PromotionMethods.DeductFromFinalAmount)
+                {
+    <div class="discount-pers">Offer<br />Off</div> }
+else if (promo.PromotionMethods == (int)PromotionMethods.FixedAmount)
+{
+    <div class="discount-pers">@promo.DiscountValue<br />Off</div> }
+else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
+{
+    <div class="discount-pers">@promo.DiscountValue%<br />Off</div>}
+}
+            <div class="viewmore-discprice">
+                <a href="/book/@b.Id" class="viewmore"></a>
+                @if (promo != null && promo.DiscountValue > 0)
+                {
+    <div class="discounted-price">-Rs.@promo.DiscountAmount/=</div>}
             </div>
-        }*@
+            <div class="book-image">
+                @if (b.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName))
+                {
+    <img src="@Url.Action("Thumbnail", "Utility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+b.FrontCover.FileName})"
+         class="img-fluid"
+         title="@b.BookName"
+         alt="muses @b.BookName" /> @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@b.FrontCover.FileName?w=160&h=100" alt="@b.BookName" />*@ }
+    else
+    {
+    <img src="~/Content/images/no-image-book.jpg" alt="@b.BookName" />}
+
+            </div>
+            <div class="book-name-author ">
+                <div class="name"><span class="sinhala">@b.LocalBookName</span></div>
+            </div>
+            <div class="book-name-author">
+                <div class="author"><span class="sinhala">@b.LocalAuthorName</span></div>
+            </div>
+
+            <div class="category">
+                @foreach (Category c in b.Categories.Take(2))
+                {
+    <span class="cat-name">@c.CategoryName</span>}
+            </div>
+            <div class="rating">
+                <div class="stars" data-rating="@BusinessHandlerUserReviews.GetBookRating(b.Id)"></div>
+            </div>
+            @{ if (bookProperty != null)
+                {
+                    if (promo != null)
+                    {
+                        if (promo.DiscountAmount > 0)
+                        {
+    <div class="price hasdiscount">Rs.@promo.BookPrice/=</div>
+                                        <div class="discount-price">Rs.@promo.BookPriceAfterDiscount/=</div> }
+                                    else
+                                    {
+    <div class="discount-price">Rs.@bookProperty.Price/=</div> }
+}
+    <div class="addto-cart btn-active add-to-cart" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
+        Add to Cart
+        <div class="icon"></div>
+    </div> }
+else
+{
+    <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
+                                <div class="addto-cart btn-active">
+                                    Add to Cart
+                                    <div class="icon"></div>
+                                </div> } }
+        </div>
+    </div>}
+            </div>
+        </div>
+
+    </div> }
+
+                    if (searchedAuthors != null && searchedAuthors.Count > 0)
+                    {
+    <div class="bookcat-col active">
+        <h3>Authors</h3>
+        <div class="row">
+            <div class="authorwork book-overview" id="authors-work">
+                @foreach (Author a in searchedAuthors)
+                {
+                    Media m = a.ProfileImage;
+    <div class="item">
+        <div class="item-inner">
+
+            <div class="viewmore-discprice">
+                <a href="/authors/@a.Id" class="viewmore"></a>
+                <div class="discounted-price">View Profile</div>
+            </div>
+            <div class="book-image">
+                @if (m != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/ProfilePicture/" + m.FileName))
+                {
+    <img src="/Content/UploadFiles/Images/ProfilePicture/@m.FileName" alt="Muses Author @a.Name"> }
+else
+{
+    <img src="/Content/images/no-image-book.jpg" alt="Muses Author @a.Name">}
+
+            </div>
+            @*<div class="book-name-author ">
+                <div class="name"><span class="sinhala">T0001</span> - <span class="english">T0001</span></div>
+            </div>*@
+            <div class="book-name-author">
+                <div class="author"><span class="sinhala">@a.LocalName</span> @*- <span class="english">@a.LocalName</span>*@</div>
+            </div>
+
+        </div>
+    </div>}
+
+            </div>
+        </div>
+    </div>}
+                }
+
     </div>
 </div>
 

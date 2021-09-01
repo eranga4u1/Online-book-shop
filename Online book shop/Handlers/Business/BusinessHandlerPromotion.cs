@@ -29,14 +29,16 @@ namespace Online_book_shop.Handlers.Business
         {
             BookPromotionVM model = new BookPromotionVM();
             BookPromotionVM BookPromotion = null;
-            var promotion = GetPromotionForBook(bookId).Select(x => new BookPromotionVM {
+            var data = GetPromotionForBook(bookId);
+
+            var promotion = data != null? data.Select(x => new BookPromotionVM {
                 Id = x.Id,
                 PromotionTitle = x.PromotionTitle,
                 PromotionDescription = x.PromotionDescription,
                 DiscountValue = x.DiscountValue,
                 PromotionMethods=x.PromotionMethods,
                 BookPropertyId = !string.IsNullOrEmpty(x.OtherParameters)?JsonConvert.DeserializeObject<PromptionParameters>(x.OtherParameters).BookPropertyId:0
-            });
+            }):null;
             if(promotion != null && promotion.Count()>0)
             {
                 BookPromotion= promotion.Where(x => x.BookPropertyId == propertyId).FirstOrDefault();

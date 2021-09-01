@@ -29,7 +29,7 @@ namespace Online_book_shop.Controllers
             List<Article> RecentArticles = BusinessHandlerArticle.GetArticles(true);
             ViewBag.Articles = (RecentArticles != null && RecentArticles.Count > 0) ? RecentArticles.Take(3).ToList() : null;
             ViewBag.LatestPromotion = BusinessHandlerPromotion.GetLatestPromotion();
-            ViewBag.RecentlyViewItems = BusinessHandlerRecentlyVisitedItems.Get();
+            ViewBag.RecentlyViewItems = null;//BusinessHandlerRecentlyVisitedItems.Get();
             //HTMLHelper.Test();
             return View();
         }

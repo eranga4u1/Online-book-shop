@@ -960,8 +960,8 @@ $('#sync-order-desc').on("click", function (e) {
 });
 
 $('.btn-bulk-update-promotion').on('click', function () {
-    var srat_date = $('#startDate').val();
-    var end_date = $('#endDate').val();;
+    var srat_date = $('#StartDate').val();
+    var end_date = $('#EndDate').val();;
     var percentage = $('#percentage').val();;
     var selected_nc = $('.checkbox-nc:checked');
     var selected_hc = $('.checkbox-hb:checked');
@@ -1074,22 +1074,42 @@ $('.update-order-payment-sttaus').on('click', function (e) {
 });
 
 
-$('#select-author').on('change', function (e) {
-    var selected_author = $('#select-author').val();
+//$('#select-author').on('change', function (e) {
+//    var selected_author = $('#select-author').val();
     
-    if (selected_author != 0) {
-        var items = $(".author_" + selected_author);
-        $('.checked_all').prop('checked', false);
-        $('.checked_hard_bind_all').prop('checked', false);
-        $('.checked_other_all').prop('checked', false);
-        $('.check-box-container').hide();
-        items.show();
-    } else {
-        $('.checked_all').prop('checked', false);
-        $('.checked_hard_bind_all').prop('checked', false);
-        $('.checked_other_all').prop('checked', false);
-        $('.check-box-container').show();
-    }
+//    if (selected_author != 0) {
+//        var items = $(".author_" + selected_author);
+//        $('.checked_all').prop('checked', false);
+//        $('.checked_hard_bind_all').prop('checked', false);
+//        $('.checked_other_all').prop('checked', false);
+//        $('.check-box-container').hide();
+//        items.show();
+//    } else {
+//        $('.checked_all').prop('checked', false);
+//        $('.checked_hard_bind_all').prop('checked', false);
+//        $('.checked_other_all').prop('checked', false);
+//        $('.check-box-container').show();
+//    }
     
-   // location.replace("/Admin/Promotion/BulkPromotion?author=" + selected_author);
-});
+//});
+
+//$('#select-publisher').on('change', function (e) {
+//    var selected_author = $('#select-publisher').val();
+
+//    if (selected_author != 0) {
+//        var items = $(".publisher_" + selected_author);
+//        $('.checked_all').prop('checked', false);
+//        $('.checked_hard_bind_all').prop('checked', false);
+//        $('.checked_other_all').prop('checked', false);
+//        $('.check-box-container').hide();
+//        items.show();
+//    } else {
+//        $('.checked_all').prop('checked', false);
+//        $('.checked_hard_bind_all').prop('checked', false);
+//        $('.checked_other_all').prop('checked', false);
+//        $('.check-box-container').show();
+//    }
+
+//    // location.replace("/Admin/Promotion/BulkPromotion?author=" + selected_author);
+//});
+

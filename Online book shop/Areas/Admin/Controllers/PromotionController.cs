@@ -83,11 +83,32 @@ namespace Online_book_shop.Areas.Admin.Controllers
             BusinessHandlerPromotion.Show(id);
             return RedirectToAction("Index");
         }
-        public ActionResult BulkPromotion()
+        public ActionResult BulkPromotion(BulkPromotionVM model=null)
         {
             var books = BusinessHandlerBook.GetAllBooksWithPropertyAsNewOne();
-            ViewBag.Items = books;
+            if (model == null || (model.PublisherId==0 && model.AuthorId==0))
+            {
+                ViewBag.Items = books;
+            }
+            else
+            {
+                if(model.AuthorId>0 && model.PublisherId > 0)
+                {
+                    ViewBag.Items = books.Where(x => x.BookAuthorId == model.AuthorId && x.BookPublisherId == model.PublisherId) !=null? books.Where(x => x.BookAuthorId == model.AuthorId && x.BookPublisherId == model.PublisherId).ToList():null;
+                }
+                else if(model.AuthorId > 0)
+                {
+                    ViewBag.Items = books.Where(x => x.BookAuthorId == model.AuthorId) !=null? books.Where(x => x.BookAuthorId == model.AuthorId).ToList():null;
+                }else if (model.PublisherId > 0)
+                {
+                    ViewBag.Items = books.Where(x => x.BookPublisherId == model.PublisherId) !=null? books.Where(x => x.BookPublisherId == model.PublisherId).ToList():null;
+                }
+            }
+            
+            
             ViewBag.Authors = BusinessHandlerAuthor.GetAuthors();
+            ViewBag.Publishers = BusinessHandlerPublisher.GetPublishers();
+            ViewBag.FilterModel = model;
             return View();
         }
 
@@ -95,6 +116,8 @@ namespace Online_book_shop.Areas.Admin.Controllers
         {
             if (!string.IsNullOrEmpty(model.SelectedItems))
             {
+                model.StartDate = model.StartDate.AddHours(-12.5);
+                model.EndDate = model.EndDate.AddHours(-12.5);
                 List<Promotion> promoList = new List<Promotion>();
                 string[] itemArray = model.SelectedItems.Split(',');
                 foreach(string s in itemArray)
