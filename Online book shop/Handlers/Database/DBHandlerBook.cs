@@ -205,11 +205,38 @@ namespace Online_book_shop.Handlers.Database
             }
         }
 
-        internal static List<ItemMedia> GetOtherMedia(int id, ObjectTypes type)
+        internal static bool UpdateBookStockAddBookPackItem(int bookId, int propertyId, int numberOfBookPacks)
         {
             try
             {
                 using (var ctx = new ApplicationDbContext())
+                {
+                    var bookProperty = ctx.BookProperties.Where(x => x.BookId == bookId && x.Id == propertyId).FirstOrDefault();
+                    if(bookProperty != null && (bookProperty.NumberOfCopies <= numberOfBookPacks))
+                    {
+                        bookProperty.NumberOfCopies = bookProperty.NumberOfCopies - numberOfBookPacks;
+                        bookProperty.UpdatedDate = DateTime.UtcNow;
+                        bookProperty.UpdatedBy = BusinessHandlerAuthor.GetLoginUserId();
+                        if (ctx.SaveChanges() > 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        internal static List<ItemMedia> GetOtherMedia(int id, ObjectTypes type)
+        {
+            try
+            {
+                 using (var ctx = new ApplicationDbContext())
                 {
                     return ctx.ItemMedias.Where(x => x.ObjectId == id && x.ObjectType==(int)type && !x.IsDeleted).ToList();
                 }
@@ -231,7 +258,7 @@ namespace Online_book_shop.Handlers.Database
                     SaleStatus pre_order= ctx.SaleStatus.Where(x => x.Title == "pre_order").FirstOrDefault();
                     if (book != null && pre_order !=null)
                     {
-                        if(book.SaleType== pre_order.Id)
+                               if(book.SaleType== pre_order.Id)
                         {
                             if (DateTime.UtcNow > book.RelaseDate)
                             {

@@ -49,14 +49,25 @@ namespace Online_book_shop.Handlers.Business
         }
         public static string GetStringRecentViews(string value,int newId)
         {
-            string s = value;
-            value.Replace(string.Format(",{0}", newId.ToString()),"").Replace(string.Format(",{0}", newId.ToString()), "");
-            if (StringToIntList(value).Count() > 10)
+            List<string> bookIds = value.Split(',').Distinct().Reverse().Take(5).Select(x => x).ToList();
+            if (bookIds !=null)
             {
-                s = string.Join(",", value.Split(',').Select(str => str.TrimStart('0')));
+                bookIds.Add(newId.ToString());
             }
-            
-            return string.Format(s + ",{0}", newId.ToString());
+            else
+            {
+                bookIds=new List<string>();
+                bookIds.Add(newId.ToString());
+            }
+
+            //string s = value;
+            //value.Replace(string.Format(",{0}", newId.ToString()),"").Replace(string.Format(",{0}", newId.ToString()), "");
+            //if (StringToIntList(value).Count() > 10)
+            //{
+            //    s = string.Join(",", value.Split(',').Select(str => str.TrimStart('0')));
+            //}
+
+            return String.Join(",", bookIds); //string.Format(s + ",{0}", newId.ToString());
 
         }
     }

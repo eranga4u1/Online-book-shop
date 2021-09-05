@@ -1,13 +1,29 @@
 ﻿@model Online_book_shop.Models.ViewModel.BookVM
+@using Online_book_shop.Models.ViewModel;
 @using Online_book_shop.Models;
- @{
-     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
-     List<string> Obj_book_property_types= ViewBag.book_property_types;
-}
-<h2>New Book</h2>
+@{ 
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List<string> Obj_book_property_types = ViewBag.book_property_types;
+    List<DataObjVM> data = ViewBag.list; 
+    }
+<h2>New Item</h2>
 <script src="https://cdn.ckeditor.com/4.14.1/standard/ckeditor.js"></script>
 <form id="form-add-book" method="post" action="/Admin/Book/AddBook" enctype="multipart/form-data">
-
+    <div class="col-lg-12">
+        <h3>Select Item Type</h3>
+        <div class="form-check col-lg-2">
+            <input class="form-check-input check-item-type" type="radio" value="0" name="ItemType" id="ItemTypeBook" checked>
+            <label class="form-check-label check-item-type" for="ItemTypeBook">
+                Book
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input check-item-type" value="1" type="radio" name="ItemType" id="ItemTypeBookPack">
+            <label class="form-check-label" for="ItemTypeBookPack">
+                Book Pack
+            </label>
+        </div>
+    </div>
     <div class="row col-lg-12 col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -33,16 +49,15 @@
                             <div class="row">
                                 @foreach (Category c in ViewBag.Categories)
                                 {
-                                    <div class="col-lg-4">
-                                        <div class="input-group-prepend">
-                                            <label class="input-group-text">
-                                                <input type="checkbox" class="category-check-box" aria-label="Checkbox for following text input" value="@c.Id"><span>@c.CategoryName</span>
-                                                <span class="checkmark"></span>
-                                            </label>
-                                        </div>
+                    <div class="col-lg-4">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text">
+                                <input type="checkbox" class="category-check-box" aria-label="Checkbox for following text input" value="@c.Id"><span>@c.CategoryName</span>
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
 
-                                    </div>
-                                }
+                    </div>}
                                 <input type="hidden" id="Categories" name="Categories" value="" />
                             </div>
                         </div>
@@ -66,8 +81,8 @@
                         <select id="PublisherId" class="form-control" name="PublisherId">
                             @foreach (Publisher publisher in ViewBag.Publishers)
                             {
-                                <option value="@publisher.Id">@publisher.Name</option>
-                            }
+                <option value="@publisher.Id">@publisher.Name</option>
+}
                         </select>
                     </div>
                 </div>
@@ -77,8 +92,8 @@
                         <select id="AuthorId" class="form-control" name="AuthorId">
                             @foreach (Author author in ViewBag.Authors)
                             {
-                                <option value="@author.Id">@author.Name</option>
-                            }
+                <option value="@author.Id">@author.Name</option>
+}
                         </select>
                     </div>
                     <span class="btn btn-xs add-more-author">Add more</span>
@@ -91,13 +106,13 @@
                             {
                                 if (l.Name == "Sinhala")
                                 {
-                                    <option selected value="@l.Id">@l.Name</option>
-                                }
-                                else
-                                {
-                                    <option value="@l.Id">@l.Name</option>}
+                <option selected value="@l.Id">@l.Name</option>
+ }
+            else
+            {
+<option value="@l.Id">@l.Name</option>}
 
-                                }
+            }
 
                         </select>
                     </div>
@@ -111,10 +126,10 @@
                                 List<SaleStatus> saleStatuses = ViewBag.SaleStatus;
                                 foreach (SaleStatus s in saleStatuses)
                                 {
-                                    <option @("Available"==s.DisplayText?"selected":"") value="@s.Id">@s.DisplayText</option>
-                                }
+                <option @("Available" == s.DisplayText ? "selected" : "") value="@s.Id">@s.DisplayText</option>
+}
 
-                            }                        
+        }
                         </select>
                     </div>
                 </div>
@@ -151,242 +166,139 @@
 
                 <div class="form-group">
                     <label>Maximum Number Of Items Per Cart</label>
-                    <input type="number" min="0" value="0"  class="form-control" id="MaximumItemPerOrder" name="MaximumItemPerOrder" placeholder="Maximum Item PerOrder" />
+                    <input type="number" min="0" value="0" class="form-control" id="MaximumItemPerOrder" name="MaximumItemPerOrder" placeholder="Maximum Item PerOrder" />
                 </div>
             </div>
 
         </div>
     </div>
-    @for (int i = 0; i < 5; i++)
-    {
+    <div class="book-property-container">
+        @for (int i = 0; i < 5; i++)
+        {
 
-       string style= (i == 0 ? "display: block;" : "display: none;");
-        <div class="row col-lg-12 col-md-12 b-prop-@(i + 1)" style="@style">
+            string style = (i == 0 ? "display: block;" : "display: none;");
+<div class="row col-lg-12 col-md-12 b-prop-@(i + 1)" style="@style">
     <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Type of books
-                    </div>
-                    <div class="panel-body">
-                        <div class="col-lg-6" style="border-right:solid 1px;">
-                            <h3 class="mini-header">Base Property</h3>
-                            <hr />
-                            <div class="form-group">
-                                <label>Property Title</label>
-                                <div class="select">
-                                    <select id="BookProperties[@i].Title" name="BookProperties[@i].Title" class="form-control">
-                                        @foreach (var item in Obj_book_property_types)
-                                        {
-                                            <option value="@item">@item</option>
-                                        }
+        <div class="panel-heading">
+            Type of books
+        </div>
+        <div class="panel-body">
+            <div class="col-lg-6" style="border-right:solid 1px;">
+                <h3 class="mini-header">Base Property</h3>
+                <hr />
+                <div class="form-group">
+                    <label>Property Title</label>
+                    <div class="select">
+                        <select id="BookProperties[@i].Title" name="BookProperties[@i].Title" class="form-control">
+                            @foreach (var item in Obj_book_property_types)
+                            {
+                                <option value="@item">@item</option>
+                            }
 
-                                        @*<option value="Hard Bind Cover">Hard Bind Cover</option>
-                                        <option value="Other">Other</option>*@
+                            @*<option value="Hard Bind Cover">Hard Bind Cover</option>
+                                <option value="Other">Other</option>*@
+                        </select>
+                    </div>
+                    @*<input type="text" class="form-control" id="BookProperties[@i].Title" name="BookProperties[@i].Title" placeholder="Title">*@
+                </div>
+                <div class="form-group hidden">
+                    <label>Property Description</label>
+                    <textarea type="text" class="form-control" id="BookProperties[@i].Description" name="BookProperties[@i].Description" placeholder="Description">Content Empty</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Number Of Pages</label>
+                    <input type="number" class="form-control" id="BookProperties[@i].NumberOfPages" name="BookProperties[@i].NumberOfPages" placeholder="NumberOfPages">
+                </div>
+                <div class="form-group">
+                    <label>Weight(One book by gram)</label>
+                    <input type="number" class="form-control" id="BookProperties[@i].WeightByGrams" name="BookProperties[@i].WeightByGrams" placeholder="Weight By Grams">
+                </div>
+                <div class="form-group">
+                    <label>Number Of Copies</label>
+                    <input type="number" class="form-control" id="BookProperties[@i].NumberOfCopies" name="BookProperties[@i].NumberOfCopies" placeholder="Number Of Copies">
+                </div>
+                <div class="form-group">
+                    <label>Raw Price</label>
+                    <input type="number" class="form-control" id="BookProperties[@i].Price" name="BookProperties[@i].Price" placeholder="Price">
+                </div>
+                <input type="hidden" name="isAvailable_@i" id="isAvailable_@(i+1)" value="@i" />
+            </div>
+            <div class="col-lg-6">
+                <h3 class="mini-header">Quick Promotion</h3>
+                <hr />
+                <div class="form-group">
+                    <label>Discount Value</label>
+                    <table>
+                        <tr>
+                            <td><input type="number" min="0" class="form-control" id="DiscountValue" name="BookProperties[@i].DiscountValue" value="20"></td>
+                            <td class="col-lg-8">
+                                <div class="select">
+                                    <select class="form-control" name="BookProperties[@i].PromotionMethods">
+                                        <option value="1">Percent</option>
+                                        <option value="0">Fix Amount</option>
                                     </select>
                                 </div>
-                                @*<input type="text" class="form-control" id="BookProperties[@i].Title" name="BookProperties[@i].Title" placeholder="Title">*@
-                            </div>
-                            <div class="form-group hidden">
-                                <label>Property Description</label>
-                                <textarea type="text" class="form-control" id="BookProperties[@i].Description" name="BookProperties[@i].Description" placeholder="Description">Content Empty</textarea>
-                            </div>
-                            <div class="form-group">
-                                <label>Number Of Pages</label>
-                                <input type="number" class="form-control" id="BookProperties[@i].NumberOfPages" name="BookProperties[@i].NumberOfPages" placeholder="NumberOfPages">
-                            </div>
-                            <div class="form-group">
-                                <label>Weight(One book by gram)</label>
-                                <input type="number" class="form-control" id="BookProperties[@i].WeightByGrams" name="BookProperties[@i].WeightByGrams" placeholder="Weight By Grams">
-                            </div>
-                            <div class="form-group">
-                                <label>Number Of Copies</label>
-                                <input type="number" class="form-control" id="BookProperties[@i].NumberOfCopies" name="BookProperties[@i].NumberOfCopies" placeholder="Number Of Copies">
-                            </div>
-                            <div class="form-group">
-                                <label>Raw Price</label>
-                                <input type="number" class="form-control" id="BookProperties[@i].Price" name="BookProperties[@i].Price" placeholder="Price">
-                            </div>
-                            <input type="hidden" name="isAvailable_@i" id="isAvailable_@(i+1)" value="@i" />
-                        </div>
-                        <div class="col-lg-6">
-                            <h3 class="mini-header">Quick Promotion</h3>
-                            <hr />
-                            <div class="form-group">
-                                <label>Discount Value</label>
-                                <table>
-                                    <tr>
-                                        <td><input type="number" min="0" class="form-control" id="DiscountValue" name="BookProperties[@i].DiscountValue" value="20"></td>
-                                        <td class="col-lg-8">
-                                            <div class="select">
-                                                <select class="form-control" name="BookProperties[@i].PromotionMethods">
-                                                    <option value="1">Percent</option>
-                                                    <option value="0">Fix Amount</option>
-                                                </select>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    
-                                </table>
-                               
-                                
-                             
-                            </div>
-                        </div>
-                       
-                                </div>
-                                <div class="panel-footer text-right">
-                                    <button class="btn btn-defaultv btn-b-prop-@(i+1)">Add New</button>
-                                </div>
-                            </div>
-                    </div>
-                }
-                        @* <div class="row col-lg-12 col-md-12 b-prop-1">
-          <div class="panel panel-default">
-              <div class="panel-heading">
-                  Type of books
-              </div>
-              <div class="panel-body">
-                  <div class="form-group">
-                      <label>Number Of Pages</label>
-                      <input type="number" class="form-control" id="BookProperties[0].NumberOfPages" name="BookProperties[0].NumberOfPages" placeholder="NumberOfPages">
-                  </div>
-                  <div class="form-group">
-                      <label>Weight(One book by gram)</label>
-                      <input type="number" class="form-control" id="BookProperties[0].WeightByGrams" name="BookProperties[0].WeightByGrams" placeholder="Weight By Grams">
-                  </div>
-                  <div class="form-group">
-                      <label>Number Of Copies</label>
-                      <input type="number" class="form-control" id="BookProperties[0].NumberOfCopies" name="BookProperties[0].NumberOfCopies" placeholder="Number Of Copies">
-                  </div>
-                  <div class="form-group">
-                      <label>Raw Price</label>
-                      <input type="number" class="form-control" id="BookProperties[0].Price" name="BookProperties[0].Price" placeholder="Price">
-                  </div>
-                  <input type="hidden" name="isAvailable_1" id="isAvailable_1" value="1" />
-              </div>
-              <div class="panel-footer text-right">
-                  <button class="btn btn-defaultv btn-b-prop-1">Add New</button>
-              </div>
-          </div>
-      </div>
-    <div class="row col-lg-12 col-md-12 b-prop-2" style="display:none;">
-              <div class="panel panel-default">
-                  <div class="panel-heading">
-                      Type of books
-                  </div>
-                  <div class="panel-body">
-                      <div class="form-group">
-                          <label>Number Of Pages</label>
-                          <input type="number" class="form-control" id="NumberOfPages_2" name="NumberOfPages_2" placeholder="NumberOfPages">
-                      </div>
-                      <div class="form-group">
-                          <label>Weight(One book by gram)</label>
-                          <input type="number" class="form-control" id="WeightByGrams_2" name="WeightByGrams_2" placeholder="Weight By Grams">
-                      </div>
-                      <div class="form-group">
-                          <label>Number Of Copies</label>
-                          <input type="number" class="form-control" id="NumberOfCopies_2" name="NumberOfCopies_2" placeholder="Number Of Copies">
-                      </div>
-                      <div class="form-group">
-                          <label>Raw Price</label>
-                          <input type="number" class="form-control" id="Price_2" name="Price_2" placeholder="Price">
-                      </div>
-                      <input type="hidden" name="isAvailable_2" id="isAvailable_2" value="0" />
-                  </div>
-                  <div class="panel-footer text-right">
-                      <button class="btn btn-default btn-b-prop-2">Add New</button>
-                  </div>
-              </div>
-          </div>
-          <div class="row col-lg-12 col-md-12 b-prop-3" style="display:none;">
-              <div class="panel panel-default">
-                  <div class="panel-heading">
-                      Type of books
-                  </div>
-                  <div class="panel-body">
-                      <div class="form-group">
-                          <label>Number Of Pages</label>
-                          <input type="number" class="form-control" id="NumberOfPages_3" name="NumberOfPages_3" placeholder="NumberOfPages">
-                      </div>
-                      <div class="form-group">
-                          <label>Weight(One book by gram)</label>
-                          <input type="number" class="form-control" id="WeightByGrams_3" name="WeightByGrams_3" placeholder="Weight By Grams">
-                      </div>
-                      <div class="form-group">
-                          <label>Number Of Copies</label>
-                          <input type="number" class="form-control" id="NumberOfCopies_3" name="NumberOfCopies_3" placeholder="Number Of Copies">
-                      </div>
-                      <div class="form-group">
-                          <label>Raw Price</label>
-                          <input type="number" class="form-control" id="Price_3" name="Price_3" placeholder="Price">
-                      </div>
-                      <input type="hidden" name="isAvailable_3" id="isAvailable_3" value="0" />
-                  </div>
-                  <div class="panel-footer text-right">
-                      <button class="btn btn-default btn-b-prop-3">Add New</button>
-                  </div>
-              </div>
-          </div>
-          <div class="row col-lg-12 col-md-12 b-prop-4" style="display:none;">
-              <div class="panel panel-default">
-                  <div class="panel-heading">
-                      Type of books
-                  </div>
-                  <div class="panel-body">
-                      <div class="form-group">
-                          <label>Number Of Pages</label>
-                          <input type="number" class="form-control" id="NumberOfPages_4" name="NumberOfPages_4" placeholder="NumberOfPages">
-                      </div>
-                      <div class="form-group">
-                          <label>Weight(One book by gram)</label>
-                          <input type="number" class="form-control" id="WeightByGrams_4" name="WeightByGrams_4" placeholder="Weight By Grams">
-                      </div>
-                      <div class="form-group">
-                          <label>Number Of Copies</label>
-                          <input type="number" class="form-control" id="NumberOfCopies_4" name="NumberOfCopies_4" placeholder="Number Of Copies">
-                      </div>
-                      <div class="form-group">
-                          <label>Raw Price</label>
-                          <input type="number" class="form-control" id="Price_4" name="Price_4" placeholder="Price">
-                      </div>
-                      <input type="hidden" name="isAvailable_4" id="isAvailable_4" value="0" />
-                  </div>
-                  <div class="panel-footer text-right">
-                      <button class="btn btn-default btn-b-prop-4">Add New</button>
-                  </div>
-              </div>
-          </div>
-          <div class="row col-lg-12 col-md-12 b-prop-5" style="display:none;">
-              <div class="panel panel-default">
-                  <div class="panel-heading">
-                      Type of books
-                  </div>
-                  <div class="panel-body">
-                      <div class="form-group">
-                          <label>Number Of Pages</label>
-                          <input type="number" class="form-control" id="NumberOfPages_5" name="NumberOfPages_5" placeholder="NumberOfPages">
-                      </div>
-                      <div class="form-group">
-                          <label>Weight(One book by gram)</label>
-                          <input type="number" class="form-control" id="WeightByGrams_5" name="WeightByGrams_5" placeholder="Weight By Grams">
-                      </div>
-                      <div class="form-group">
-                          <label>Number Of Copies</label>
-                          <input type="number" class="form-control" id="NumberOfCopies_5" name="NumberOfCopies_5" placeholder="Number Of Copies">
-                      </div>
-                      <div class="form-group">
-                          <label>Raw Price</label>
-                          <input type="number" class="form-control" id="Price_5" name="Price_5" placeholder="Price">
-                      </div>
-                      <input type="hidden" name="isAvailable_5" id="isAvailable_5" value="0" />
-                  </div>
+                            </td>
+                        </tr>
 
-      </div>
-      </div>*@
+                    </table>
+
+
+
+                </div>
+            </div>
+
+        </div>
+        <div class="panel-footer text-right">
+            <button class="btn btn-defaultv btn-b-prop-@(i+1)">Add New</button>
+        </div>
+    </div>
+</div>}
+    </div>
+    <div class="book-pack-container" style="display:none">
+        <div class="form-group">
+            <label>Books </label>
+            <table>
+                <tr>
+                    <td class="col-lg-6">
+                        <div class="select mce-match-marker-selected book-row ">
+                            <select id="select-book-for-book-pack" class="form-control " name="select-book-for-book-pack">
+                                <option data-para="" class="obj_select" value="0">--Select--</option>
+                                @foreach (var item in data)
+                                {
+                    <option data-para="@item.OtherPara" class="obj_select" value="@item.Id">@item.Name</option>
+}
+                            </select>
+                        </div>
+                    </td>
+                    <td class="col-lg-6">
+                        <a class="btn btn-warning btn-sm  add-new-bookpackrow">Add</a>
+                        <input id="numberOfBooksForBookPacks" class="display-none" type="number" value="1" />
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <div>
+            <ul id="book-pack-menu" class="list-group">
+            </ul>
+            <input id="selected-books" name="SelectedBooks" type="hidden" value="" />
+        </div>
+        <div class="form-group">
+            <label>Item Price</label>
+            <input type="number" class="form-control" id="item-price" name="ItemPrice" placeholder="Price">
+        </div>
+        <div class="form-group">
+            <label>Number Of Copies</label>
+            <input type="number" class="form-control" id="item-number-of-copies" name="NumberOfCopies" placeholder="Number Of Copies">
+        </div>
+    </div>
+
 
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
 
-        <div>
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

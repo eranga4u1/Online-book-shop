@@ -1116,7 +1116,15 @@ $('.update-order-payment-sttaus').on('click', function (e) {
 
     
 });
-
+$('.check-item-type').one('change', function (e) {
+    if ($(this).val() == 0 && $(this).is(":checked")) {
+        $('.book-property-container').show();
+        $('.book-pack-container').hide();
+    } else if ($(this).val() == 1 && $(this).is(":checked")) {
+        $('.book-property-container').hide();
+        $('.book-pack-container').show();
+    }
+});
 
 //$('#select-author').on('change', function (e) {
 //    var selected_author = $('#select-author').val();

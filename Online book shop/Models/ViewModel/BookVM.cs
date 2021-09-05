@@ -29,6 +29,12 @@ namespace Online_book_shop.Models.ViewModel
 
         public int MaximumItemPerOrder { get; set; }
 
+        public int ItemType { get; set; }
+        public string SelectedBooks { get; set; }
+        public decimal ItemPrice { get; set; }
+
+        public int NumberOfCopies { get; set; }
+
         //public int NumberOfPages_1 { get; set; }
         //public decimal WeightByGrams_1 { get; set; }
         //public int NumberOfCopies_1 { get; set; }

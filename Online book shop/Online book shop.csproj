@@ -655,6 +655,10 @@
     <Compile Include="Migrations\202107181146336_alter_book_tbl.Designer.cs">
       <DependentUpon>202107181146336_alter_book_tbl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202109051810010_alter_book.cs" />
+    <Compile Include="Migrations\202109051810010_alter_book.Designer.cs">
+      <DependentUpon>202109051810010_alter_book.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActiveMenu.cs" />
@@ -1457,6 +1461,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202107181146336_alter_book_tbl.resx">
       <DependentUpon>202107181146336_alter_book_tbl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202109051810010_alter_book.resx">
+      <DependentUpon>202109051810010_alter_book.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

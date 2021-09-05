@@ -238,5 +238,13 @@ namespace Online_book_shop.Handlers.Business
         {
             return DBHandlerBook.isOrderLimitExceed(bookId, numberOfItem);
         }
+        internal static StockEntry UpdateBookStockAddBookPackItem(int BookId , int PropertyId , int NumberOfBooks)
+        {
+            if(DBHandlerBook.UpdateBookStockAddBookPackItem(BookId, PropertyId, NumberOfBooks))
+            {
+              return  BusinessHandlerStockEntry.Update(BookId, NumberOfBooks, PropertyId, StockEntryOperation.Out_For_Book_Pack);
+            }
+            return null;
+        }
     }
 }

@@ -41,7 +41,8 @@ namespace Online_book_shop.Areas.Admin.Controllers
             ViewBag.Categories = BusinessHandlerCategory.GetCategories();
             ViewBag.Languages = BusinessHandlerLanguage.Get();
             ViewBag.SaleStatus = BusinessHandlerSaleStatus.GetAllActiveSaleStatus();
-            
+            var books = BusinessHandlerBook.GetAllBooksWithPropertyAsNewOne(); //BusinessHandlerBook.GetAllBooks(true).Select(x=> new DataObjVM { Id=x.Id,Name=x.Title,ObjType=0}).ToList();    
+            ViewBag.list = books;
             ViewBag.book_property_types = Obj_book_property_types;
             return View();
         }
@@ -119,29 +120,31 @@ namespace Online_book_shop.Areas.Admin.Controllers
                         }
 
                     }
-                    bool isPropertyAdded = false;
-                    if(bookvm.BookProperties !=null && bookvm.BookProperties.Count > 0)
+                    if(bookvm.ItemType== (int)ItemType.Book)
                     {
-                        foreach (var bp in bookvm.BookProperties)
+                        bool isPropertyAdded = false;
+                        if (bookvm.BookProperties != null && bookvm.BookProperties.Count > 0)
                         {
-                            if (bp.Price > 0 && bp.NumberOfPages != 0)
+                            foreach (var bp in bookvm.BookProperties)
                             {
-                                BookProperties bookProperties = new BookProperties();
-                                bookProperties.BookId = book.Id;
-                                bookProperties.NumberOfPages = bp.NumberOfPages;
-                                bookProperties.NumberOfCopies = bp.NumberOfCopies;
-                                bookProperties.LanguageId = bookvm.LanguageId;
-                                bookProperties.Price = bp.Price;
-                                bookProperties.WeightByGrams = bp.WeightByGrams;
-                                bookProperties.FreeReadPDFMediaId = FreeReadPDFMediaId;
-                                bookProperties.BackCoverMediaId = BackCoverMediaId;
-                                bookProperties.FrontCoverMediaId = FrontCoverMediaId;
-                                bookProperties.Title = bp.Title;
-                                bookProperties.Description = bp.Description;
-                                BusinessHandlerBookProperties.Add(bookProperties);
-                                isPropertyAdded = true;
-                                //if (bp.DiscountValue > 0)
-                                //{
+                                if (bp.Price > 0 && bp.NumberOfPages != 0)
+                                {
+                                    BookProperties bookProperties = new BookProperties();
+                                    bookProperties.BookId = book.Id;
+                                    bookProperties.NumberOfPages = bp.NumberOfPages;
+                                    bookProperties.NumberOfCopies = bp.NumberOfCopies;
+                                    bookProperties.LanguageId = bookvm.LanguageId;
+                                    bookProperties.Price = bp.Price;
+                                    bookProperties.WeightByGrams = bp.WeightByGrams;
+                                    bookProperties.FreeReadPDFMediaId = FreeReadPDFMediaId;
+                                    bookProperties.BackCoverMediaId = BackCoverMediaId;
+                                    bookProperties.FrontCoverMediaId = FrontCoverMediaId;
+                                    bookProperties.Title = bp.Title;
+                                    bookProperties.Description = bp.Description;
+                                    BusinessHandlerBookProperties.Add(bookProperties);
+                                    isPropertyAdded = true;
+                                    //if (bp.DiscountValue > 0)
+                                    //{
                                     Promotion promotion = new Promotion
                                     {
                                         PromotionTitle = "Promotion for " + bookvm.Title + " - " + book.Id,
@@ -156,14 +159,53 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                         StartDate = DateTime.Today.AddDays(-1)
                                     };
                                     BusinessHandlerPromotion.Add(promotion);
-                                //}
+                                    //}
+                                }
                             }
                         }
-                    }
-                    if(!isPropertyAdded)
+                        if (!isPropertyAdded)
+                        {
+                            BusinessHandlerBookProperties.AddDemoProperty(book.Id);
+                        }
+                    }else if(bookvm.ItemType == (int)ItemType.BookPack)
                     {
-                        BusinessHandlerBookProperties.AddDemoProperty(book.Id);
+                        decimal weight = 0;
+                        if (!String.IsNullOrEmpty(bookvm.SelectedBooks))
+                        {
+                            List<ItemPack_Item> itemPack_ItemList = new List<ItemPack_Item>();
+                            string[] items = bookvm.SelectedBooks.Split(',');
+                            foreach (string s in items)
+                            {
+                                string[] dictionary = s.Split('-');
+                                int bookId = Convert.ToInt32(dictionary[0]);
+                                int propertyId = Convert.ToInt32(dictionary[1]);
+                                var Obj = new ItemPack_Item { ItemId = bookId, ItemPackId = book.Id, ItemPropertyId = propertyId, NumberOfItems = 1 };
+                                itemPack_ItemList.Add(Obj);
+                                BookProperties b = BusinessHandlerBookProperties.GetById(propertyId);
+                                BusinessHandlerBook.UpdateBookStockAddBookPackItem(book.Id, propertyId, bookvm.NumberOfCopies);
+                                weight = weight + (b != null ? b.WeightByGrams : 0);
+                            }
+                            if (itemPack_ItemList.Count > 0)
+                            {
+                                BusinessHandlerBook.AddItemPack_Book(itemPack_ItemList);
+                            }
+
+                        }
+                        BookProperties bookProperties = new BookProperties();
+                        bookProperties.BookId = book.Id;
+                        bookProperties.NumberOfPages = 0;
+                        bookProperties.NumberOfCopies = bookvm.NumberOfCopies;
+                        bookProperties.LanguageId = bookvm.LanguageId;
+                        bookProperties.Price = bookvm.ItemPrice;
+                        bookProperties.WeightByGrams = weight;
+                        bookProperties.FreeReadPDFMediaId = FreeReadPDFMediaId;
+                        bookProperties.BackCoverMediaId = BackCoverMediaId;
+                        bookProperties.FrontCoverMediaId = FrontCoverMediaId;
+                        bookProperties.Title = bookvm.Title;
+                        bookProperties.Description = bookvm.Description;
+                        BusinessHandlerBookProperties.Add(bookProperties);
                     }
+                   
                    
                     //BusinessHandlerBookCategory.DeletebyBookId(book.Id);
                     if(!string.IsNullOrEmpty(bookvm.Categories))

@@ -27,7 +27,9 @@ namespace Online_book_shop.Handlers.Business
         Out,
         In_Admin_Updated,
         Out_Admin_Updated,
-        Added_To_Item_Pack
+        Added_To_Item_Pack,
+        Out_For_Book_Pack,
+        In_From_Book_Pack
     }
     public enum CartStatus
     {
@@ -121,5 +123,11 @@ namespace Online_book_shop.Handlers.Business
     {
         Normal,
         Urgent
+    }
+
+    public enum ItemType
+    {
+        Book,
+        BookPack
     }
 }

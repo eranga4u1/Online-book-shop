@@ -20,8 +20,10 @@ namespace Online_book_shop.Handlers.Database
                     RecentyViewItems recentyViewItems= ctx.RecentyViewItems.Where(x => x.UserId == userId).FirstOrDefault();
                     if(recentyViewItems != null && !string.IsNullOrEmpty(recentyViewItems.RecentlyVisitedItems) )
                     {
-                        IEnumerable<int> bookIds = BusinessHandlerRecentlyVisitedItems.StringToIntList(recentyViewItems.RecentlyVisitedItems);
-                        if(bookIds !=null && bookIds.Count()>0)
+                       
+
+                        List<int> bookIds = recentyViewItems.RecentlyVisitedItems.Split(',').Distinct().Reverse().Take(5).Select(x=>Convert.ToInt32(x)).ToList();//BusinessHandlerRecentlyVisitedItems.StringToIntList(recentyViewItems.RecentlyVisitedItems);
+                        if (bookIds !=null && bookIds.Count()>0)
                         {
                             var bookResults = from a in (from q in ctx.Books
                                                          where bookIds.Any(y => y == q.Id) && !q.isDeleted
