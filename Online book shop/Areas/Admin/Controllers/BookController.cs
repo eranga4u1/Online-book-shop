@@ -65,6 +65,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                 book.RelaseDate = bookvm.PreReleaseEndDate;//) ? Convert.ToDateTime(bookvm.PreReleaseEndDate) : DateTime.UtcNow;
                 book.YoutubeUrl = bookvm.YoutubeUrl;
                 book.MaximumItemPerOrder = bookvm.MaximumItemPerOrder == 0 ? 10000 : bookvm.MaximumItemPerOrder;
+                book.ItemType = bookvm.ItemType;
                 book =BusinessHandlerBook.Add(book);
           
                 int FrontCoverMediaId=0, BackCoverMediaId=0, FreeReadPDFMediaId=0;

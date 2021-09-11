@@ -365,11 +365,12 @@ $(document).ready(function() {
   home.init();
   slider.bookSlider("#preorder");
   slider.bookSlider(".commonslider");
-    slider.bookSlider("#latestarr");
-    slider.bookSlider("#recentview");
-  slider.bookSlider("#bestselling");
-  slider.bookSlider(".authorwork-slider");
-  slider.bookSlider(".recommended-slider");
+slider.bookSlider("#latestarr");
+    slider.bookSlider("#bookpacksarr");
+slider.bookSlider("#recentview");
+slider.bookSlider("#bestselling");
+slider.bookSlider(".authorwork-slider");
+slider.bookSlider(".recommended-slider");
 
   slider.bookOverviewSlider();
   countDown.init();

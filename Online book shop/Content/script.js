@@ -365,6 +365,7 @@ $(document).ready(function() {
   slider.bookSlider("#booksby");
   slider.bookSlider("#youmaylike");
     slider.bookSlider("#latestarr");
+    slider.bookSlider("#bookpacksarr");
     slider.bookSlider("#recentview");
   slider.bookSlider("#bestselling");
   slider.bookSlider(".authorwork-slider");

@@ -20,7 +20,8 @@ namespace Online_book_shop.Controllers
         {
            List<BookVMTile> preorder_books = BusinessHandlerBook.GetPreOrderBooksForView();
            List<BookVMTile> latest_books = BusinessHandlerBook.GetLatestBooksForView();
-           List<BookVMTile> best_selling_books = BusinessHandlerBook.GetBestSellingBooksForView(); //set to get latest book this should change later
+            List<BookVMTile> book_packs = BusinessHandlerBook.GetBookPacksForView();
+            List<BookVMTile> best_selling_books = BusinessHandlerBook.GetBestSellingBooksForView(); //set to get latest book this should change later
             // var preOrderBooks = books.Where(x => x.SaleType == (int)SaleType.PreOrder);
             ViewBag.PreOrderBooks = preorder_books.Where(b=> !b.isDeleted).OrderByDescending(x=> x.CreatedDate).ToList();
             ViewBag.LatestBooks = latest_books.Where(b => !b.isDeleted).OrderByDescending(x => x.CreatedDate).ToList();
@@ -30,6 +31,7 @@ namespace Online_book_shop.Controllers
             ViewBag.Articles = (RecentArticles != null && RecentArticles.Count > 0) ? RecentArticles.Take(3).ToList() : null;
             ViewBag.LatestPromotion = BusinessHandlerPromotion.GetLatestPromotion();
             ViewBag.RecentlyViewItems = BusinessHandlerRecentlyVisitedItems.Get();
+            ViewBag.book_packs = book_packs;
             //HTMLHelper.Test();
             return View();
         }

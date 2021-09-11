@@ -7,6 +7,7 @@
     ViewBag.Title = "Home Page";
     List<BookVMTile> PreOrderBooks = ViewBag.PreOrderBooks;
     List<BookVMTile> LatestBooks = ViewBag.LatestBooks;
+     List<BookVMTile> BookPacks = ViewBag.book_packs;
     List<BookVMTile> BestSellingBooks = ViewBag.BestSellingBooks;
     List<BookVMTile> RecentlyViewBooks = ViewBag.RecentlyViewItems;
     List<Media> HomeBanners = ViewBag.HomeBanners;
@@ -184,6 +185,134 @@
                 <h3 class="acordian-tab">Latest Arrivel</h3>
                 <div class="book-overview" id="latestarr">
                     @foreach (BookVMTile b in LatestBooks)
+                    {
+                        BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
+                        BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
+                        <div class="item">
+                            <div class="item-inner">
+                                @if (promo != null)
+                                {
+                                    if (promo.PromotionMethods == (int)PromotionMethods.DeductFromFinalAmount)
+                                    {
+                                        <div class="discount-pers">Offer<br />Off</div>
+
+                                    }
+                                    else if (promo.PromotionMethods == (int)PromotionMethods.FixedAmount)
+                                    {
+                                        <div class="discount-pers">@promo.DiscountValue<br />Off</div>
+
+                                    }
+                                    else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
+                                    {
+                                        <div class="discount-pers">@promo.DiscountValue%<br />Off</div>
+
+                                    }
+                                }
+                                <div class="viewmore-discprice">
+                                    <a href="/book/@HTMLHelper.GetUrl(b.Url,b.Id)" class="viewmore"></a>
+                                    @if (promo != null && promo.DiscountValue > 0)
+                                    {
+                                        <div class="discounted-price">-Rs.@promo.DiscountAmount </div>
+                                    }
+                                </div>
+                                <div class="book-image">
+                                    @if (b.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName))
+                                    {
+                                        <img src="@Url.Action("Thumbnail", "Utility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+b.FrontCover.FileName})"
+                                             class="img-fluid"
+                                             title="@b.BookName"
+                                             alt="muses @b.BookName" />
+                                        @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@b.FrontCover.FileName?w=160&h=100" alt="@b.BookName" />*@
+                                    }
+                                    else
+                                    {
+                                        <img src="~/Content/images/no-image-book.jpg" alt="@b.BookName" />
+                                    }
+
+                                </div>
+                                <div class="book-name-author ">
+                                    <div class="name">
+                                        <span class="sinhala">@b.LocalBookName</span>
+                                        @*- <span class="english">@b.BookName</span>*@
+                                    </div>
+                                </div>
+                                @{
+                                    List<Author> mulauthors = BusinessHandlerAuthor.GetmultipleAuthors(b.Id);
+                                    if (mulauthors != null && mulauthors.Count > 0)
+                                    {
+
+                                        <div class="book-name-author">
+                                            <div class="author">
+                                                <span class="sinhala">@b.LocalAuthorName</span> <br />
+                                                @foreach (Author author in mulauthors)
+                                                {
+                                                    <span class="sinhala">@author.LocalName</span>
+                                                    @*@Html.Raw("-") <span class="english">@author.Name</span>*@
+                                                }
+                                            </div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="book-name-author">
+                                            <div class="author">
+                                                <span class="sinhala">@b.LocalAuthorName</span>
+                                                @*- <span class="english">@b.AuthorName</span>*@
+                                            </div>
+                                        </div>
+                                    }
+                                }
+
+                                <div class="category">
+                                    @foreach (Category c in b.Categories.Take(2))
+                                    {
+                                        <span class="cat-name">@c.CategoryName</span>
+                                    }
+                                </div>
+                                <div class="rating">
+                                    <div class="stars" data-rating="@BusinessHandlerUserReviews.GetBookRating(b.Id)"></div>
+                                </div>
+                                @{
+                                    if (bookProperty != null)
+                                    {
+                                        if (promo != null)
+                                        {
+                                            if (promo.DiscountAmount > 0)
+                                            {
+                                                <div class="price hasdiscount">Rs.@promo.BookPrice </div>
+                                                <div class="discount-price">Rs.@promo.BookPriceAfterDiscount </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="discount-price">Rs.@bookProperty.Price </div>
+                                            }
+                                        }
+                                        <div class="@(HTMLHelper.isCartEnabled(b.SaleType,bookProperty.NumberOfCopies)?"addto-cart btn-active add-to-cart":"addto-cart btn-active add-to-cart tile-addto-cart-dissabled")" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
+                                            Add to Cart
+                                            <div class="icon"></div>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
+                                        <div class="addto-cart btn-active add-to-cart tile-addto-cart-dissabled">
+                                            Add to Cart
+                                            <div class="icon"></div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+        @if (BookPacks != null && BookPacks.Count > 0)
+        {
+            <div class="bookcat-col active">
+                <h3 class="acordian-tab">Book Packs</h3>
+                <div class="book-overview" id="bookpacksarr">
+                    @foreach (BookVMTile b in BookPacks)
                     {
                         BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
                         BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);

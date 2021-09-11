@@ -23,6 +23,11 @@ namespace Online_book_shop.Handlers.Business
             return DBHandlerBook.Add(book);
         }
 
+        internal static List<BookVMTile> GetBookPacksForView()
+        {
+            return DBHandlerBook.GetBookPacksForView();
+        }
+
         public static int GetIdFromFriendlyName(string name)
         {
             return DBHandlerBook.GetIdFromFriendlyName(name);

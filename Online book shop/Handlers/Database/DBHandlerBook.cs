@@ -440,7 +440,7 @@ namespace Online_book_shop.Handlers.Database
                                         Total = g.Sum(x => x.NumberOfBook)
                                     }).OrderByDescending(x=> x.Total).Take(12).Select(i=> i.BookId).ToList();
 
-                  var bookResults = from a in (from q in ctx.Books where  result.Any(y=> y==q.Id) && !q.isDeleted
+                  var bookResults = from a in (from q in ctx.Books where  result.Any(y=> y==q.Id) && !q.isDeleted && q.ItemType == (int)ItemType.Book
                                                  orderby q.CreatedDate descending
                                                    select q )
                                         join b in ctx.Authors on a.AuthorId equals b.Id
@@ -535,7 +535,7 @@ namespace Online_book_shop.Handlers.Database
                 using (var ctx = new ApplicationDbContext())
                 {
                     var preOrderBooks = from a in (from q in ctx.Books
-                                                   where q.PublisherId== publisherId && !q.isDeleted
+                                                   where q.PublisherId== publisherId && !q.isDeleted && q.ItemType == (int)ItemType.Book
                                                    select q)
                                         join b in ctx.Authors on a.AuthorId equals b.Id
                                         select new BookVMTile
@@ -581,12 +581,12 @@ namespace Online_book_shop.Handlers.Database
                 List<BookVMTile> list = new List<BookVMTile>();
                 using (var ctx = new ApplicationDbContext())
                 {
-                    var selectedBooks = from bc in ctx.Book_Categories where !bc.isDeleted
+                    var selectedBooks = from bc in ctx.Book_Categories where !bc.isDeleted 
                                         join cid in categoryIds
                                          on bc.CategoryId equals cid
                                         join bk in ctx.Books 
                                              on bc.BookId equals bk.Id
-                                             where !bk.isDeleted
+                                             where !bk.isDeleted && bk.ItemType == (int)ItemType.Book
                                         select bk;
 
                     var preOrderBooks = from a in  (selectedBooks.Distinct()) 
@@ -771,7 +771,7 @@ namespace Online_book_shop.Handlers.Database
                 {
                     int preOrderId = ctx.SaleStatus.Where(s => s.Title == "pre_order").FirstOrDefault().Id;
                     var preOrderBooks = from a in (from q in ctx.Books
-                                        where (q.SaleType == preOrderId && !q.isDeleted) select q)
+                                        where (q.SaleType == preOrderId && !q.isDeleted && q.ItemType == (int)ItemType.Book) select q)
                                         join b in ctx.Authors on a.AuthorId equals b.Id
                                         select new BookVMTile
                                         {
@@ -814,7 +814,7 @@ namespace Online_book_shop.Handlers.Database
                     SaleStatus saleStatus = BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order");
                     
                     var preOrderBooks = from a in (from q in ctx.Books
-                                                   where !q.isDeleted && q.SaleType !=saleStatus.Id
+                                                   where !q.isDeleted && q.SaleType !=saleStatus.Id && q.ItemType == (int)ItemType.Book
                                                    orderby q.CreatedDate descending 
                                                    select q).Take(10)
                     join b in ctx.Authors on a.AuthorId equals b.Id
@@ -1209,6 +1209,55 @@ namespace Online_book_shop.Handlers.Database
                                                          select y).ToList().FirstOrDefault()
                                         };
                     return preOrderBooks.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        internal static List<BookVMTile> GetBookPacksForView()
+        {
+            try
+            {
+                List<BookVMTile> list = new List<BookVMTile>();
+                using (var ctx = new ApplicationDbContext())
+                {
+                    SaleStatus saleStatus = BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order");
+
+                    var BookPacks = from a in (from q in ctx.Books
+                                                   where !q.isDeleted &&  q.ItemType == (int)ItemType.BookPack
+                                                   orderby q.CreatedDate descending
+                                                   select q)
+                                        join b in ctx.Authors on a.AuthorId equals b.Id
+                                        select new BookVMTile
+                                        {
+                                            Id = a.Id,
+                                            BookName = a.Title,
+                                            LocalBookName = a.LocalTitle,
+                                            AuthorName = b.Name,
+                                            LocalAuthorName = b.LocalName,
+                                            isDeleted = b.isDeleted,
+                                            Rating = a.Ratings,
+                                            SaleType = a.SaleType,
+                                            Url = a.FriendlyName,
+                                            CreatedDate = a.CreatedDate,
+                                            Property = ctx.BookProperties.Where(x => x.BookId == a.Id).ToList(),
+                                            Categories = (from r in (from t in ctx.Book_Categories
+                                                                     where t.BookId == a.Id && !t.isDeleted
+                                                                     select t)
+                                                          join
+                                        c in ctx.Categories on r.CategoryId equals c.Id
+                                                          select c).ToList(),
+                                            FrontCover = (from x in (from s in ctx.BookProperties
+                                                                     where s.BookId == a.Id
+                                                                     select s)
+                                                          join
+                                                          y in ctx.Medias on x.FrontCoverMediaId equals y.Id
+                                                          select y).ToList().FirstOrDefault()
+                                        };
+                    return BookPacks.ToList();
                 }
             }
             catch (Exception ex)
