@@ -1120,9 +1120,11 @@ $('.check-item-type').one('change', function (e) {
     if ($(this).val() == 0 && $(this).is(":checked")) {
         $('.book-property-container').show();
         $('.book-pack-container').hide();
+        $('.publisherId-container').show();
     } else if ($(this).val() == 1 && $(this).is(":checked")) {
         $('.book-property-container').hide();
         $('.book-pack-container').show();
+        $('.publisherId-container').hide();
     }
 });
 

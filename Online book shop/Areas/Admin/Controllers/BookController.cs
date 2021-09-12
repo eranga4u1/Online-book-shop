@@ -58,7 +58,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                 book.ISBN = bookvm.ISBN; ;
                 book.Description =bookvm.Description;
                 book.AuthorId =bookvm.AuthorId;
-                book.PublisherId = bookvm.PublisherId;
+                book.PublisherId = bookvm.ItemType==(int)ItemType.Book?bookvm.PublisherId:0;
                 book.LocalTitle = bookvm.LocalTitle;
                 book.Ratings = bookvm.Ratings;
                 book.SaleType = bookvm.SaleType;

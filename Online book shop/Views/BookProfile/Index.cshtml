@@ -279,7 +279,7 @@
                 <div class="bookdetails">
                     <div class="row-element">
                         <div class="column-left">
-                            ISBN13:
+                            @(book.ItemType==(int)ItemType.Book?"ISBN13":"Book Pack ID"):
                         </div>
                         <div class="column-right">
                             @book.ISBN
@@ -294,6 +294,7 @@
                             @weight g
                         </div>
                     </div>
+                    @if(book.ItemType == (int)ItemType.Book){                   
                     <div class="row-element">
                         <div class="column-left">
                             Pages&nbsp;:
@@ -310,6 +311,7 @@
                             <a href="/publisher/@book.publisher.Id">@book.publisher.Name</a>
                         </div>
                     </div>
+                    }
                     <div class="row-element">
                         <div class="column-left">
                             Categories&nbsp;:

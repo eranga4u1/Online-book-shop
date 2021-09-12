@@ -882,6 +882,7 @@ namespace Online_book_shop.Handlers.Database
                                             CreatedDate=a.CreatedDate,
                                             publisher =ctx.Publishers.Where(x=> x.Id==a.PublisherId).FirstOrDefault(),
                                             Property = ctx.BookProperties.Where(x => x.BookId == a.Id).ToList(),
+                                            ItemType=a.ItemType,
                                             Categories = (from r in (from t in ctx.Book_Categories
                                                                      where t.BookId == a.Id && !t.isDeleted
                                                                      select t)

@@ -9,7 +9,7 @@
     UtilityController uc = new UtilityController();
     double timeOffset = BusinessHandlerConfigurations.GetTimeOffSet();
 }
-<h1>Books</h1>
+<h1>Books / Book Packs</h1>
 <table class="table">
     <thead>
         <tr>
@@ -35,6 +35,7 @@
             <th scope="col">Title</th>
             <th scope="col">Author</th>
             <th scope="col">Created date</th>
+             <th scope="col">Type</th>
             <th scope="col">Operation</th>
         </tr>
     </thead>
@@ -68,6 +69,7 @@
             <td>@book.Title</td>
             <td>@book.AuthorName</td>
             <td>@book.CreatedDate.AddHours(timeOffset).ToString("yyyy/MM/dd")</td>
+            <td>@(book.ItemType == 0?"Book":"Book Pack" )</td>
             <td>
                 <a href="/Admin/Book/edit/@book.Id" class="btn-xs btn-info">Edit Book</a><br /><br />
                 @if (book.isDeleted)

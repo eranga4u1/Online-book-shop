@@ -32,5 +32,7 @@ namespace Online_book_shop.Models.ViewModel
         public string Url { get; set; }
         public DateTime CreatedDate { get; set; }
         public int MaximumItemPerOrder { get; set; }
+
+        public int ItemType { get; set; }
     }
 }
