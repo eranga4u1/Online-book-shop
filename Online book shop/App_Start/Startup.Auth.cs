@@ -73,6 +73,10 @@ namespace Online_book_shop
             {
                 BusinessHandlerScheduller.UpdateOrderDescription();
             });
+            SiteScheduler.IntervalInDays(00, 01, 1, () =>
+            {
+                BusinessHandlerScheduller.ReleaseOldBookPack();
+            });
         }
     }
 }

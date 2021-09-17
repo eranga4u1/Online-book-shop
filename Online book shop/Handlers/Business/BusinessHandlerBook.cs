@@ -251,5 +251,21 @@ namespace Online_book_shop.Handlers.Business
             }
             return null;
         }
+        internal static StockEntry UpdateBookStockRemoveBookPackItem(int BookId, int PropertyId, int NumberOfBooks)
+        {
+            if (DBHandlerBook.UpdateBookStockAddBookPackItem(BookId, PropertyId, NumberOfBooks))
+            {
+                return BusinessHandlerStockEntry.Update(BookId, NumberOfBooks, PropertyId, StockEntryOperation.In_From_Book_Pack);
+            }
+            return null;
+        }
+        internal static List<DataObjVM> GetBookPackItemByBookPackId(int Id)
+        {
+            return DBHandlerBook.GetBookPackItemByBookPackId(Id);
+        }
+        internal static bool ReleaseBookPack(int BookPackId)
+        {
+            return DBHandlerBook.ReleaseBookPack(BookPackId);
+        }
     }
 }

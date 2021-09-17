@@ -180,7 +180,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                 string[] dictionary = s.Split('-');
                                 int bookId = Convert.ToInt32(dictionary[0]);
                                 int propertyId = Convert.ToInt32(dictionary[1]);
-                                var Obj = new ItemPack_Item { ItemId = bookId, ItemPackId = book.Id, ItemPropertyId = propertyId, NumberOfItems = 1 };
+                                var Obj = new ItemPack_Item { ItemId = bookId, ItemPackId = book.Id, ItemPropertyId = propertyId, NumberOfItems = 1,isDeleted=false };
                                 itemPack_ItemList.Add(Obj);
                                 BookProperties b = BusinessHandlerBookProperties.GetById(propertyId);
                                 BusinessHandlerBook.UpdateBookStockAddBookPackItem(book.Id, propertyId, bookvm.NumberOfCopies);
@@ -259,6 +259,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                 bookvm.Categories= string.Join(",", bookCategories.Select(x=> x.CategoryId));
                 bookvm.OtherAthors = BusinessHandlerAuthor.GetmultipleAuthors(book.Id).Select(x=> x.Id).ToArray();
                 bookvm.YoutubeUrl = book.YoutubeUrl;
+                bookvm.ItemType = book.ItemType;
 
                 List<BookPropertyVM> bplist = new List<BookPropertyVM>();
                 foreach (var b in bookProperties)
@@ -297,6 +298,9 @@ namespace Online_book_shop.Areas.Admin.Controllers
                   
 
                 }
+                var books = BusinessHandlerBook.GetAllBooksWithPropertyAsNewOne(); //BusinessHandlerBook.GetAllBooks(true).Select(x=> new DataObjVM { Id=x.Id,Name=x.Title,ObjType=0}).ToList();    
+                ViewBag.list = books;
+
                 bookvm.BookProperties = bplist;
             }
             List<string> Obj_book_property_types = new List<string>();
@@ -312,6 +316,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
             ViewBag.Languages = BusinessHandlerLanguage.Get();
             ViewBag.SaleStatus = BusinessHandlerSaleStatus.GetAllActiveSaleStatus();
             ViewBag.book_property_types = Obj_book_property_types;
+            ViewBag.selectedBooks = BusinessHandlerBook.GetBookPackItemByBookPackId(id);
 
             return View(bookvm);
         }
@@ -330,7 +335,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                     book.Title= bookVM.Title;
                     book.ISBN= bookVM.ISBN;
                     book.Description= bookVM.Description;
-                    book.PublisherId = bookVM.PublisherId;
+                    book.PublisherId = bookVM.ItemType == (int)ItemType.Book ? bookVM.PublisherId : 0;
                     book.AuthorId= bookVM.AuthorId;
                     book.LocalTitle = bookVM.LocalTitle;
                     book.Ratings = bookVM.Ratings;
@@ -394,31 +399,33 @@ namespace Online_book_shop.Areas.Admin.Controllers
 
                         }
                         bool isPropertyAdded = false;
-                        foreach (var bp in bookVM.BookProperties)
+                        if (bookVM.ItemType == (int)ItemType.Book)
                         {
-
-                            BookProperties bookPropertyDb = BusinessHandlerBookProperties.GetById(bp.Id);
-                            if(bookPropertyDb != null)
+                            foreach (var bp in bookVM.BookProperties)
                             {
-                                bookPropertyDb.BookId = book.Id;
-                                bookPropertyDb.NumberOfPages = bp.NumberOfPages;
-                                bookPropertyDb.NumberOfCopies = bp.NumberOfCopies;
-                                bookPropertyDb.LanguageId = bookVM.LanguageId;
-                                bookPropertyDb.Price = bp.Price;
-                                bookPropertyDb.WeightByGrams = bp.WeightByGrams;
-                                bookPropertyDb.FreeReadPDFMediaId = FreeReadPDFMediaId !=0? FreeReadPDFMediaId: bookPropertyDb.FreeReadPDFMediaId;
-                                bookPropertyDb.BackCoverMediaId = BackCoverMediaId !=0? BackCoverMediaId: bookPropertyDb.BackCoverMediaId;
-                                bookPropertyDb.FrontCoverMediaId = FrontCoverMediaId !=0? FrontCoverMediaId: bookPropertyDb.FrontCoverMediaId;
-                                bookPropertyDb.Title = bp.Title;
-                                bookPropertyDb.Description = bp.Description;
-                                BusinessHandlerBookProperties.Put(bookPropertyDb);
-                                isPropertyAdded = true;
-                                //if (bp.DiscountValue > 0)
-                                //{
+
+                                BookProperties bookPropertyDb = BusinessHandlerBookProperties.GetById(bp.Id);
+                                if (bookPropertyDb != null)
+                                {
+                                    bookPropertyDb.BookId = book.Id;
+                                    bookPropertyDb.NumberOfPages = bp.NumberOfPages;
+                                    bookPropertyDb.NumberOfCopies = bp.NumberOfCopies;
+                                    bookPropertyDb.LanguageId = bookVM.LanguageId;
+                                    bookPropertyDb.Price = bp.Price;
+                                    bookPropertyDb.WeightByGrams = bp.WeightByGrams;
+                                    bookPropertyDb.FreeReadPDFMediaId = FreeReadPDFMediaId != 0 ? FreeReadPDFMediaId : bookPropertyDb.FreeReadPDFMediaId;
+                                    bookPropertyDb.BackCoverMediaId = BackCoverMediaId != 0 ? BackCoverMediaId : bookPropertyDb.BackCoverMediaId;
+                                    bookPropertyDb.FrontCoverMediaId = FrontCoverMediaId != 0 ? FrontCoverMediaId : bookPropertyDb.FrontCoverMediaId;
+                                    bookPropertyDb.Title = bp.Title;
+                                    bookPropertyDb.Description = bp.Description;
+                                    BusinessHandlerBookProperties.Put(bookPropertyDb);
+                                    isPropertyAdded = true;
+                                    //if (bp.DiscountValue > 0)
+                                    //{
                                     Promotion promotion = BusinessHandlerPromotion.Get(book.Id, bookPropertyDb.Id);
-                                    if(promotion == null)
+                                    if (promotion == null)
                                     {
-                                         promotion = new Promotion
+                                        promotion = new Promotion
                                         {
                                             PromotionTitle = "Promotion for " + book.Title + " - " + book.Id,
                                             PromotionDescription = "",
@@ -429,7 +436,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                             DiscountValue = bp.DiscountValue,
                                             OtherParameters = "{BookPropertyId:" + bookPropertyDb.Id + "}",
                                             EndDate = DateTime.Today.AddYears(5),
-                                            StartDate = DateTime.Today.AddDays(-1)                                            
+                                            StartDate = DateTime.Today.AddDays(-1)
                                         };
                                         BusinessHandlerPromotion.Add(promotion);
                                     }
@@ -450,51 +457,91 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                         BusinessHandlerPromotion.Update(promotion);
                                         //};
                                     }
-                                    
-                                //}                                                                      
 
-                            }
-                            else
-                            {
-                                if (bp.Price > 0 && bp.NumberOfPages != 0)
-                                {
-                                    BookProperties bookPropertyNew = new BookProperties();
-                                    bookPropertyNew.BookId = book.Id;
-                                    bookPropertyNew.NumberOfPages = bp.NumberOfPages;
-                                    bookPropertyNew.NumberOfCopies = bp.NumberOfCopies;
-                                    bookPropertyNew.LanguageId = bookVM.LanguageId;
-                                    bookPropertyNew.Price = bp.Price;
-                                    bookPropertyNew.WeightByGrams = bp.WeightByGrams;
-                                    bookPropertyNew.FreeReadPDFMediaId = FreeReadPDFMediaId;
-                                    bookPropertyNew.BackCoverMediaId = BackCoverMediaId;
-                                    bookPropertyNew.FrontCoverMediaId = FrontCoverMediaId;
-                                    bookPropertyNew.Title = bp.Title;
-                                    bookPropertyNew.Description = bp.Description;
-                                    BusinessHandlerBookProperties.Add(bookPropertyNew);
-                                    if (bp.DiscountValue > 0)
-                                    {
-                                       // BusinessHandlerPromotion.Get(book.Id, bookPropertyNew.Id);
-                                        Promotion promotion = new Promotion
-                                        {
-                                            PromotionTitle = "Promotion for " + book.Title + " - " + book.Id,
-                                            PromotionDescription = "",
-                                            PromotionTypesFor = (int)PromotionTypesFor.Book,
-                                            PromotionMethods = bp.PromotionMethods,
-                                            ObjectType = (int)ObjectTypes.Book,
-                                            ObjectId = book.Id,
-                                            DiscountValue = bp.DiscountValue,
-                                            OtherParameters = "{BookPropertyId:" + bookPropertyNew.Id + "}",
-                                            EndDate = DateTime.Today.AddYears(5),
-                                            StartDate = DateTime.Today.AddDays(-1)
-                                        };
-                                        BusinessHandlerPromotion.Add(promotion);
-                                    }
+                                    //}                                                                      
+
                                 }
-                               
-                            
-                            }
+                                else
+                                {
+                                    if (bp.Price > 0 && bp.NumberOfPages != 0)
+                                    {
+                                        BookProperties bookPropertyNew = new BookProperties();
+                                        bookPropertyNew.BookId = book.Id;
+                                        bookPropertyNew.NumberOfPages = bp.NumberOfPages;
+                                        bookPropertyNew.NumberOfCopies = bp.NumberOfCopies;
+                                        bookPropertyNew.LanguageId = bookVM.LanguageId;
+                                        bookPropertyNew.Price = bp.Price;
+                                        bookPropertyNew.WeightByGrams = bp.WeightByGrams;
+                                        bookPropertyNew.FreeReadPDFMediaId = FreeReadPDFMediaId;
+                                        bookPropertyNew.BackCoverMediaId = BackCoverMediaId;
+                                        bookPropertyNew.FrontCoverMediaId = FrontCoverMediaId;
+                                        bookPropertyNew.Title = bp.Title;
+                                        bookPropertyNew.Description = bp.Description;
+                                        BusinessHandlerBookProperties.Add(bookPropertyNew);
+                                        if (bp.DiscountValue > 0)
+                                        {
+                                            // BusinessHandlerPromotion.Get(book.Id, bookPropertyNew.Id);
+                                            Promotion promotion = new Promotion
+                                            {
+                                                PromotionTitle = "Promotion for " + book.Title + " - " + book.Id,
+                                                PromotionDescription = "",
+                                                PromotionTypesFor = (int)PromotionTypesFor.Book,
+                                                PromotionMethods = bp.PromotionMethods,
+                                                ObjectType = (int)ObjectTypes.Book,
+                                                ObjectId = book.Id,
+                                                DiscountValue = bp.DiscountValue,
+                                                OtherParameters = "{BookPropertyId:" + bookPropertyNew.Id + "}",
+                                                EndDate = DateTime.Today.AddYears(5),
+                                                StartDate = DateTime.Today.AddDays(-1)
+                                            };
+                                            BusinessHandlerPromotion.Add(promotion);
+                                        }
+                                    }
 
+
+                                }
+
+                            }
                         }
+                        else
+                        {
+                            decimal weight = 0;
+                            if (!String.IsNullOrEmpty(bookVM.SelectedBooks))
+                            {
+                                List<ItemPack_Item> itemPack_ItemList = new List<ItemPack_Item>();
+                                string[] items = bookVM.SelectedBooks.Split(',');
+                                foreach (string s in items)
+                                {
+                                    string[] dictionary = s.Split('-');
+                                    int bookId = Convert.ToInt32(dictionary[0]);
+                                    int propertyId = Convert.ToInt32(dictionary[1]);
+                                    var Obj = new ItemPack_Item { ItemId = bookId, ItemPackId = book.Id, ItemPropertyId = propertyId, NumberOfItems = 1, isDeleted = false };
+                                    itemPack_ItemList.Add(Obj);
+                                    BookProperties b = BusinessHandlerBookProperties.GetById(propertyId);
+                                    BusinessHandlerBook.UpdateBookStockAddBookPackItem(book.Id, propertyId, bookVM.NumberOfCopies);
+                                    weight = weight + (b != null ? b.WeightByGrams : 0);
+                                }
+                                if (itemPack_ItemList.Count > 0)
+                                {
+                                    BusinessHandlerBook.AddItemPack_Book(itemPack_ItemList);
+                                }
+
+                            }
+                            BookProperties bookPropertyDb = BusinessHandlerBookProperties.GetById(bookVM.Id);
+                            bookPropertyDb.BookId = book.Id;
+                            bookPropertyDb.NumberOfPages = 0;
+                            bookPropertyDb.NumberOfCopies = bookVM.NumberOfCopies;
+                            bookPropertyDb.LanguageId = bookVM.LanguageId;
+                            bookPropertyDb.Price = bookVM.ItemPrice;
+                            bookPropertyDb.WeightByGrams = weight;
+                            bookPropertyDb.FreeReadPDFMediaId = FreeReadPDFMediaId;
+                            bookPropertyDb.BackCoverMediaId = BackCoverMediaId;
+                            bookPropertyDb.FrontCoverMediaId = FrontCoverMediaId;
+                            bookPropertyDb.Title = bookVM.Title;
+                            bookPropertyDb.Description = bookVM.Description;
+                            BusinessHandlerBookProperties.Put(bookPropertyDb);
+                        }
+                           
                         if (!string.IsNullOrEmpty(bookVM.Categories))
                         {
                             BusinessHandlerBookCategory.RemoveExsistngMap(book.Id);

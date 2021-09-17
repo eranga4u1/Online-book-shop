@@ -205,6 +205,84 @@ namespace Online_book_shop.Handlers.Database
             }
         }
 
+        internal static List<DataObjVM> GetBookPackItemByBookPackId(int id)
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    
+                    var list = ctx.ItemPack_Items.Where(x => x.Id == id && !x.isDeleted);
+                    var books = from a in ctx.BookProperties
+                                join
+                                b in ctx.Books on a.BookId equals b.Id
+                                select (new DataObjVM
+                                {
+                                    Id = b.Id,
+                                    Name = b.Title + " : " + a.Title,
+                                    ObjType = 0,
+                                    OtherPara = "{\"BookPropertyId\":" + a.Id + "}",
+                                    BookAuthorId = b.AuthorId,
+                                    BookPublisherId = b.PublisherId
+                                });
+                    var result = books.Where(x=> list.Any(y=> y.ItemId==x.Id && "{\"BookPropertyId\":" + y.ItemPropertyId + "}"==x.OtherPara));
+
+
+                    if (result != null)
+                    {
+                        return result.ToList();
+
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        internal static bool ReleaseBookPack(int bookPackId)
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                  var book=  ctx.Books.Where(x => x.Id == bookPackId).FirstOrDefault();
+                    if(book != null)
+                    {
+
+                        book.isDeleted = true;
+                        book.UpdatedDate = DateTime.UtcNow;
+                    }
+                    var items=  ctx.ItemPack_Items.Where(x=> x.ItemPackId==bookPackId);
+                    var bookproperty = ctx.BookProperties.Where(x => x.BookId == bookPackId).FirstOrDefault();
+                    if(items != null && bookproperty !=null)
+                    {
+                        foreach(var i in items)
+                        {
+                            i.isDeleted = true;
+                            i.DeletedDate = DateTime.UtcNow;
+                            BusinessHandlerBook.UpdateBookStockAddBookPackItem(book.Id, i.ItemPropertyId, bookproperty.NumberOfCopies);
+                            DBHandlerBookProperties.UpdateNumberOfBooks(book.Id, i.ItemPropertyId, bookproperty.NumberOfCopies);
+                        }
+
+                    }
+
+                }
+                return false;
+
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         internal static bool UpdateBookStockAddBookPackItem(int bookId, int propertyId, int numberOfBookPacks)
         {
             try
@@ -1226,10 +1304,10 @@ namespace Online_book_shop.Handlers.Database
                 using (var ctx = new ApplicationDbContext())
                 {
                     SaleStatus saleStatus = BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order");
-
+                    var date = DateTime.Now.AddHours(5.5);
                     var BookPacks = from a in (from q in ctx.Books
-                                                   where !q.isDeleted &&  q.ItemType == (int)ItemType.BookPack
-                                                   orderby q.CreatedDate descending
+                                                   where !q.isDeleted &&  q.ItemType == (int)ItemType.BookPack && (q.RelaseDate >= date)
+                                               orderby q.CreatedDate descending
                                                    select q)
                                         join b in ctx.Authors on a.AuthorId equals b.Id
                                         select new BookVMTile
@@ -1259,6 +1337,22 @@ namespace Online_book_shop.Handlers.Database
                                                           select y).ToList().FirstOrDefault()
                                         };
                     return BookPacks.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        internal static List<int> GetInactivatedBookPacks()
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    DateTime date = DateTime.UtcNow.AddHours(5.5);
+                    return ctx.Books.Where(x=> x.ItemType==(int)ItemType.BookPack && !x.isDeleted && x.RelaseDate< date).Select(x=> x.Id).ToList();
                 }
             }
             catch (Exception ex)

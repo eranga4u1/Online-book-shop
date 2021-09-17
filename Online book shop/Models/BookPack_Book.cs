@@ -17,5 +17,7 @@ namespace Online_book_shop.Models
         public int ItemId { get; set; }//BookId
         public int ItemPropertyId { get; set; }//BookPropertyId
         public int NumberOfItems { get; set; }
+        public bool isDeleted { get; set; }
+        public DateTime DeletedDate { get; set; } = DateTime.UtcNow;
     }
 }
