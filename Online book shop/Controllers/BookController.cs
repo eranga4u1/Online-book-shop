@@ -41,7 +41,7 @@ namespace Online_book_shop.Controllers
             ViewBag.Suggestionbooks = Suggestionbooks.Where(b => b.Id != bookId) != null ? Suggestionbooks.Where(b => b.Id != bookId).ToList() : null; 
             ViewBag.Reviews = reviews;
             ViewBag.RecentRate = RecentRate;
-            if (book.publisher.Id == 9)
+            if (book.publisher !=null && book.publisher.Id == 9)
             {
                 ViewBag.MethodName = "muses";
             }

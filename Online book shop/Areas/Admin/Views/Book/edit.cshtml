@@ -155,7 +155,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Pre Release End Date  / Book pack available until</label>
+                    <label id="lbl-pre-release-end-date">@(Model.ItemType == (int)ItemType.Book?"Pre Release End Date":"Book pack available until")</label>
                     <input type="text" value="@Model.PreReleaseEndDate" class="form-control" id="PreReleaseEndDate" name="PreReleaseEndDate" placeholder="Pre Release End Date">
                 </div>
                 <div class="form-group">
@@ -334,135 +334,161 @@
 </div> }
 else
 {
-<div class="row col-lg-12 col-md-12 b-prop-@(i + 1)" style="display:none">
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            Type of books
+    <div class="row col-lg-12 col-md-12 b-prop-@(i + 1)" style="display:none">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Type of books
+            </div>
+            <div class="panel-body">
+                <div class="col-lg-6" style="border-right:solid 1px;">
+                    <h4 class="mini-header">Base Property</h4>
+                    <hr />
+                    <div class="form-group">
+                        <label>Property Title</label>
+                        @*<input type="text" class="form-control" id="BookProperties[@i].Title" name="BookProperties[@i].Title" placeholder="Title">*@
+                        <select id="BookProperties[@i].Title" name="BookProperties[@i].Title" class="form-control">
+                            @foreach (var item in Obj_book_property_types)
+                            {
+    <option value="@item">@item</option>
+    }
+                        </select>
+                    </div>
+                    <div class="form-group hidden">
+                        <label>Property Description</label>
+                        <textarea type="text" class="form-control" id="BookProperties[@i].Description" name="BookProperties[@i].Description" placeholder="Description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Number Of Pages</label>
+                        <input type="number" class="form-control" id="BookProperties[@i].NumberOfPages" name="BookProperties[@i].NumberOfPages" placeholder="NumberOfPages">
+                    </div>
+                    <div class="form-group">
+                        <label>Weight(One book by gram)</label>
+                        <input type="number" class="form-control" id="BookProperties[@i].WeightByGrams" name="BookProperties[@i].WeightByGrams" placeholder="Weight By Grams">
+                    </div>
+                    <div class="form-group">
+                        <label>Number Of Copies</label>
+                        <input type="number" class="form-control" id="BookProperties[@i].NumberOfCopies" name="BookProperties[@i].NumberOfCopies" placeholder="Number Of Copies">
+                    </div>
+                    <div class="form-group">
+                        <label>Raw Price</label>
+                        <input type="number" class="form-control" id="BookProperties[@i].Price" name="BookProperties[@i].Price" placeholder="Price">
+                    </div>
+                    <input type="hidden" name="isAvailable_@i" id="isAvailable_@(i + 1)" value="@i" />
+                </div>
+                <div class="col-lg-6">
+                    <h4 class="mini-header">Quick Promotion</h4>
+                    <hr />
+                    <div class="form-group">
+                        <label>Discount Value</label>
+                        <table>
+                            <tr>
+                                <td><input type="number" min="0" class="form-control" id="DiscountValue" name="BookProperties[@i].DiscountValue" value="20"></td>
+                                <td class="col-lg-8">
+                                    <div class="select">
+                                        <select class="form-control" name="BookProperties[@i].PromotionMethods">
+                                            <option value="1">Percent</option>
+                                            <option value="0">Fix Amount</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="panel-footer text-right">
+                <button class="btn btn-defaultv btn-b-prop-@(i + 1)">Add New</button>
+            </div>
         </div>
-        <div class="panel-body">
-            <div class="col-lg-6" style="border-right:solid 1px;">
-                <h4 class="mini-header">Base Property</h4>
-                <hr />
-                <div class="form-group">
-                    <label>Property Title</label>
-                    @*<input type="text" class="form-control" id="BookProperties[@i].Title" name="BookProperties[@i].Title" placeholder="Title">*@
-                    <select id="BookProperties[@i].Title" name="BookProperties[@i].Title" class="form-control">
-                        @foreach (var item in Obj_book_property_types)
-                        {
-<option value="@item">@item</option>
+    </div> 
 }
-                    </select>
-                </div>
-                <div class="form-group hidden">
-                    <label>Property Description</label>
-                    <textarea type="text" class="form-control" id="BookProperties[@i].Description" name="BookProperties[@i].Description" placeholder="Description"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Number Of Pages</label>
-                    <input type="number" class="form-control" id="BookProperties[@i].NumberOfPages" name="BookProperties[@i].NumberOfPages" placeholder="NumberOfPages">
-                </div>
-                <div class="form-group">
-                    <label>Weight(One book by gram)</label>
-                    <input type="number" class="form-control" id="BookProperties[@i].WeightByGrams" name="BookProperties[@i].WeightByGrams" placeholder="Weight By Grams">
-                </div>
-                <div class="form-group">
-                    <label>Number Of Copies</label>
-                    <input type="number" class="form-control" id="BookProperties[@i].NumberOfCopies" name="BookProperties[@i].NumberOfCopies" placeholder="Number Of Copies">
-                </div>
-                <div class="form-group">
-                    <label>Raw Price</label>
-                    <input type="number" class="form-control" id="BookProperties[@i].Price" name="BookProperties[@i].Price" placeholder="Price">
-                </div>
-                <input type="hidden" name="isAvailable_@i" id="isAvailable_@(i + 1)" value="@i" />
-            </div>
-            <div class="col-lg-6">
-                <h4 class="mini-header">Quick Promotion</h4>
-                <hr />
-                <div class="form-group">
-                    <label>Discount Value</label>
-                    <table>
-                        <tr>
-                            <td><input type="number" min="0" class="form-control" id="DiscountValue" name="BookProperties[@i].DiscountValue" value="20"></td>
-                            <td class="col-lg-8">
-                                <div class="select">
-                                    <select class="form-control" name="BookProperties[@i].PromotionMethods">
-                                        <option value="1">Percent</option>
-                                        <option value="0">Fix Amount</option>
-                                    </select>
-                                </div>
-                            </td>
-                        </tr>
-
-                    </table>
-                </div>
-            </div>
-
-        </div>
-        <div class="panel-footer text-right">
-            <button class="btn btn-defaultv btn-b-prop-@(i + 1)">Add New</button>
-        </div>
-    </div>
-</div> }
 }
 }
 else
 {
 var bookProperty = Model.BookProperties.FirstOrDefault();
 <input value="1" type="hidden" name="ItemType">
-                <div class="book-pack-container">
-                    <div class="form-group">
-                        <label>Books </label>
-                        <table>
-                            <tr>
-                                <td class="col-lg-6">
-                                    <div class="select mce-match-marker-selected book-row ">
-                                        <select id="select-book-for-book-pack" class="form-control " name="select-book-for-book-pack">
-                                            <option data-para="" class="obj_select" value="0">--Select--</option>
-                                            @foreach (var item in data)
-                                            {
-                            <option data-para="@item.OtherPara" class="obj_select" value="@item.Id">@item.Name</option>
-}
-                                        </select>
-                                    </div>
-                                </td>
-                                <td class="col-lg-6">
-                                    <a class="btn btn-warning btn-sm  add-new-bookpackrow">Add</a>
-                                    <input id="numberOfBooksForBookPacks" class="display-none" type="number" value="1" />
-                                </td>
-                            </tr>
-                        </table>
-
-                    </div>
-                    <div>
-                        <ul id="book-pack-menu" class="list-group">
-                            @if (ViewBag.selectedBooks != null)
-                            {
-                                foreach (DataObjVM item in ViewBag.selectedBooks)
+<div class="book-pack-container col-lg-12">
+    <div class="col-lg-6">
+        <div class="form-group">
+            <label>Books </label>
+            <table>
+                <tr>
+                    <td class="col-lg-6">
+                        <div class="select mce-match-marker-selected book-row ">
+                            <select id="select-book-for-book-pack" class="form-control " name="select-book-for-book-pack">
+                                <option data-para="" class="obj_select" value="0">--Select--</option>
+                                @foreach (var item in data)
                                 {
-            <li data-amount="1" data-obj="@item.Id" class="list-group-item">@item.Name<span data-obj="@item.Id" class="text-danger remove-selected-book-pack-item" style="margin-left: 30px;cursor: pointer;">Remove</span></li>
+                <option data-para="@item.OtherPara" class="obj_select" value="@item.Id">@item.Name</option>
 }
+                            </select>
+                        </div>
+                    </td>
+                    <td class="col-lg-6">
+                        <a class="btn btn-warning btn-sm  add-new-bookpackrow">Add</a>
+                        <input id="numberOfBooksForBookPacks" class="display-none" type="number" value="1" />
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+        <div>
+            <ul id="book-pack-menu" class="list-group">
+                @if (ViewBag.selectedBooks != null)
+                {
+                    foreach (DataObjVM item in ViewBag.selectedBooks)
+                    {
+    <li data-amount="1" data-obj="@item.Id" class="list-group-item">@item.Name<span data-obj="@item.Id" class="text-danger remove-selected-book-pack-item" style="margin-left: 30px;cursor: pointer;">Remove</span></li>
+}
+}
+            </ul>
+            @{ List<string> selectedStr = new List<string>();
+                foreach (DataObjVM item in ViewBag.selectedBooks)
+                {
+                    var obj = JsonConvert.DeserializeObject<ItemProperty>(item.OtherPara);
+                    selectedStr.Add(item.Id + "-" + obj.BookPropertyId);
+                } }
+            <input id="selected-books" name="SelectedBooks" type="hidden" value="@string.Join(",", selectedStr)" />
+        </div>
+        @*<div class="form-group">
+            <label>Item Price</label>
+            <input type="number" class="form-control" id="item-price" value="@bookProperty.Price" name="ItemPrice" placeholder="Price">
+        </div>*@
+        <div class="form-group">
+            <label>Number Of Copies</label>
+            <input type="number" class="form-control" id="item-number-of-copies" value="@bookProperty.NumberOfCopies" name="NumberOfCopies" placeholder="Number Of Copies">
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <h4 class="mini-header">Quick Promotion</h4>
+        <hr />
+        <div class="form-group">
+            <label>Discount Value</label>
+            <table>
+                <tr>
+                    <td><input type="number" min="0" class="form-control" id="DiscountValue" name="BookProperties[0].DiscountValue" value="20"></td>
+                    <td class="col-lg-8">
+                        <div class="select">
+                            <select class="form-control" name="BookProperties[0].PromotionMethods">
+                                <option value="1">Percent</option>
+                                <option value="0">Fix Amount</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+</div>
     }
-                        </ul>
-                        @{ List<string> selectedStr = new List<string>();
-                            foreach (DataObjVM item in ViewBag.selectedBooks)
-                            {
-                                var obj = JsonConvert.DeserializeObject<ItemProperty>(item.OtherPara);
-                                selectedStr.Add(item.Id + "-" + obj.BookPropertyId);
-                            } }
-                        <input id="selected-books" name="SelectedBooks" type="hidden" value="@string.Join(",", selectedStr)" />
-                    </div>
-                    <div class="form-group">
-                        <label>Item Price</label>
-                        <input type="number" class="form-control" id="item-price" value="@bookProperty.Price" name="ItemPrice" placeholder="Price">
-                    </div>
-                    <div class="form-group">
-                        <label>Number Of Copies</label>
-                        <input type="number" class="form-control" id="item-number-of-copies" value="@bookProperty.NumberOfCopies" name="NumberOfCopies" placeholder="Number Of Copies">
-                    </div>
-                </div>}
 
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary float-right">Submit</button>
 </form>
 
 

@@ -212,7 +212,7 @@ namespace Online_book_shop.Handlers.Database
                 using (var ctx = new ApplicationDbContext())
                 {
                     
-                    var list = ctx.ItemPack_Items.Where(x => x.Id == id && !x.isDeleted);
+                    var list = ctx.ItemPack_Items.Where(x => x.ItemPackId == id && !x.isDeleted);
                     var books = from a in ctx.BookProperties
                                 join
                                 b in ctx.Books on a.BookId equals b.Id
@@ -1359,6 +1359,35 @@ namespace Online_book_shop.Handlers.Database
             {
                 return null;
             }
+        }
+
+        internal static bool UpdateBookPackItem(int bookPackId, List<ItemPack_Item> newitems)
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    var items=ctx.ItemPack_Items.Where(x => x.ItemPackId == bookPackId && !x.isDeleted);
+                    if(items !=null )
+                    {
+                        foreach (var item in items.ToList())
+                        {
+                            item.isDeleted = true;
+                            item.DeletedDate = DateTime.UtcNow;
+                        }
+                    }                       
+                    ctx.ItemPack_Items.AddRange(newitems);
+                    if (ctx.SaveChanges() > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            return false;
         }
     }
 }

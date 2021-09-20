@@ -1116,14 +1116,16 @@ $('.update-order-payment-sttaus').on('click', function (e) {
 
     
 });
-$('.check-item-type').one('change', function (e) {
+$('.check-item-type').on('change', function (e) {
     if ($(this).val() == 0 && $(this).is(":checked")) {
         $('.book-property-container').show();
         $('.book-pack-container').hide();
+        $('#lbl-pre-release-end-date').text("Pre Release End Date");
         $('.publisherId-container').show();
     } else if ($(this).val() == 1 && $(this).is(":checked")) {
         $('.book-property-container').hide();
         $('.book-pack-container').show();
+        $('#lbl-pre-release-end-date').text("Book pack available until");
         $('.publisherId-container').hide();
     }
 });

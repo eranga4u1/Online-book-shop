@@ -171,6 +171,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                     }else if(bookvm.ItemType == (int)ItemType.BookPack)
                     {
                         decimal weight = 0;
+                        decimal price = 0;
                         if (!String.IsNullOrEmpty(bookvm.SelectedBooks))
                         {
                             List<ItemPack_Item> itemPack_ItemList = new List<ItemPack_Item>();
@@ -185,6 +186,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                 BookProperties b = BusinessHandlerBookProperties.GetById(propertyId);
                                 BusinessHandlerBook.UpdateBookStockAddBookPackItem(book.Id, propertyId, bookvm.NumberOfCopies);
                                 weight = weight + (b != null ? b.WeightByGrams : 0);
+                                price = price + (b != null ? b.Price : 0);
                             }
                             if (itemPack_ItemList.Count > 0)
                             {
@@ -197,7 +199,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                         bookProperties.NumberOfPages = 0;
                         bookProperties.NumberOfCopies = bookvm.NumberOfCopies;
                         bookProperties.LanguageId = bookvm.LanguageId;
-                        bookProperties.Price = bookvm.ItemPrice;
+                        bookProperties.Price = price;//bookvm.ItemPrice;
                         bookProperties.WeightByGrams = weight;
                         bookProperties.FreeReadPDFMediaId = FreeReadPDFMediaId;
                         bookProperties.BackCoverMediaId = BackCoverMediaId;
@@ -205,6 +207,20 @@ namespace Online_book_shop.Areas.Admin.Controllers
                         bookProperties.Title = bookvm.Title;
                         bookProperties.Description = bookvm.Description;
                         BusinessHandlerBookProperties.Add(bookProperties);
+                        Promotion promotion = new Promotion
+                        {
+                            PromotionTitle = "Promotion for " + bookvm.Title + " - " + book.Id,
+                            PromotionDescription = "",
+                            PromotionTypesFor = (int)PromotionTypesFor.Book,
+                            PromotionMethods = bookvm.BookProperties[0].PromotionMethods,
+                            ObjectType = (int)ObjectTypes.Book,
+                            ObjectId = book.Id,
+                            DiscountValue = bookvm.BookProperties[0].DiscountValue,
+                            OtherParameters = "{BookPropertyId:" + bookProperties.Id + "}",
+                            EndDate = DateTime.Today.AddYears(5),
+                            StartDate = DateTime.Today.AddDays(-1)
+                        };
+                        BusinessHandlerPromotion.Add(promotion);
                     }
                    
                    
@@ -228,10 +244,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                 BusinessHandlerAuthor.AddMultipleAuthor(bookvm.Id,a);
                             }
                         }
-                    }
-
-                   
-                    
+                    }                                       
                 }
             }
             return RedirectToAction("Index");
@@ -506,6 +519,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                         else
                         {
                             decimal weight = 0;
+                            decimal price = 0;
                             if (!String.IsNullOrEmpty(bookVM.SelectedBooks))
                             {
                                 List<ItemPack_Item> itemPack_ItemList = new List<ItemPack_Item>();
@@ -520,10 +534,11 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                     BookProperties b = BusinessHandlerBookProperties.GetById(propertyId);
                                     BusinessHandlerBook.UpdateBookStockAddBookPackItem(book.Id, propertyId, bookVM.NumberOfCopies);
                                     weight = weight + (b != null ? b.WeightByGrams : 0);
+                                    price = price+ (b != null ? b.Price : 0);
                                 }
                                 if (itemPack_ItemList.Count > 0)
                                 {
-                                    BusinessHandlerBook.AddItemPack_Book(itemPack_ItemList);
+                                    BusinessHandlerBook.UpdateBookPackItem(book.Id, itemPack_ItemList);
                                 }
 
                             }
@@ -532,7 +547,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                             bookPropertyDb.NumberOfPages = 0;
                             bookPropertyDb.NumberOfCopies = bookVM.NumberOfCopies;
                             bookPropertyDb.LanguageId = bookVM.LanguageId;
-                            bookPropertyDb.Price = bookVM.ItemPrice;
+                            bookPropertyDb.Price = price;//bookVM.ItemPrice;
                             bookPropertyDb.WeightByGrams = weight;
                             bookPropertyDb.FreeReadPDFMediaId = FreeReadPDFMediaId;
                             bookPropertyDb.BackCoverMediaId = BackCoverMediaId;
@@ -540,6 +555,41 @@ namespace Online_book_shop.Areas.Admin.Controllers
                             bookPropertyDb.Title = bookVM.Title;
                             bookPropertyDb.Description = bookVM.Description;
                             BusinessHandlerBookProperties.Put(bookPropertyDb);
+                            Promotion promotion = BusinessHandlerPromotion.Get(book.Id, bookPropertyDb.Id);
+                            if (promotion == null)
+                            {
+                                promotion = new Promotion
+                                {
+                                    PromotionTitle = "Promotion for " + book.Title + " - " + book.Id,
+                                    PromotionDescription = "",
+                                    PromotionTypesFor = (int)PromotionTypesFor.Book,
+                                    PromotionMethods = bookVM.BookProperties[0].PromotionMethods,
+                                    ObjectType = (int)ObjectTypes.Book,
+                                    ObjectId = book.Id,
+                                    DiscountValue = bookVM.BookProperties[0].DiscountValue,
+                                    OtherParameters = "{BookPropertyId:" + bookPropertyDb.Id + "}",
+                                    EndDate = DateTime.Today.AddYears(5),
+                                    StartDate = DateTime.Today.AddDays(-1)
+                                };
+                                BusinessHandlerPromotion.Add(promotion);
+                            }
+                            else
+                            {
+                                //Promotion promotion = new Promotion
+                                //{
+                                promotion.PromotionTitle = "Promotion for " + book.Title + " - " + book.Id;
+                                promotion.PromotionDescription = "";
+                                promotion.PromotionTypesFor = (int)PromotionTypesFor.Book;
+                                promotion.PromotionMethods = bookVM.BookProperties[0].PromotionMethods;
+                                promotion.ObjectType = (int)ObjectTypes.Book;
+                                promotion.ObjectId = book.Id;
+                                promotion.DiscountValue = bookVM.BookProperties[0].DiscountValue;
+                                promotion.OtherParameters = "{BookPropertyId:" + bookPropertyDb.Id + "}";
+                                promotion.EndDate = DateTime.Today.AddYears(5);
+                                promotion.StartDate = DateTime.Today.AddDays(-1);
+                                BusinessHandlerPromotion.Update(promotion);
+                                //};
+                            }
                         }
                            
                         if (!string.IsNullOrEmpty(bookVM.Categories))

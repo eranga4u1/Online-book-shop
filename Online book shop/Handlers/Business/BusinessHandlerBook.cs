@@ -267,5 +267,10 @@ namespace Online_book_shop.Handlers.Business
         {
             return DBHandlerBook.ReleaseBookPack(BookPackId);
         }
+
+        internal static bool UpdateBookPackItem(int id, List<ItemPack_Item> itemPack_ItemList)
+        {
+            return DBHandlerBook.UpdateBookPackItem(id, itemPack_ItemList);
+        }
     }
 }
