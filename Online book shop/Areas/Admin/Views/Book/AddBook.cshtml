@@ -50,14 +50,13 @@
                                 @foreach (Category c in ViewBag.Categories)
                                 {
                                    <div class="col-lg-4">
-                        <div class="input-group-prepend">
-                            <label class="input-group-text">
-                                <input type="checkbox" class="category-check-box" aria-label="Checkbox for following text input" value="@c.Id"><span>@c.CategoryName</span>
-                                <span class="checkmark"></span>
-                            </label>
-                        </div>
-
-                    </div>
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text">
+                                            <input type="checkbox" class="category-check-box" aria-label="Checkbox for following text input" value="@c.Id"><span>@c.CategoryName</span>
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                    </div>
                                 }
                                 <input type="hidden" id="Categories" name="Categories" value="" />
                             </div>
@@ -90,11 +89,11 @@
                 <div class="form-group  author-block">
                     <label>Author<span class="text-success refresh-authors" style="cursor:pointer;"></span></label>
                     <div class="select  main-author-block">
-                        <select id="AuthorId" class="form-control" name="AuthorId">
+                        <select id="AuthorId" class="form-control selected-author-drop" name="AuthorId">
+                            <option value="0">--Select--</option>
                             @foreach (Author author in ViewBag.Authors)
                             {
-                                <option value="@author.Id">@author.Name</option>
-                            }
+                        <option value="@author.Id">@author.Name</option>}
                         </select>
                     </div>
                     <span class="btn btn-xs add-more-author">Add more</span>
@@ -193,7 +192,7 @@
                                 <select id="BookProperties[@i].Title" name="BookProperties[@i].Title" class="form-control">
                                     @foreach (var item in Obj_book_property_types)
                                     {
-                                        <option value="@item">@item</option>
+                                        <option  value="@item">@item</option>
                                     }
 
                                     @*<option value="Hard Bind Cover">Hard Bind Cover</option>
@@ -269,12 +268,13 @@
                                     <option data-para="" class="obj_select" value="0">--Select--</option>
                                     @foreach (var item in data)
                                     {
-                                        <option data-para="@item.OtherPara" class="obj_select" value="@item.Id">@item.Name</option>
+                                        <option data-author-id="@item.BookAuthorId" data-para="@item.OtherPara" class="obj_select bk_author_@item.BookAuthorId" value="@item.Id">@item.Name</option>
                                     }
                                 </select>
                             </div>
                         </td>
                         <td class="col-lg-6">
+                            @*<a id="filter-books-by-author" class="btn btn-primary btn-sm">Filter books by selected authors</a>*@
                             <a class="btn btn-warning btn-sm  add-new-bookpackrow">Add</a>
                             <input id="numberOfBooksForBookPacks" class="display-none" type="number" value="1" />
                         </td>

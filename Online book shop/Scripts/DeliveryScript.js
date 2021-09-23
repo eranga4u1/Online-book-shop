@@ -102,6 +102,11 @@ $('input[type=radio][name=delivery_method]').change(function () {
     }
    
 });
+$("#frm-delivery-details").submit(function (event) {
+    if (!$("#frm-delivery-details").valid()) {
+        event.preventDefault();
+    }  
+});
 $("#frm-delivery-details").validate({
     rules: {
         BillingAddressId: "required",

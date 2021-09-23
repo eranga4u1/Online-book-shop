@@ -59,7 +59,10 @@ namespace Online_book_shop.Controllers
             {
                 Address billingAddress = BusinessHandlerAddress.GetAddress(order.BillingAddressId);
                 Address deliveryAddress = BusinessHandlerAddress.GetAddress(order.DeliveryAddressId);
-
+                if(billingAddress==null || deliveryAddress == null)
+                {
+                    return RedirectToAction("Index",new {error="Please add valid address"});
+                }
                 order.FirstName = deliveryAddress.FirstName;
                 order.LastName = deliveryAddress.LastName;
                 order.DeliveryAddress = (!string.IsNullOrEmpty(deliveryAddress.AddressLine01) ? (deliveryAddress.AddressLine01 + ", ") : "") +
