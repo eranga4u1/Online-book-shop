@@ -483,7 +483,7 @@ $('.add-more-author').click(function () {
     var content = $('.main-author-block').html();   
     $(".author-block").append("<div class='select mo'>" + content.replaceAll("AuthorId", "OtherAthors[" + $(".mo").length+"]") +"</div>");
 });
-$('.selected-author-drop').on('change', function (e) {
+$('#filter-books-by-authors').on('click', function (e) {
     var authorsselection = $('.selected-author-drop');
     $('.obj_select').hide();
     $.each(authorsselection, function (key, value) {

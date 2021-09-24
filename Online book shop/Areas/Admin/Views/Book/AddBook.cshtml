@@ -261,6 +261,7 @@
             <div class="form-group">
                 <label>Books </label>
                 <table>
+
                     <tr>
                         <td class="col-lg-6">
                             <div class="select mce-match-marker-selected book-row ">
@@ -268,8 +269,7 @@
                                     <option data-para="" class="obj_select" value="0">--Select--</option>
                                     @foreach (var item in data)
                                     {
-                                        <option data-author-id="@item.BookAuthorId" data-para="@item.OtherPara" class="obj_select bk_author_@item.BookAuthorId" value="@item.Id">@item.Name</option>
-                                    }
+                        <option data-author-id="@item.BookAuthorId" data-para="@item.OtherPara" class="obj_select bk_author_@item.BookAuthorId" value="@item.Id">@item.Name</option>}
                                 </select>
                             </div>
                         </td>
@@ -278,6 +278,12 @@
                             <a class="btn btn-warning btn-sm  add-new-bookpackrow">Add</a>
                             <input id="numberOfBooksForBookPacks" class="display-none" type="number" value="1" />
                         </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a id="filter-books-by-authors" class="btn btn-info btn-sm">Filter Books By Selected Author(s)</a>
+                        </td>
+                        <td></td>
                     </tr>
                 </table>
 
