@@ -494,37 +494,57 @@ $('#filter-books-by-authors').on('click', function (e) {
 });
 
 $('.add-new-bookpackrow').on('click', function (e) {
-
+  
     if ($('#select-book-for-book-pack').val() != 0) {
+
+        
         var selectedBook = $('#select-book-for-book-pack').val();
         var bkPropertyDetail = $('#select-book-for-book-pack').find(":selected").attr("data-para")
         var bkdisplayName = $('#select-book-for-book-pack').find(":selected").html();
         var selectedAmount = $('#numberOfBooksForBookPacks').val();
         var current_selection = $('#selected-books').val();
-        
         var bookProperty = JSON.parse(bkPropertyDetail);
-        var Obj = selectedBook + '-' + bookProperty.BookPropertyId;
-        if (current_selection === '') {
-            $('#selected-books').val(Obj);
-        } else {
-            $('#selected-books').val(current_selection + ',' + Obj);
-        }
-        
 
-        $("#book-pack-menu").append('<li data-amount="' + selectedAmount + '" data-obj="' + Obj + '" class="list-group-item">' + bkdisplayName + '<span data-obj="' +Obj+'" class="text-danger remove-selected-book-pack-item"  style="margin-left: 30px;cursor: pointer;">Remove</span></li>');
-        $('#select-book-for-book-pack').find(":selected").hide();
-        $('#select-book-for-book-pack').val(0);
-        $('#numberOfBooksForBookPacks').val(0);
+        var Obj = selectedBook + '-' + bookProperty.BookPropertyId;
+        var model = {
+            "BookId": $('#select-book-for-book-pack').val(),
+            "PropertyId": bookProperty.BookPropertyId,
+            "NumberOfBookPackItems": $('#item-number-of-copies').val()
+        };
+        var url = "/Admin/Book/GetBookValidationForBookPack";
+        $.post(url, model)
+            .done(function (data) {
+                console.log(data);
+                if (data.success == "pass") {
+                    
+                    if (current_selection === '') {
+                        $('#selected-books').val(Obj);
+                    } else {
+                        $('#selected-books').val(current_selection + ',' + Obj);
+                    }
+
+
+                    $("#book-pack-menu").append('<li data-amount="' + selectedAmount + '" data-obj="' + Obj + '" class="list-group-item" id="selected-item-' + Obj+'">' + bkdisplayName + '<span data-obj="' + Obj + '" class="text-danger remove-selected-book-pack-item"  style="margin-left: 30px;cursor: pointer;">Remove</span></li>');
+                    $('#select-book-for-book-pack').find(":selected").hide();
+                    $('#select-book-for-book-pack').val(0);
+                    $('#numberOfBooksForBookPacks').val(0);
+                } else {
+                    bootbox.alert(data.message);
+                }
+            })
+            .fail(function (data) {
+                console.log(data);
+            });
     }   
     event.preventDefault();
 });
 
-$('.remove-selected-book-pack-item').on('click', function (e) {
+$(document).on("click", ".remove-selected-book-pack-item", function () {
     var Obj = $(this).attr("data-obj");
     if (Obj) {
-
+        $('#selected-item-' + Obj).remove();
     }
-})
+});
 
 $('.update-contact-config').on('click',function(e){
     var Objtype = $(this).attr("data-type");

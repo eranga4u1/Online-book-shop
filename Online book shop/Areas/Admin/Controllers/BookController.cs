@@ -810,5 +810,37 @@ namespace Online_book_shop.Areas.Admin.Controllers
             return jr;
         }
 
+        public JsonResult GetBookValidationForBookPack(BookPackItemVM model)
+        {
+            JsonResult jr = new JsonResult();
+            Book _book = BusinessHandlerBook.Get(model.BookId);
+            BookProperties _bookProperty = BusinessHandlerBookProperties.GetById(model.PropertyId);
+            SaleStatus preOrder =BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order");
+            Dictionary<string, string> result = new Dictionary<string, string>();
+            if (_book !=null && _bookProperty != null)
+            {
+                if(_book.SaleType== preOrder.Id)
+                {
+                    result.Add("message", "Can't Update. Book is on Pre order state");
+                    result.Add("success", "failed");
+                }else if (_bookProperty.NumberOfCopies<model.NumberOfBookPackItems)
+                {
+                    result.Add("message", "Can't Update. Not enough remaining items");
+                    result.Add("success", "failed");
+                }
+                else
+                {
+                    result.Add("message", "Added successfully");
+                    result.Add("success", "pass");
+                }
+            }
+            else
+            {
+                result.Add("message", "Can't Update. Book is missing");
+                result.Add("success", "failed");
+            }
+            jr.Data = result;
+            return jr;
+        }
     }
 }

@@ -440,9 +440,9 @@ var bookProperty = Model.BookProperties.FirstOrDefault();
                 {
                     foreach (DataObjVM item in ViewBag.selectedBooks)
                     {
-    <li data-amount="1" data-obj="@item.Id" class="list-group-item">@item.Name<span data-obj="@item.Id" class="text-danger remove-selected-book-pack-item" style="margin-left: 30px;cursor: pointer;">Remove</span></li>
-}
-}
+                        <li data-amount="1" data-obj="@item.Id" id="selected-item-@item.Id" class="list-group-item">@item.Name<span data-obj="@item.Id" class="text-danger remove-selected-book-pack-item" style="margin-left: 30px;cursor: pointer;">Remove</span></li>
+                    }
+                    }
             </ul>
             @{ List<string> selectedStr = new List<string>();
                 foreach (DataObjVM item in ViewBag.selectedBooks)

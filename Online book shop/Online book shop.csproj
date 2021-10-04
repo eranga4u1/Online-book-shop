@@ -701,6 +701,7 @@
     <Compile Include="Models\UserReview.cs" />
     <Compile Include="Models\ViewModel\AboutUs.cs" />
     <Compile Include="Models\ViewModel\BillingVM.cs" />
+    <Compile Include="Models\ViewModel\BookPackItemVM.cs" />
     <Compile Include="Models\ViewModel\BookPrice.cs" />
     <Compile Include="Models\ViewModel\BookPromotionVM.cs" />
     <Compile Include="Models\ViewModel\BookVM.cs" />

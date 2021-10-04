@@ -7,7 +7,7 @@
     ViewBag.Title = "Home Page";
     List<BookVMTile> PreOrderBooks = ViewBag.PreOrderBooks;
     List<BookVMTile> LatestBooks = ViewBag.LatestBooks;
-     List<BookVMTile> BookPacks = ViewBag.book_packs;
+    List<BookVMTile> BookPacks = ViewBag.book_packs;
     List<BookVMTile> BestSellingBooks = ViewBag.BestSellingBooks;
     List<BookVMTile> RecentlyViewBooks = ViewBag.RecentlyViewItems;
     List<Media> HomeBanners = ViewBag.HomeBanners;
@@ -15,6 +15,7 @@
     List<Promotion> Promotions = ViewBag.LatestPromotion;
     Configuration configabtUs = BusinessHandlerConfigurations.GetConfigByKey("ABOUT-US");
     InstantMessage Obj_instant_message = BusinessHandlerConfigurations.GetInstantMessage();
+    string Obj__contactNumbers = BusinessHandlerConfigurations.GetHomeContactNumber();
 }
 
 <div class="slider">
@@ -904,7 +905,7 @@
                 </div>
                 <div class="text">
                     <span>24/7 Support</span>
-                    0777 456 456
+                    @Obj__contactNumbers
                 </div>
             </div>
         </div>
