@@ -105,6 +105,55 @@ namespace Online_book_shop.Handlers.Database
             }
         }
 
+        internal static List<BookVMTile> GetAllActiveBookPacks()
+        {
+            try
+            {
+                List<BookVMTile> list = new List<BookVMTile>();
+                using (var ctx = new ApplicationDbContext())
+                {
+                    
+                    var selectedBooks = ctx.Books.Where(x => !x.isDeleted && x.ItemType == (int)ItemType.BookPack && (x.RelaseDate >= DateTime.UtcNow)).ToList();
+                    var Bookpacks = from a in (from q in selectedBooks
+                                               orderby q.CreatedDate descending
+                                                   select q)
+                                        join b in ctx.Authors on a.AuthorId equals b.Id
+                                        select new BookVMTile
+                                        {
+                                            Id = a.Id,
+                                            BookName = a.Title,
+                                            LocalBookName = a.LocalTitle,
+                                            AuthorName = b.Name,
+                                            LocalAuthorName = b.LocalName,
+                                            isDeleted = b.isDeleted,
+                                            Rating = a.Ratings,
+                                            SaleType = a.SaleType,
+                                            Url = a.FriendlyName,
+                                            CreatedDate = a.CreatedDate,
+                                            Property = ctx.BookProperties.Where(x => x.BookId == a.Id).ToList(),
+                                            Categories = (from r in (from t in ctx.Book_Categories
+                                                                     where t.BookId == a.Id && !t.isDeleted
+                                                                     select t)
+                                                          join
+                                        c in ctx.Categories on r.CategoryId equals c.Id
+                                                          select c).ToList(),
+                                            FrontCover = (from x in (from s in ctx.BookProperties
+                                                                     where s.BookId == a.Id
+                                                                     select s)
+                                                          join
+                                                          y in ctx.Medias on x.FrontCoverMediaId equals y.Id
+                                                          select y).ToList().FirstOrDefault()
+                                        };
+                    var returnList = Bookpacks.Where(x => !x.isDeleted).ToList();
+                    return returnList;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         internal static Dictionary<int, int> GetStock(int bookId)
         {
             Dictionary<int, int> dic = new Dictionary<int, int>();
@@ -125,6 +174,50 @@ namespace Online_book_shop.Handlers.Database
                     {
                         return null;
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        internal static List<DataObjVM> GetAllBooksWithPropertyAsNewOneForBookPack()
+        {
+            try
+            {
+                SaleStatus preOrder = BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order");
+                SaleStatus NormalSaleType = BusinessHandlerSaleStatus.GetSaleStatusByTitle("normal_sale");
+                //SaleStatus LimitedStockType = BusinessHandlerSaleStatus.GetSaleStatusByTitle("limited_stock");
+
+                using (var ctx = new ApplicationDbContext())
+                {
+
+                    var books = from a in ctx.BookProperties
+                                join
+                                b in ctx.Books.Where(x=> (x.SaleType == preOrder.Id || x.SaleType == NormalSaleType.Id) && x.ItemType==(int)ItemType.Book) on a.BookId equals b.Id
+                                select (new DataObjVM
+                                {
+                                    Id = b.Id,
+                                    Name = b.Title + " : " + a.Title,
+                                    ObjType = 0,
+                                    OtherPara = "{\"BookPropertyId\":" + a.Id + "}",
+                                    BookAuthorId = b.AuthorId,
+                                    BookPublisherId = b.PublisherId
+                                });
+                    var result = books.ToList();
+
+
+                    if (result != null)
+                    {
+                        return result;
+
+                    }
+                    else
+                    {
+                        return null;
+                    }
+
                 }
             }
             catch (Exception ex)

@@ -292,6 +292,7 @@
     <Compile Include="Controllers\AuthorController.cs" />
     <Compile Include="Controllers\BlogController.cs" />
     <Compile Include="Controllers\BookController.cs" />
+    <Compile Include="Controllers\BookPackController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\DeliveryController.cs" />
@@ -1250,12 +1251,15 @@
     <Content Include="Views\Invoice\Find.cshtml" />
     <Content Include="Views\Delivery\InStorePickup.cshtml" />
     <Content Include="Views\Search\Find.cshtml" />
+    <Content Include="Views\BookProfile\BookPacks.cshtml" />
+    <Content Include="Views\BookPacks\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\AdminUtility\" />
     <Folder Include="Areas\Admin\Views\Media\" />
+    <Folder Include="Views\BookPack\" />
     <Folder Include="Views\PreOwnedBooks\" />
     <Folder Include="Views\PropertyType\" />
     <Folder Include="Views\Test\" />

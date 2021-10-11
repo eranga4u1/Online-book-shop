@@ -41,7 +41,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
             ViewBag.Categories = BusinessHandlerCategory.GetCategories();
             ViewBag.Languages = BusinessHandlerLanguage.Get();
             ViewBag.SaleStatus = BusinessHandlerSaleStatus.GetAllActiveSaleStatus();
-            var books = BusinessHandlerBook.GetAllBooksWithPropertyAsNewOne(); //BusinessHandlerBook.GetAllBooks(true).Select(x=> new DataObjVM { Id=x.Id,Name=x.Title,ObjType=0}).ToList();    
+            var books = BusinessHandlerBook.GetAllBooksWithPropertyAsNewOneForBookPack(); //BusinessHandlerBook.GetAllBooks(true).Select(x=> new DataObjVM { Id=x.Id,Name=x.Title,ObjType=0}).ToList();    
             ViewBag.list = books;
             ViewBag.book_property_types = Obj_book_property_types;
             return View();
@@ -816,12 +816,14 @@ namespace Online_book_shop.Areas.Admin.Controllers
             Book _book = BusinessHandlerBook.Get(model.BookId);
             BookProperties _bookProperty = BusinessHandlerBookProperties.GetById(model.PropertyId);
             SaleStatus preOrder =BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order");
+            SaleStatus NormalSaleType = BusinessHandlerSaleStatus.GetSaleStatusByTitle("normal_sale");
+            //SaleStatus LimitedStockType = BusinessHandlerSaleStatus.GetSaleStatusByTitle("limited_stock");
             Dictionary<string, string> result = new Dictionary<string, string>();
             if (_book !=null && _bookProperty != null)
             {
-                if(_book.SaleType== preOrder.Id)
+                if(_book.SaleType != preOrder.Id && _book.SaleType != NormalSaleType.Id)
                 {
-                    result.Add("message", "Can't Update. Book is on Pre order state");
+                    result.Add("message", "Can't Update. Book is not on Pre order or normal sale state");
                     result.Add("success", "failed");
                 }else if (_bookProperty.NumberOfCopies<model.NumberOfBookPackItems)
                 {

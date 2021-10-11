@@ -120,6 +120,11 @@ namespace Online_book_shop.Handlers.Business
             return DBHandlerBook.GetBooksByCategories(categoryId);
         }
 
+        internal static List<BookVMTile> GetAllActiveBookPacks()
+        {
+            return DBHandlerBook.GetAllActiveBookPacks();
+        }
+
         internal static List<BookVMTile> GetBooksByAuthor(int Authord,int pageId=0)
         {
             return DBHandlerBook.GetBooksByAuthor(Authord, pageId);
@@ -142,7 +147,11 @@ namespace Online_book_shop.Handlers.Business
         {
             return DBHandlerBook.GetAllBooksWithPropertyAsNewOne();
         }
-
+        internal static List<DataObjVM> GetAllBooksWithPropertyAsNewOneForBookPack()
+        {
+            return DBHandlerBook.GetAllBooksWithPropertyAsNewOneForBookPack();
+        }
+        
         internal static List<ItemPack> GetAllItemPack(bool withDeleted = false)
         {
             return DBHandlerBook.GetAllItemPack(withDeleted);

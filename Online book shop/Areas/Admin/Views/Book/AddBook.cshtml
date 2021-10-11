@@ -257,6 +257,10 @@
         }
     </div>
     <div class="book-pack-container col-lg-12" style="display:none">
+        <div class="form-group">
+            <label>Number Of Packs</label>
+            <input type="number" class="form-control" id="item-number-of-copies" name="NumberOfCopies" placeholder="Number Of Copies">
+        </div>
         <div class="col-lg-6">
             <div class="form-group">
                 <label>Books </label>
@@ -264,12 +268,13 @@
 
                     <tr>
                         <td class="col-lg-6">
-                            <div class="select mce-match-marker-selected book-row ">
+                            <div class="mce-match-marker-selected book-row ">
                                 <select id="select-book-for-book-pack" class="form-control " name="select-book-for-book-pack">
                                     <option data-para="" class="obj_select" value="0">--Select--</option>
                                     @foreach (var item in data)
                                     {
-                        <option data-author-id="@item.BookAuthorId" data-para="@item.OtherPara" class="obj_select bk_author_@item.BookAuthorId" value="@item.Id">@item.Name</option>}
+                        <option data-author-id="@item.BookAuthorId" data-para="@item.OtherPara" class="obj_select bk_author_@item.BookAuthorId" value="@item.Id">@item.Name</option>
+}
                                 </select>
                             </div>
                         </td>
@@ -281,7 +286,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <a id="filter-books-by-authors" class="btn btn-info btn-sm">Filter Books By Selected Author(s)</a>
+                            <a id="filter-books-by-authors" class="btn btn-info btn-sm margin-top-5px">Filter Books By Selected Author(s)</a>
                         </td>
                         <td></td>
                     </tr>
@@ -297,10 +302,7 @@
                 <label>Item Price</label>
                 <input type="number" class="form-control" id="item-price" name="ItemPrice" placeholder="Price">
             </div>*@
-            <div class="form-group">
-                <label>Number Of Copies</label>
-                <input type="number" class="form-control" id="item-number-of-copies" name="NumberOfCopies" placeholder="Number Of Copies">
-            </div>
+
         </div>
         <div class="col-lg-6">
             <h3 class="mini-header">Quick Promotion</h3>

@@ -83,5 +83,10 @@ namespace Online_book_shop.Controllers
         {
             return BusinessHandlerBook.GetStock(bookId);
         }
+        public ActionResult BookPacks()
+        {
+            ViewBag.AllActiveBookPacks= BusinessHandlerBook.GetAllActiveBookPacks();
+            return View();
+        }
     }
 }
