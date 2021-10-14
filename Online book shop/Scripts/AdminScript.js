@@ -483,13 +483,35 @@ $('.add-more-author').click(function () {
     var content = $('.main-author-block').html();   
     $(".author-block").append("<div class='select mo'>" + content.replaceAll("AuthorId", "OtherAthors[" + $(".mo").length+"]") +"</div>");
 });
+
 $('#filter-books-by-authors').on('click', function (e) {
     var authorsselection = $('.selected-author-drop');
+    var books = JSON.parse($('#all-books-data').val());
+    //var selectedBooks = [];
+    //var appendString = '';
+    //$.each(books, function (key, value) { 
+    //    $.each(authorsselection, function (key2, value2) {
+    //        var id = $(value2).val();
+    //        if (id == value.BookAuthorId){
+    //           // selectedBooks.push(value);
+    //            var text = "data-para=\"" + JSON.stringify(value.OtherPara) +"\"";
+    //            appendString = appendString + '<option data-author-id="' + id + '" ' + text +'" class="obj_select bk_author_' + id + '" value="' + value.Id +'">' + value.Name+'</option>';
+    //        }
+    //    });
+    //});
+
+    //console.log(appendString);
+    //$('#select-book-for-book-pack')
+    //    .find('option')
+    //    .remove();
+    //$('#select-book-for-book-pack').append(appendString);
+    
     $('.obj_select').hide();
+    $('.obj_select').attr('disabled', 'disabled');
     $.each(authorsselection, function (key, value) {
-        //alert(key + ": " + value);
         var id = $(value).val();
         $('.bk_author_' + id).show();
+        $('.bk_author_' + id).removeAttr('disabled');
     });
 });
 

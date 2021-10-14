@@ -59,22 +59,24 @@ namespace Online_book_shop.Handlers.Helper
             _pager.Next = new PagerItem { isEnable = true, LinkPageId = (currentPage + 1) };
             _pager.LinkedPages = new List<int>();
 
-            int AppNumberOfPages = numberOfItems / itemPerPage;
+            //int AppNumberOfPages = numberOfItems / itemPerPage;
 
-            if(AppNumberOfPages* itemPerPage== numberOfItems)
-            {
-                //No need next page
-                NumberOfPages = AppNumberOfPages;
-            }else if (AppNumberOfPages * itemPerPage > numberOfItems)
-            {
-                //No need next page
-                NumberOfPages = AppNumberOfPages;
-            }
-            else if(AppNumberOfPages * itemPerPage < numberOfItems)
-            {
-                //need next page
-                NumberOfPages = (AppNumberOfPages+1);
-            }
+            //if(AppNumberOfPages* itemPerPage== numberOfItems)
+            //{
+            //    //No need next page
+            //    NumberOfPages = AppNumberOfPages;
+            //}else if (AppNumberOfPages * itemPerPage > numberOfItems)
+            //{
+            //    //No need next page
+            //    NumberOfPages = AppNumberOfPages;
+            //}
+            //else if(AppNumberOfPages * itemPerPage < numberOfItems)
+            //{
+            //    //need next page
+            //    NumberOfPages = (AppNumberOfPages+1);
+            //}
+
+             NumberOfPages = (int)Math.Ceiling(Convert.ToDecimal(numberOfItems) / Convert.ToDecimal(itemPerPage));
 
             if (currentPage == 1)
             {

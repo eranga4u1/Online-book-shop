@@ -27,7 +27,7 @@ namespace Online_book_shop
             routes.MapRoute(
                   name: "BookCollection",
                   url: "books",
-                  defaults: new { controller = "BookProfile", action = "Collection", id = UrlParameter.Optional },
+                  defaults: new { controller = "BookProfile", action = "AllBooks", id = UrlParameter.Optional },
                   new string[] { "Online_book_shop.Controllers" }
                );
             routes.MapRoute(

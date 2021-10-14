@@ -138,10 +138,17 @@ namespace Online_book_shop.Handlers.Business
         {
             return DBHandlerBook.GetBooksByPublisher(publisherId, pageId);
         }
-
+        internal static int GetTotalNumberOfBooks()
+        {
+            return DBHandlerBook.GetTotalNumberOfBooks();
+        }
         internal static List<BookVMTile> GetAllBooksForView()
         {
             return DBHandlerBook.GetAllBooksForView();
+        }
+        internal static List<BookVMTile> GetAllBooksForView(int page, int itemPerPage)
+        {
+            return DBHandlerBook.GetPageBooksForView(page, itemPerPage);
         }
         internal static List<DataObjVM> GetAllBooksWithPropertyAsNewOne()
         {

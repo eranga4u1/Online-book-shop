@@ -44,10 +44,10 @@
             if (bookPacks != null && bookPacks.Count > 0)
             {
                 <div class="bookcat-col active">
-                    <h3>Books</h3>
+                    <h3>පොත් කට්ටල - Book Packs</h3>
                     <div class="row">
                         <div class="authorwork book-overview" id="">
-                            @foreach (BookVMTile b in bookPacks)
+                            @foreach (BookVMTile b in bookPacks.OrderByDescending(x=> x.CreatedDate))
                             {
                                 BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
                                 BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);

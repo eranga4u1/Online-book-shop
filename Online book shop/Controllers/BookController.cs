@@ -78,6 +78,20 @@ namespace Online_book_shop.Controllers
             ViewBag.Categories = categories;
             return View();
         }
+        public ActionResult AllBooks()
+        {
+            int page = 1;
+            if (Request.QueryString["page"] != null)
+            {
+                page = Convert.ToInt32(Request.QueryString["page"]);
+            }
+            List<BookVMTile> books = BusinessHandlerBook.GetAllBooksForView(page, 40);
+            //List<Category> categories = BusinessHandlerCategory.GetCategories();
+            ViewBag.TotalNumberOfBooks = BusinessHandlerBook.GetTotalNumberOfBooks(); //books != null ? books.Count : 0;
+            ViewBag.Books = books;//.Skip(40 * (page - 1)).Take(40).ToList();
+            // ViewBag.Categories = categories;
+            return View();
+        }
 
         public static Dictionary<int,int> GetStock(int bookId)
         {
@@ -87,6 +101,11 @@ namespace Online_book_shop.Controllers
         {
             ViewBag.AllActiveBookPacks= BusinessHandlerBook.GetAllActiveBookPacks();
             return View();
+        }
+
+        public int GetNumberOfPages(int NumberOfItems, int ItemPerPage)
+        {
+            return (int)Math.Ceiling(Convert.ToDecimal(NumberOfItems) / Convert.ToDecimal(ItemPerPage));
         }
     }
 }

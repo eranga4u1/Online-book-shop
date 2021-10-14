@@ -1192,6 +1192,72 @@ namespace Online_book_shop.Handlers.Database
             }
         }
 
+        internal static int GetTotalNumberOfBooks()
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                   return ctx.Books.Where(b => !b.isDeleted && b.ItemType == (int)ItemType.Book).Count();//.ToList();
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return 0;
+        }
+
+        internal static List<BookVMTile> GetPageBooksForView(int page, int itemPerPage)
+        {
+            try
+            {
+                List<BookVMTile> list = new List<BookVMTile>();
+                using (var ctx = new ApplicationDbContext())
+                {
+                    var selectedBooks = ctx.Books.Where(b => !b.isDeleted && b.ItemType == (int)ItemType.Book).OrderByDescending(x => x.CreatedDate).Skip(itemPerPage * (page - 1)).Take(itemPerPage).ToList();
+                    var preOrderBooks = from a in selectedBooks
+                                            //(from q in ctx.Books
+                                            //       where !q.isDeleted
+                                            //       orderby q.CreatedDate descending
+                                            //       select q)//.Skip(page* itemForPage).Take(itemForPage)
+                                        join b in ctx.Authors on a.AuthorId equals b.Id
+                                        select new BookVMTile
+                                        {
+                                            Id = a.Id,
+                                            BookName = a.Title,
+                                            LocalBookName = a.LocalTitle,
+                                            AuthorName = b.Name,
+                                            LocalAuthorName = b.LocalName,
+                                            isDeleted = b.isDeleted,
+                                            Rating = a.Ratings,
+                                            SaleType = a.SaleType,
+                                            Url = a.FriendlyName,
+                                            CreatedDate = a.CreatedDate,
+                                            Property = ctx.BookProperties.Where(x => x.BookId == a.Id).ToList(),
+                                            Categories = (from r in (from t in ctx.Book_Categories
+                                                                     where t.BookId == a.Id && !t.isDeleted
+                                                                     select t)
+                                                          join
+                                        c in ctx.Categories on r.CategoryId equals c.Id
+                                                          select c).ToList(),
+                                            FrontCover = (from x in (from s in ctx.BookProperties
+                                                                     where s.BookId == a.Id
+                                                                     select s)
+                                                          join
+                                                          y in ctx.Medias on x.FrontCoverMediaId equals y.Id
+                                                          select y).ToList().FirstOrDefault()
+                                        };
+                    var returnList = preOrderBooks.Where(x => !x.isDeleted).ToList();
+                    return returnList;
+                }
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         internal static ItemPack AddItemPack(ItemPack model)
         {
             try

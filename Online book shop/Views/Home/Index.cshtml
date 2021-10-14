@@ -55,7 +55,7 @@
             <div class="bookcat-col active">
                 <h3 class="acordian-tab">Pre Orders</h3>
                 <div class="book-overview" id="preorder">
-                    @foreach (BookVMTile b in PreOrderBooks)
+                    @foreach (BookVMTile b in PreOrderBooks.OrderBy(x=> x.CreatedDate))
                     {
 
                         //  @Html.Partial("_BookTile", b)
@@ -185,7 +185,7 @@
             <div class="bookcat-col active">
                 <h3 class="acordian-tab">Latest Arrivel</h3>
                 <div class="book-overview" id="latestarr">
-                    @foreach (BookVMTile b in LatestBooks)
+                    @foreach (BookVMTile b in LatestBooks.OrderBy(x => x.CreatedDate))
                     {
                         BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
                         BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
@@ -313,7 +313,7 @@
             <div class="bookcat-col active">
                 <h3 class="acordian-tab">Book Packs</h3>
                 <div class="book-overview" id="bookpacksarr">
-                    @foreach (BookVMTile b in BookPacks)
+                    @foreach (BookVMTile b in BookPacks.OrderBy(x => x.CreatedDate))
                     {
                         BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
                         BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
@@ -442,7 +442,7 @@
             <div class="bookcat-col">
                 <h3 class="acordian-tab">Best Selling Books</h3>
                 <div class="book-overview" id="bestselling">
-                    @foreach (BookVMTile b in BestSellingBooks)
+                    @foreach (BookVMTile b in BestSellingBooks.OrderBy(x => x.CreatedDate))
                     {
 
                         BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
