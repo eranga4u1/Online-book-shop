@@ -76,6 +76,7 @@ namespace Online_book_shop.Controllers
             ViewBag.TotalNumberOfBooks = books != null ? books.Count : 0;
             ViewBag.Books = books;//.Skip(25 * page).Take(25).ToList();
             ViewBag.Categories = categories;
+            ViewBag.MethodName = "Collection";
             return View();
         }
         public ActionResult AllBooks()

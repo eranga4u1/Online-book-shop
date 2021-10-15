@@ -1152,7 +1152,7 @@ namespace Online_book_shop.Handlers.Database
                 List<BookVMTile> list = new List<BookVMTile>();
                 using (var ctx = new ApplicationDbContext())
                 {
-                    var preOrderBooks = from a in (from q in ctx.Books where !q.isDeleted
+                    var preOrderBooks = from a in (from q in ctx.Books where !q.isDeleted && q.ItemType==(int)ItemType.Book
                                                    orderby q.CreatedDate descending
                                                    select q )//.Skip(page* itemForPage).Take(itemForPage)
                                         join b in ctx.Authors on a.AuthorId equals b.Id
