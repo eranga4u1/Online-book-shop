@@ -468,12 +468,12 @@ var bookProperty = Model.BookProperties.FirstOrDefault();
             <label>Discount Value</label>
             <table>
                 <tr>
-                    <td><input type="number" min="0" class="form-control" id="DiscountValue" name="BookProperties[0].DiscountValue" value="20"></td>
+                    <td><input type="number" min="0" class="form-control" id="BookPackDiscountType" name="BookPackDiscountType" value="@Model.BookPackDiscountType"></td>
                     <td class="col-lg-8">
                         <div class="select">
-                            <select class="form-control" name="BookProperties[0].PromotionMethods">
-                                <option value="1">Percent</option>
-                                <option value="0">Fix Amount</option>
+                            <select class="form-control" name="BookPackDiscountType">
+                                <option @(Model.BookPackDiscountType==1?"Selected":"") value="1">Percent</option>
+                                <option @(Model.BookPackDiscountType==2?"Selected":"") value="0">Fix Amount</option>
                             </select>
                         </div>
                     </td>

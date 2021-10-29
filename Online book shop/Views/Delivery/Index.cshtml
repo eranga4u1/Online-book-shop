@@ -228,12 +228,12 @@
                     (* ඔබ යොමුකරන්නේ පෙර ඇනවුමක් නම් සහ මුදල් ගෙවන ආකරය Bank Deposit හෝ Online Tranfer නම්, පෙර ඇනවුම් බාරගන්නා අවසාන දිනයට පෙර මුදල් ගෙවීම සිදු කළ යුතුය.)
                 </div> }
                             else if (order != null)
-                            { @*<div class="col-lg-12">
+                            { <div class="col-lg-12">
                         <input type="radio" id="post" name="delivery_method" @((order.DeliveryMethod == (int)DeliveryTypes.Postal_Service) ? "checked" : "") value="post">
                         <label>Post Service/තැපැල් සේවය හරහා</label><br />
                         (තැපෑලෙන් පොත් ගෙන්වා ගැනීමේදී මුදල් ගෙවීම පළමුව සිදු කළ යුතුය. මෙහිදී Cash on delivery සේවාව ක්‍රියාත්මක නොවේ.)
                         (* ඔබ යොමුකරන්නේ පෙර ඇනවුමක් නම් සහ මුදල් ගෙවන ආකරය Bank Deposit හෝ Online Tranfer නම්, පෙර ඇනවුම් බාරගන්නා අවසාන දිනයට පෙර මුදල් ගෙවීම සිදු කළ යුතුය.)
-                    </div>*@
+                    </div>
                                             <div class="col-lg-12">
                                                 <input type="radio" id="courier" @((order.DeliveryMethod == (int)DeliveryTypes.Currier_Service) ? "checked" : "") name="delivery_method" value="courier">
                                                 <label>Courier Service/කුරියර් සේවය </label><br />
@@ -247,12 +247,12 @@
 
                                                         }
                                                         else
-                                                        { @*<div class="col-lg-12">
+                                                        { <div class="col-lg-12">
                                                     <input type="radio" id="post" name="delivery_method" value="post">
                                                     <label>Post Service/තැපැල් සේවය හරහා</label><br />
                                                     (තැපෑලෙන් පොත් ගෙන්වා ගැනීමේදී මුදල් ගෙවීම පළමුව සිදු කළ යුතුය. මෙහිදී Cash on delivery සේවාව ක්‍රියාත්මක නොවේ.)
                                                     (* ඔබ යොමුකරන්නේ පෙර ඇනවුමක් නම් සහ මුදල් ගෙවන ආකරය Bank Deposit හෝ Online Tranfer නම්, පෙර ඇනවුම් බාරගන්නා අවසාන දිනයට පෙර මුදල් ගෙවීම සිදු කළ යුතුය.)
-                                                </div>*@
+                                                </div>
                                                                         <div class="col-lg-12">
                                                                             <input type="radio" id="courier" name="delivery_method" checked value="courier">
                                                                             <label>Courier Service/කුරියර් සේවය </label><br />

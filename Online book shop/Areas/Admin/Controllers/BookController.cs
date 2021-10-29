@@ -212,10 +212,10 @@ namespace Online_book_shop.Areas.Admin.Controllers
                             PromotionTitle = "Promotion for " + bookvm.Title + " - " + book.Id,
                             PromotionDescription = "",
                             PromotionTypesFor = (int)PromotionTypesFor.Book,
-                            PromotionMethods = bookvm.BookProperties[0].PromotionMethods,
+                            PromotionMethods = bookvm.BookPackDiscountType,
                             ObjectType = (int)ObjectTypes.Book,
                             ObjectId = book.Id,
-                            DiscountValue = bookvm.BookProperties[0].DiscountValue,
+                            DiscountValue = bookvm.BookPackDiscountValue,
                             OtherParameters = "{BookPropertyId:" + bookProperties.Id + "}",
                             EndDate = DateTime.Today.AddYears(5),
                             StartDate = DateTime.Today.AddDays(-1)
@@ -286,8 +286,16 @@ namespace Online_book_shop.Areas.Admin.Controllers
                     bp.Id = b.Id;
                     if(promotion != null)
                     {
-                        bp.DiscountValue = promotion.DiscountValue;
-                        bp.PromotionMethods = promotion.PromotionMethods;
+                        if (book.ItemType == (int)ItemType.Book)
+                        {
+                            bp.DiscountValue = promotion.DiscountValue;
+                            bp.PromotionMethods = promotion.PromotionMethods;
+                        }else if(book.ItemType== (int)ItemType.BookPack)
+                        {
+                            bookvm.BookPackDiscountValue = promotion.DiscountValue;
+                            bookvm.BookPackDiscountType =promotion.PromotionMethods;
+                        }
+                        
                     }
                     if (bookvm.FrontCover == null)
                     {

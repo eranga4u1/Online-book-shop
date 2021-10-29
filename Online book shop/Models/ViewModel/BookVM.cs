@@ -34,6 +34,8 @@ namespace Online_book_shop.Models.ViewModel
         public decimal ItemPrice { get; set; }
 
         public int NumberOfCopies { get; set; }
+        public int BookPackDiscountType { get; set; }
+        public Double BookPackDiscountValue { get; set; }
 
         //public int NumberOfPages_1 { get; set; }
         //public decimal WeightByGrams_1 { get; set; }
