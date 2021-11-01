@@ -33,6 +33,7 @@ namespace Online_book_shop.Models
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime RelaseDate { get; set; }
+        public DateTime? AvailableUntil { get; set; }
         public string FriendlyName { get; set; }
         public int MaximumItemPerOrder { get; set; }
         public int ItemType { get; set; }

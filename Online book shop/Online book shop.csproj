@@ -665,6 +665,10 @@
     <Compile Include="Migrations\202109171452432_alter_item_pack.Designer.cs">
       <DependentUpon>202109171452432_alter_item_pack.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202111011330099_dead_line_date_for_book_pack.cs" />
+    <Compile Include="Migrations\202111011330099_dead_line_date_for_book_pack.Designer.cs">
+      <DependentUpon>202111011330099_dead_line_date_for_book_pack.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActiveMenu.cs" />
@@ -1479,6 +1483,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202109171452432_alter_item_pack.resx">
       <DependentUpon>202109171452432_alter_item_pack.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202111011330099_dead_line_date_for_book_pack.resx">
+      <DependentUpon>202111011330099_dead_line_date_for_book_pack.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

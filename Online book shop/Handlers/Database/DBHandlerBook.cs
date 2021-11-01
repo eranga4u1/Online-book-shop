@@ -899,6 +899,7 @@ namespace Online_book_shop.Handlers.Database
                     dbBook.FriendlyName = book.FriendlyName;
                     dbBook.YoutubeUrl = book.YoutubeUrl;
                     dbBook.MaximumItemPerOrder = book.MaximumItemPerOrder;
+                    dbBook.AvailableUntil = book.AvailableUntil;
                     ctx.SaveChanges();
                     if (BusinessHandlerConfigurations.GetLUCENE_AUTO_UPDATE())
                     {
@@ -942,7 +943,9 @@ namespace Online_book_shop.Handlers.Database
                 {
                     int preOrderId = ctx.SaleStatus.Where(s => s.Title == "pre_order").FirstOrDefault().Id;
                     var preOrderBooks = from a in (from q in ctx.Books
-                                        where (q.SaleType == preOrderId && !q.isDeleted && q.ItemType == (int)ItemType.Book) select q)
+                                                // where (q.SaleType == preOrderId && !q.isDeleted && q.ItemType == (int)ItemType.Book) select q)
+                                                   where (q.SaleType == preOrderId && !q.isDeleted )
+                                                   select q)
                                         join b in ctx.Authors on a.AuthorId equals b.Id
                                         select new BookVMTile
                                         {
@@ -1462,10 +1465,10 @@ namespace Online_book_shop.Handlers.Database
                 List<BookVMTile> list = new List<BookVMTile>();
                 using (var ctx = new ApplicationDbContext())
                 {
-                    SaleStatus saleStatus = BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order");
+                    //SaleStatus saleStatus = BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order");
                     var date = DateTime.Now.AddHours(5.5);
                     var BookPacks = from a in (from q in ctx.Books
-                                                   where !q.isDeleted &&  q.ItemType == (int)ItemType.BookPack && (q.RelaseDate >= date)
+                                                   where !q.isDeleted &&  q.ItemType == (int)ItemType.BookPack && (q.AvailableUntil>= date)
                                                orderby q.CreatedDate descending
                                                    select q)
                                         join b in ctx.Authors on a.AuthorId equals b.Id

@@ -79,7 +79,8 @@
                         <select id="PublisherId" class="form-control" name="PublisherId">
                             @foreach (Publisher publisher in ViewBag.Publishers)
                             {
-                <option value="@publisher.Id">@publisher.Name</option>}
+                <option value="@publisher.Id">@publisher.Name</option>
+}
                         </select>
                     </div>
                 </div>
@@ -90,8 +91,7 @@
                             <option value="0">--Select--</option>
                             @foreach (Author author in ViewBag.Authors)
                             {
-                <option value="@author.Id">@author.Name</option>
-}
+                <option value="@author.Id">@author.Name</option>}
                         </select>
                     </div>
                     <span class="btn btn-xs add-more-author">Add more</span>
@@ -104,12 +104,14 @@
                             {
                                 if (l.Name == "Sinhala")
                                 {
-                <option selected value="@l.Id">@l.Name</option> }
-                                else
-                                {
-                <option value="@l.Id">@l.Name</option>}
+                <option selected value="@l.Id">@l.Name</option>
+ }
+            else
+            {
+            <option value="@l.Id">@l.Name</option>
+}
 
-                            }
+    }
 
                         </select>
                     </div>
@@ -123,14 +125,19 @@
                                 List<SaleStatus> saleStatuses = ViewBag.SaleStatus;
                                 foreach (SaleStatus s in saleStatuses)
                                 {
-                <option @("Available" == s.DisplayText ? "selected" : "") value="@s.Id">@s.DisplayText</option>}
-                            }
+                <option @("Available" == s.DisplayText ? "selected" : "") value="@s.Id">@s.DisplayText</option>
+}
+        }
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
                     <label id="lbl-pre-release-end-date">Pre Release End Date</label>
                     <input type="text" value="@DateTime.Now" class="form-control" id="PreReleaseEndDate" name="PreReleaseEndDate" placeholder="Pre Release End Date">
+                </div>
+                <div class="form-group">
+                    <label id="lbl-pre-release-end-date">Book Available Until</label>
+                    <input type="text" value="@DateTime.Now" class="form-control" id="AvailableUntil" name="AvailableUntil" placeholder="Available Until">
                 </div>
                 <div class="form-group">
                     <label>Free Read Content</label>

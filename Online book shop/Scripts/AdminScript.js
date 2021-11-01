@@ -437,6 +437,7 @@ $("#SaleStartDate").datepicker({ dateFormat: 'yy/mm/dd' });
 $("#SaleEndDate").datepicker({ dateFormat: 'yy/mm/dd' }); 
 $("#EndDate").datepicker({ dateFormat: 'yy/mm/dd' });
 $("#PreReleaseEndDate").datepicker({ dateFormat: 'yy/mm/dd' });
+$("#AvailableUntil").datepicker({ dateFormat: 'yy/mm/dd' });
 
 $("#form-add-promotion #ObjectType").change(function () {
     var val = $("#form-add-promotion #ObjectType").val();
@@ -1171,12 +1172,12 @@ $('.check-item-type').on('change', function (e) {
     if ($(this).val() == 0 && $(this).is(":checked")) {
         $('.book-property-container').show();
         $('.book-pack-container').hide();
-        $('#lbl-pre-release-end-date').text("Pre Release End Date");
+        //$('#lbl-pre-release-end-date').text("Pre Release End Date");
         $('.publisherId-container').show();
     } else if ($(this).val() == 1 && $(this).is(":checked")) {
         $('.book-property-container').hide();
         $('.book-pack-container').show();
-        $('#lbl-pre-release-end-date').text("Book pack available until");
+       // $('#lbl-pre-release-end-date').text("Book pack available until");
         $('.publisherId-container').hide();
     }
 });

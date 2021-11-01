@@ -37,6 +37,8 @@ namespace Online_book_shop.Models.ViewModel
         public int BookPackDiscountType { get; set; }
         public Double BookPackDiscountValue { get; set; }
 
+        public DateTime? AvailableUntil { get; set; }
+
         //public int NumberOfPages_1 { get; set; }
         //public decimal WeightByGrams_1 { get; set; }
         //public int NumberOfCopies_1 { get; set; }

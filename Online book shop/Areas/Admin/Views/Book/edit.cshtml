@@ -81,21 +81,23 @@
 
                 @if (Model.ItemType == (int)ItemType.Book)
                 {
-    <div class="form-group">
-        <label>Publisher<span class="text-success refresh-publishers" style="cursor:pointer;"><i class="fa fa-refresh" aria-hidden="true"></i></span></label>
-        <select id="PublisherId" class="form-control" name="PublisherId">
-            @foreach (Publisher publisher in ViewBag.Publishers)
-            {
-                if (Model.PublisherId == publisher.Id)
-                {
-<option selected value="@publisher.Id">@publisher.Name</option> }
-                    else
+            <div class="form-group">
+                <label>Publisher<span class="text-success refresh-publishers" style="cursor:pointer;"><i class="fa fa-refresh" aria-hidden="true"></i></span></label>
+                <select id="PublisherId" class="form-control" name="PublisherId">
+                    @foreach (Publisher publisher in ViewBag.Publishers)
                     {
-<option value="@publisher.Id">@publisher.Name</option>}
-                }
-        </select>
+                        if (Model.PublisherId == publisher.Id)
+                        {
+            <option selected value="@publisher.Id">@publisher.Name</option>
+ }
+        else
+        {
+            <option value="@publisher.Id">@publisher.Name</option>
+}
+    }
+                </select>
 
-    </div>}
+            </div>}
 
                 <div class="form-group  author-block">
                     <label>Author<span class="text-success refresh-authors" style="cursor:pointer;"></span></label>
@@ -105,11 +107,13 @@
                             {
                                 if (Model.AuthorId == author.Id)
                                 {
-                <option selected value="@author.Id">@author.Name</option> }
-                                else
-                                {
-                <option value="@author.Id">@author.Name</option>}
-                            }
+                <option selected value="@author.Id">@author.Name</option>
+ }
+            else
+            {
+            <option value="@author.Id">@author.Name</option>
+}
+    }
                         </select>
                     </div>
                     @{ //List<Author> authors = BusinessHandlerAuthor.GetmultipleAuthors(Model.Id);
@@ -117,7 +121,7 @@
                         {
                             Author a = BusinessHandlerAuthor.GetAuthorById(i);
             <span class="col-lg-3">@a.LocalName</span><span data-book-id="@Model.Id" data-author-id="@a.Id" class="remove-multiple-author btn btn-sm btn-danger">Remove</span> }
-<span class="btn btn-xs add-more-author">Add more</span> }
+            <span class="btn btn-xs add-more-author">Add more</span> }
 
 
                 </div>
@@ -128,11 +132,13 @@
                         {
                             if (l.Id == Model.LanguageId)
                             {
-            <option selected value="@l.Id">@l.Name</option> }
-                            else
-                            {
-            <option value="@l.Id">@l.Name</option>}
-                        }
+            <option selected value="@l.Id">@l.Name</option>
+ }
+        else
+        {
+            <option value="@l.Id">@l.Name</option>
+}
+    }
                     </select>
                 </div>
                 <div class="form-group">
@@ -145,13 +151,13 @@
                             {
                                 if (Model.SaleType == s.Id)
                                 {
-            <option selected value="@s.Id">@s.DisplayText</option> }
-                                else
-                                {
-            <option value="@s.Id">@s.DisplayText</option>
-}
-    }
-}
+            <option selected value="@s.Id">@s.DisplayText</option>
+ }
+        else
+        {
+            <option value="@s.Id">@s.DisplayText</option>}
+                            }
+                        }
                     </select>
                 </div>
                 <div class="form-group">
@@ -159,11 +165,15 @@
                     <input type="text" value="@Model.PreReleaseEndDate" class="form-control" id="PreReleaseEndDate" name="PreReleaseEndDate" placeholder="Pre Release End Date">
                 </div>
                 <div class="form-group">
+                    <label id="lbl-pre-release-end-date">Book Available Until</label>
+                    <input type="text" value="@Model.AvailableUntil" class="form-control" id="AvailableUntil" name="AvailableUntil" placeholder="Available Until">
+                </div>
+                <div class="form-group">
                     <label>Free Read Content</label>
                     <input type="file" class="form-control-file" id="FreeReadPDFMedia" name="FreeReadPDFMedia">
                     @if (Model.ReadPDF != null)
                     {
-        <a target="_blank" href="~/Content/UploadFiles/PDF/@Model.ReadPDF.FileName"><label>@Model.ReadPDF.FileName</label></a>}
+            <a target="_blank" href="~/Content/UploadFiles/PDF/@Model.ReadPDF.FileName"><label>@Model.ReadPDF.FileName</label></a>}
                 </div>
                 <div class="form-group">
                     <label>Front Cover</label>
@@ -173,15 +183,15 @@
                     </div>
                     @if (Model.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + Model.FrontCover.FileName))
                     {
-        <div class="div-square">
-            <img src="@Url.Action("ResizeImage", "AdminUtility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+Model.FrontCover.FileName,width=67,height=102})" height="100" alt="" />
-            @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@Model.FrontCover.FileName" width="100" />*@
-        </div> }
-    else
-    {
-<div class="div-square">
-    <i class="fa fa-book fa-5x"></i>
-</div>}
+            <div class="div-square">
+                <img src="@Url.Action("ResizeImage", "AdminUtility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+Model.FrontCover.FileName,width=67,height=102})" height="100" alt="" />
+                @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@Model.FrontCover.FileName" width="100" />*@
+            </div> }
+        else
+        {
+            <div class="div-square">
+                <i class="fa fa-book fa-5x"></i>
+            </div>}
 
                 </div>
                 <div class="form-group">
@@ -192,12 +202,12 @@
                     </div>
                     @if (Model.BackCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookBackCover/" + Model.BackCover.FileName))
                     {
-        <img src="@Url.Action("ResizeImage", "AdminUtility", new {FileName="~/Content/UploadFiles/Images/BookBackCover/"+Model.BackCover.FileName,width=67,height=102})" height="100" alt="" /> @*<img src="~/Content/UploadFiles/Images/BookBackCover/@Model.BackCover.FileName" width="100" />*@ }
-    else
-    {
-<div class="div-square">
-    <i class="fa fa-book fa-5x"></i>
-</div>}
+            <img src="@Url.Action("ResizeImage", "AdminUtility", new {FileName="~/Content/UploadFiles/Images/BookBackCover/"+Model.BackCover.FileName,width=67,height=102})" height="100" alt="" /> @*<img src="~/Content/UploadFiles/Images/BookBackCover/@Model.BackCover.FileName" width="100" />*@ }
+        else
+        {
+            <div class="div-square">
+                <i class="fa fa-book fa-5x"></i>
+            </div>}
 
                 </div>
                 <div class="form-group">

@@ -66,6 +66,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                 book.YoutubeUrl = bookvm.YoutubeUrl;
                 book.MaximumItemPerOrder = bookvm.MaximumItemPerOrder == 0 ? 10000 : bookvm.MaximumItemPerOrder;
                 book.ItemType = bookvm.ItemType;
+                book.AvailableUntil = bookvm.AvailableUntil;
                 book =BusinessHandlerBook.Add(book);
           
                 int FrontCoverMediaId=0, BackCoverMediaId=0, FreeReadPDFMediaId=0;
@@ -273,6 +274,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                 bookvm.OtherAthors = BusinessHandlerAuthor.GetmultipleAuthors(book.Id).Select(x=> x.Id).ToArray();
                 bookvm.YoutubeUrl = book.YoutubeUrl;
                 bookvm.ItemType = book.ItemType;
+                bookvm.AvailableUntil = book.AvailableUntil;
 
                 List<BookPropertyVM> bplist = new List<BookPropertyVM>();
                 foreach (var b in bookProperties)
@@ -364,6 +366,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                     book.RelaseDate = bookVM.PreReleaseEndDate;//) ? Convert.ToDateTime(bookVM.PreReleaseEndDate) : DateTime.Today.AddDays(-1);
                     book.YoutubeUrl = bookVM.YoutubeUrl;
                     book.MaximumItemPerOrder = bookVM.MaximumItemPerOrder;
+                    book.AvailableUntil = bookVM.AvailableUntil;
                     BusinessHandlerBook.Put(book);
                     int FrontCoverMediaId = 0, BackCoverMediaId = 0, FreeReadPDFMediaId = 0;
                     if (book != null)
