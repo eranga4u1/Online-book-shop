@@ -242,7 +242,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                         {
                             if(a != bookvm.AuthorId)
                             {
-                                BusinessHandlerAuthor.AddMultipleAuthor(bookvm.Id,a);
+                                BusinessHandlerAuthor.AddMultipleAuthor(book.Id,a);
                             }
                         }
                     }                                       

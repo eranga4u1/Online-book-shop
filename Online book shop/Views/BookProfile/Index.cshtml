@@ -163,36 +163,32 @@
             <div class="book-content col-sm-7">
                 <h2>
                     @book.LocalBookName - @book.BookName
-                    @{
-                        string logedUid = BusinessHandlerAuthor.GetLoginUserId();
-                        if (!string.IsNullOrEmpty(logedUid))
-                        {
-                            if (BusinessHandlerWishListItem.isLovedBook(book.Id, logedUid))
-                            {
-                                <a><span data-bookid="@book.Id" id="love-book">❤️</span></a>
-                                <a><span data-bookid="@book.Id" id="no-love-book" class="display-none">🤍</span></a>
-                            }
-                            else
-                            {
-                                <a><span data-bookid="@book.Id" id="love-book" class="display-none">❤️</span></a>
-                                <a><span data-bookid="@book.Id" id="no-love-book">🤍</span></a>
-                            }
-                        }
-                    }
+                    @{ string logedUid = BusinessHandlerAuthor.GetLoginUserId();
+                                    if (!string.IsNullOrEmpty(logedUid))
+                                    {
+                                        if (BusinessHandlerWishListItem.isLovedBook(book.Id, logedUid))
+                                        {
+                        <a><span data-bookid="@book.Id" id="love-book">❤️</span></a>
+                                            <a><span data-bookid="@book.Id" id="no-love-book" class="display-none">🤍</span></a> }
+                                                            else
+                                                            {
+                                            <a><span data-bookid="@book.Id" id="love-book" class="display-none">❤️</span></a>
+                                                                <a><span data-bookid="@book.Id" id="no-love-book">🤍</span></a> }
+                                                                            } }
 
 
                 </h2>
-
-                <h3>By: <a href="/authors/@book.AuthorId">@book.LocalAuthorName - @book.AuthorName</a></h3>
-                @{
-                    List<Author> mulauthors = BusinessHandlerAuthor.GetmultipleAuthors(book.Id);
-                    if (mulauthors != null && mulauthors.Count > 0)
-                    {
-                        foreach (Author author in mulauthors)
+                @{//if (book.ItemType != (int)ItemType.BookPack)
+                
+                    <h3>By: <a href="/authors/@book.AuthorId">@book.LocalAuthorName - @book.AuthorName</a></h3>
+                        List<Author> mulauthors = BusinessHandlerAuthor.GetmultipleAuthors(book.Id);
+                        if (mulauthors != null && mulauthors.Count > 0)
                         {
-                            <h3>And <a href="/authors/@author.FriendlyName">@author.LocalName - @author.Name</a></h3>
-                        }
-                    }
+                            foreach (Author author in mulauthors)
+                            {
+                                <h3>And <a href="/authors/@author.FriendlyName">@author.LocalName - @author.Name</a></h3> 
+                            }
+                        } 
                 }
                 <div class="text-justify">
                     @Html.Raw(book.Description)
@@ -201,80 +197,66 @@
                     <div class="rating">
                         Rating details <div class="stars small" data-rating="@RecentRate"></div>
                     </div>
-                    @{
-                        int rateCount = (reviews != null && reviews.Where(x => !string.IsNullOrEmpty(x.value.ToString())) != null) ? reviews.Where(x => !string.IsNullOrEmpty(x.value.ToString())).Count() : 0;
-                        int reviewsCount = (reviews != null && reviews.Where(x => !string.IsNullOrEmpty(x.UserComment.ToString())) != null) ? reviews.Where(x => !string.IsNullOrEmpty(x.UserComment.ToString())).Count() : 0;
+                    @{ int rateCount = (reviews != null && reviews.Where(x => !string.IsNullOrEmpty(x.value.ToString())) != null) ? reviews.Where(x => !string.IsNullOrEmpty(x.value.ToString())).Count() : 0;
+                                    int reviewsCount = (reviews != null && reviews.Where(x => !string.IsNullOrEmpty(x.UserComment.ToString())) != null) ? reviews.Where(x => !string.IsNullOrEmpty(x.UserComment.ToString())).Count() : 0;
                         <span class="count">@rateCount rating(s)</span>
-                        <span class="reviews">@reviewsCount Reviews</span>
-                    }
+                                    <span class="reviews">@reviewsCount Reviews</span> }
 
                 </div>
-                @{
-                    string pages = "No Data";
-                    string weight = "No Data";
-                    int remainings = 0;
-                    if (book.Property != null)
-                    {
-                        pages = book.Property.FirstOrDefault().NumberOfPages.ToString();
-                        weight = book.Property.FirstOrDefault().WeightByGrams.ToString();
-                        remainings = book.Property.FirstOrDefault().NumberOfCopies;
-                    }
-                    if (stock != null)
-                    {
-                        foreach (KeyValuePair<int, int> entry in stock)
-                        {
-                            if (book.SaleType == BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order").Id)
-                            {
-                                <input type="hidden" id="stock_@entry.Key" value="0" />
-                            }
-                            else
-                            {
-                                <input type="hidden" id="stock_@entry.Key" value="@entry.Value" />
-                            }
+                @{ string pages = "No Data";
+                                string weight = "No Data";
+                                int remainings = 0;
+                                if (book.Property != null)
+                                {
+                                    pages = book.Property.FirstOrDefault().NumberOfPages.ToString();
+                                    weight = book.Property.FirstOrDefault().WeightByGrams.ToString();
+                                    remainings = book.Property.FirstOrDefault().NumberOfCopies;
+                                }
+                                if (stock != null)
+                                {
+                                    foreach (KeyValuePair<int, int> entry in stock)
+                                    {
+                                        if (book.SaleType == BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order").Id)
+                                        {
+                    <input type="hidden" id="stock_@entry.Key" value="0" /> }
+                                        else
+                                        {
+                    <input type="hidden" id="stock_@entry.Key" value="@entry.Value" /> }
 
-                        }
-                    }
-
-                }
+                                    }
+                                } }
 
                 @if (saleStatus.Title == "normal_sale")
                 {
                     var active_property = book.Property.Where(p => p.NumberOfCopies > 0);
                     if (active_property != null && active_property.ToList().Count > 0)
                     {
+            <div class="availability">
+                Availability&nbsp;: <span style="background-color:@saleStatus.BackGroundColor;color:@saleStatus.ForeColor">Stock Available</span>
+            </div> }
+                            else
+                            {
+            <div class="availability">
+                Availability&nbsp;: <span class="outofstock">Out of Stock</span>
+            </div> }
+                        } @*else if (remainings < 1)
+    {
+        <div class="availability">
+            Availability&nbsp;: <span class="outofstock">Out of Stock</span>
+        </div>
+    }*@ else
+                                    {
                         <div class="availability">
-                            Availability&nbsp;: <span style="background-color:@saleStatus.BackGroundColor;color:@saleStatus.ForeColor">Stock Available</span>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="availability">
-                            Availability&nbsp;: <span class="outofstock">Out of Stock</span>
-                        </div>
-
-                    }
-                }
-                @*else if (remainings < 1)
-                {
-                    <div class="availability">
-                        Availability&nbsp;: <span class="outofstock">Out of Stock</span>
-                    </div>
-                }*@
-                else
-                {
-                    <div class="availability">
-                        Availability: <span class="" style="background-color:@saleStatus.BackGroundColor;color:@saleStatus.ForeColor">@saleStatus.DisplayText</span>
-                    </div>
-                    if (saleStatus.Title == "pre_order")
-                    {
+                            Availability: <span class="" style="background-color:@saleStatus.BackGroundColor;color:@saleStatus.ForeColor">@saleStatus.DisplayText</span>
+                        </div> if (saleStatus.Title == "pre_order")
+                                        {
                         <div class="countdown-wrapper">
                             <h3>Countdown</h3>
                             <div class="countdown" id="countdown" data-date="@book.RelaseDate.ToString("MMM dd, yyyy HH:mm:ss")">
 
                             </div>
-                        </div>
-                    }
-                }
+                        </div>}
+                                    }
 
                 <div class="bookdetails">
                     <div class="row-element">
@@ -294,24 +276,24 @@
                             @weight g
                         </div>
                     </div>
-                    @if(book.ItemType == (int)ItemType.Book){                   
-                    <div class="row-element">
-                        <div class="column-left">
-                            Pages&nbsp;:
-                        </div>
-                        <div class="column-right">
-                            @pages
-                        </div>
-                    </div>
-                    <div class="row-element">
-                        <div class="column-left">
-                            Publisher&nbsp;:
-                        </div>
-                        <div class="column-right">
-                            <a href="/publisher/@book.publisher.Id">@book.publisher.Name</a>
-                        </div>
-                    </div>
-                    }
+                    @if (book.ItemType == (int)ItemType.Book)
+                    {
+            <div class="row-element">
+                <div class="column-left">
+                    Pages&nbsp;:
+                </div>
+                <div class="column-right">
+                    @pages
+                </div>
+            </div>
+                            <div class="row-element">
+                                <div class="column-left">
+                                    Publisher&nbsp;:
+                                </div>
+                                <div class="column-right">
+                                    <a href="/publisher/@book.publisher.Id">@book.publisher.Name</a>
+                                </div>
+                            </div>}
                     <div class="row-element">
                         <div class="column-left">
                             Categories&nbsp;:
@@ -333,22 +315,19 @@
                         @if (book.Property != null)
                         {
                             int index = 0;
-                            <select id="select-book-property" name="">
-                                @foreach (BookProperties bookProperty in book.Property)
+            <select id="select-book-property" name="">
+                @foreach (BookProperties bookProperty in book.Property)
+                {
+                    if (index == 0)
+                    {
+            <option selected value="@bookProperty.Id">@bookProperty.Title</option> }
+                                else
                                 {
-                                    if (index == 0)
-                                    {
-                                        <option selected value="@bookProperty.Id">@bookProperty.Title</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@bookProperty.Id">@bookProperty.Title</option>
-                                    }
-                                    index = index + 1;
+            <option value="@bookProperty.Id">@bookProperty.Title</option>}
+                                index = index + 1;
 
-                                }
-                            </select>
-                        }
+                            }
+            </select>}
                     </div>
                     @if (book.Property != null)
                     {
@@ -358,54 +337,47 @@
                             BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(book.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
                             if (indexJ == 0)
                             {
-                                <div class="price-wrapper bp-price-wrapper book-details-@bookProperty.Id">
-                                    @if (promo != null && promo.DiscountValue > 0)
-                                    {
-                                        <div class="price hasdiscount">Rs.@bookProperty.Price</div>
-                                        <div class="discount-price">Rs. @promo.BookPriceAfterDiscount</div>
-                                    }
-                                    else
-                                    {
+            <div class="price-wrapper bp-price-wrapper book-details-@bookProperty.Id">
+                @if (promo != null && promo.DiscountValue > 0)
+                {
+            <div class="price hasdiscount">Rs.@bookProperty.Price</div>
+                                        <div class="discount-price">Rs. @promo.BookPriceAfterDiscount</div> }
+                                                                else
+                                                                {
                                         <div class="price hasdiscount" style="color:#ffffff;">Rs. @bookProperty.Price</div>
-                                        <div class="discount-price">Rs. @bookProperty.Price</div>
-                                    }
+                                                                    <div class="discount-price">Rs. @bookProperty.Price</div>}
 
-                                <div class="addtocart addtocart-@bookProperty.Id">
-                                    <input type="number" class="bp-quantity" data-id="@bookProperty.Id" id="quantity-@bookProperty.Id" name="quantity-@bookProperty.Id" min="1" max="@(book.MaximumItemPerOrder>0?book.MaximumItemPerOrder:999)" value="1">
-                                    @if (book.MaximumItemPerOrder > 0)
-                                    {
-                                        <small>Available only @book.MaximumItemPerOrder item(s) per order</small>
-                                    }
+                <div class="addtocart addtocart-@bookProperty.Id">
+                    <input type="number" class="bp-quantity" data-id="@bookProperty.Id" id="quantity-@bookProperty.Id" name="quantity-@bookProperty.Id" min="1" max="@(book.MaximumItemPerOrder>0?book.MaximumItemPerOrder:999)" value="1">
+                    @if (book.MaximumItemPerOrder > 0)
+                    {
+            <small>Available only @book.MaximumItemPerOrder item(s) per order</small>}
 
-                                    <button id="bp-btn-addtocart-@bookProperty.Id" class="@(HTMLHelper.isCartEnabled(book.SaleType,bookProperty.NumberOfCopies)?"btn-addtocart add-to-cart":"addto-cart-dissabled")" data-book_id="@book.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">Add to Cart</button>
-                                </div>
-                                </div>
-                            }
-                            else
-                            {
-                                <div class="price-wrapper bp-price-wrapper book-details-@bookProperty.Id" style="display:none">
-                                    @if (promo != null && promo.DiscountValue > 0)
-                                    {
-                                        <div class="price hasdiscount">Rs.@bookProperty.Price</div>
-                                        <div class="discount-price">Rs. @promo.BookPriceAfterDiscount</div>
-                                    }
-                                    else
-                                    {
+                    <button id="bp-btn-addtocart-@bookProperty.Id" class="@(HTMLHelper.isCartEnabled(book.SaleType,bookProperty.NumberOfCopies)?"btn-addtocart add-to-cart":"addto-cart-dissabled")" data-book_id="@book.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">Add to Cart</button>
+                </div>
+            </div> }
+                                else
+                                {
+            <div class="price-wrapper bp-price-wrapper book-details-@bookProperty.Id" style="display:none">
+                @if (promo != null && promo.DiscountValue > 0)
+                {
+            <div class="price hasdiscount">Rs.@bookProperty.Price</div>
+                                        <div class="discount-price">Rs. @promo.BookPriceAfterDiscount</div> }
+                                                                else
+                                                                {
                                         <div class="price hasdiscount" style="color:#ffffff;">Rs. @bookProperty.Price</div>
-                                        <div class="discount-price">Rs. @bookProperty.Price</div>
-                                    }
+                                                                    <div class="discount-price">Rs. @bookProperty.Price</div>}
 
-                                    <div class="addtocart addtocart-@bookProperty.Id">
-                                        <input type="number" class="bp-quantity" data-id="@bookProperty.Id" id="quantity-@bookProperty.Id" name="quantity-@bookProperty.Id" min="1" max="999" value="1">
-                                        <button id="bp-btn-addtocart-@bookProperty.Id" class="@(HTMLHelper.isCartEnabled(book.SaleType,bookProperty.NumberOfCopies)?"btn-addtocart add-to-cart":"addto-cart-dissabled")" data-book_id="@book.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">Add to Cart</button>
-                                    </div>
-                                </div>
+                <div class="addtocart addtocart-@bookProperty.Id">
+                    <input type="number" class="bp-quantity" data-id="@bookProperty.Id" id="quantity-@bookProperty.Id" name="quantity-@bookProperty.Id" min="1" max="999" value="1">
+                    <button id="bp-btn-addtocart-@bookProperty.Id" class="@(HTMLHelper.isCartEnabled(book.SaleType,bookProperty.NumberOfCopies)?"btn-addtocart add-to-cart":"addto-cart-dissabled")" data-book_id="@book.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">Add to Cart</button>
+                </div>
+            </div>}
+                                indexJ = indexJ + 1;
+
+
                             }
-                            indexJ = indexJ + 1;
-
-
                         }
-                    }
 
 
                 </div>
@@ -501,111 +473,101 @@
         </div>
         @if (Authorsbooks != null && Authorsbooks.Count > 0)
         {
-            <div class="bookcat-col active">
-                <h3 class="acordian-tab">Books by <a href="/authors/@book.AuthorId">@book.AuthorName</a></h3>
-                <div class="book-overview" id="booksby">
-                    @foreach (BookVMTile b in Authorsbooks)
-                    {
-                        BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
-                        BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
-                        <div class="item">
-                            <div class="item-inner">
-                                @if (promo != null)
-                                {
-                                    if (promo.PromotionMethods == (int)PromotionMethods.DeductFromFinalAmount)
-                                    {
-                                        <div class="discount-pers">Offer<br />Off</div>
+    <div class="bookcat-col active">
+        @if (book.ItemType != (int)ItemType.BookPack)
+        {
+            <h3 class="acordian-tab">Books by <a href="/authors/@book.AuthorId">@book.AuthorName</a></h3> 
+        }
+        else
+        {
+            <h3 class="acordian-tab">Books by author(s)</h3>
+        }
 
-                                    }
-                                    else if (promo.PromotionMethods == (int)PromotionMethods.FixedAmount)
-                                    {
-                                        <div class="discount-pers">@promo.DiscountValue<br />Off</div>
+        <div class="book-overview" id="booksby">
+            @foreach (BookVMTile b in Authorsbooks)
+            {
+                BookProperties bookProperty = b.Property.Where(p => p.NumberOfCopies > 0).OrderBy(p => p.Price).FirstOrDefault();
+                BookPromotionVM promo = BusinessHandlerPromotion.GetPromotionForBook(b.Id, bookProperty != null ? bookProperty.Id : 0, bookProperty != null ? bookProperty.Price : 0);
+    <div class="item">
+        <div class="item-inner">
+            @if (promo != null)
+            {
+                if (promo.PromotionMethods == (int)PromotionMethods.DeductFromFinalAmount)
+                {
+    <div class="discount-pers">Offer<br />Off</div> }
+else if (promo.PromotionMethods == (int)PromotionMethods.FixedAmount)
+{
+    <div class="discount-pers">@promo.DiscountValue<br />Off</div> }
+else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
+{
+    <div class="discount-pers">@promo.DiscountValue%<br />Off</div>}
+}
+            <div class="viewmore-discprice">
+                <a href="/book/@HTMLHelper.GetUrl(b.Url,b.Id)" class="viewmore"></a>
+                @if (promo != null && promo.DiscountValue > 0)
+                {
+    <div class="discounted-price">-Rs.@promo.DiscountAmount </div>}
+            </div>
+            <div class="book-image">
+                @if (b.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName))
+                {
+    <img src="@Url.Action("Thumbnail", "Utility", new { FileName = "~/Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName })"
+         class="img-fluid"
+         title="@b.BookName"
+         alt="muses @b.BookName" /> @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@b.FrontCover.FileName?w=160&h=100" alt="@b.BookName" />*@ }
+    else
+    {
+    <img src="~/Content/images/no-image-book.jpg" alt="@b.BookName" />}
 
-                                    }
-                                    else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
-                                    {
-                                        <div class="discount-pers">@promo.DiscountValue%<br />Off</div>
-
-                                    }
-                                }
-                                <div class="viewmore-discprice">
-                                    <a href="/book/@HTMLHelper.GetUrl(b.Url,b.Id)" class="viewmore"></a>
-                                    @if (promo != null && promo.DiscountValue > 0)
-                                    {
-                                        <div class="discounted-price">-Rs.@promo.DiscountAmount </div>
-                                    }
-                                </div>
-                                <div class="book-image">
-                                    @if (b.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName))
-                                    {
-                                        <img src="@Url.Action("Thumbnail", "Utility", new { FileName = "~/Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName })"
-                                             class="img-fluid"
-                                             title="@b.BookName"
-                                             alt="muses @b.BookName" />
-                                        @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@b.FrontCover.FileName?w=160&h=100" alt="@b.BookName" />*@
-                                    }
-                                    else
-                                    {
-                                        <img src="~/Content/images/no-image-book.jpg" alt="@b.BookName" />
-                                    }
-
-                                </div>
-                                <div class="book-name-author ">
-                                    <div class="name">
-                                        <span class="sinhala">@b.LocalBookName</span>
-                                        @*- <span class="english">@b.BookName</span>*@
-                                    </div>
-                                </div>
-                                <div class="book-name-author">
-                                    <div class="author">
-                                        <span class="sinhala">@b.LocalAuthorName</span>
-                                        @*- <span class="english">@b.AuthorName</span>*@
-                                    </div>
-                                </div>
-
-                                <div class="category">
-                                    @foreach (Category c in b.Categories.Take(2))
-                                    {
-                                        <span class="cat-name">@c.CategoryName</span>
-                                    }
-                                </div>
-                                <div class="rating">
-                                    <div class="stars" data-rating="@BusinessHandlerUserReviews.GetBookRating(b.Id)"></div>
-                                </div>
-                                @{
-                                    if (bookProperty != null)
-                                    {
-                                        if (promo != null)
-                                        {
-                                            if (promo.DiscountAmount > 0)
-                                            {
-                                                <div class="price hasdiscount">Rs.@promo.BookPrice </div>
-                                                <div class="discount-price">Rs.@promo.BookPriceAfterDiscount </div>
-                                            }
-                                            else
-                                            {
-                                                <div class="discount-price">Rs.@bookProperty.Price </div>
-                                            }
-                                        }
-                                        <div class="@(HTMLHelper.isCartEnabled(b.SaleType,bookProperty.NumberOfCopies)?"addto-cart btn-active add-to-cart":"addto-cart btn-active add-to-cart tile-addto-cart-dissabled")" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
-                                            Add to Cart
-                                            <div class="icon"></div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
-                                        <div class="addto-cart btn-active add-to-cart tile-addto-cart-dissabled">
-                                            Add to Cart
-                                            <div class="icon"></div>
-                                        </div>
-                                    }
-                                }
-                            </div>
-                        </div>
-                    }
+            </div>
+            <div class="book-name-author ">
+                <div class="name">
+                    <span class="sinhala">@b.LocalBookName</span>
+                    @*- <span class="english">@b.BookName</span>*@
                 </div>
             </div>
+            <div class="book-name-author">
+                <div class="author">
+                    <span class="sinhala">@b.LocalAuthorName</span>
+                    @*- <span class="english">@b.AuthorName</span>*@
+                </div>
+            </div>
+
+            <div class="category">
+                @foreach (Category c in b.Categories.Take(2))
+                {
+    <span class="cat-name">@c.CategoryName</span>}
+            </div>
+            <div class="rating">
+                <div class="stars" data-rating="@BusinessHandlerUserReviews.GetBookRating(b.Id)"></div>
+            </div>
+            @{ if (bookProperty != null)
+                {
+                    if (promo != null)
+                    {
+                        if (promo.DiscountAmount > 0)
+                        {
+    <div class="price hasdiscount">Rs.@promo.BookPrice </div>
+                                    <div class="discount-price">Rs.@promo.BookPriceAfterDiscount </div> }
+                                else
+                                {
+    <div class="discount-price">Rs.@bookProperty.Price </div> }
+}
+    <div class="@(HTMLHelper.isCartEnabled(b.SaleType,bookProperty.NumberOfCopies)?"addto-cart btn-active add-to-cart":"addto-cart btn-active add-to-cart tile-addto-cart-dissabled")" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
+        Add to Cart
+        <div class="icon"></div>
+    </div> }
+else
+{
+    <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
+                            <div class="addto-cart btn-active add-to-cart tile-addto-cart-dissabled">
+                                Add to Cart
+                                <div class="icon"></div>
+                            </div> } }
+        </div>
+    </div>}
+        </div>
+    </div>
         }
         @if (Suggestionbooks != null && Suggestionbooks.Count > 0)
         {

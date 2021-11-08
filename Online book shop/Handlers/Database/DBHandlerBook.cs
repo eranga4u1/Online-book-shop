@@ -959,6 +959,7 @@ namespace Online_book_shop.Handlers.Database
                                             SaleType=a.SaleType,
                                             Url = a.FriendlyName,
                                             CreatedDate= a.CreatedDate,
+                                            ItemType=a.ItemType,
                                             Property =ctx.BookProperties.Where(x=> x.BookId==a.Id).ToList(),
                                             Categories= (from r in (from t in ctx.Book_Categories
                                                          where t.BookId == a.Id && !t.isDeleted select t)                                                         join
@@ -1465,10 +1466,10 @@ namespace Online_book_shop.Handlers.Database
                 List<BookVMTile> list = new List<BookVMTile>();
                 using (var ctx = new ApplicationDbContext())
                 {
-                    //SaleStatus saleStatus = BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order");
+                    SaleStatus saleStatus = BusinessHandlerSaleStatus.GetSaleStatusByTitle("pre_order");
                     var date = DateTime.Now.AddHours(5.5);
                     var BookPacks = from a in (from q in ctx.Books
-                                                   where !q.isDeleted &&  q.ItemType == (int)ItemType.BookPack && (q.AvailableUntil>= date)
+                                                   where !q.isDeleted && q.SaleType != saleStatus.Id &&  q.ItemType == (int)ItemType.BookPack && (q.AvailableUntil>= date)
                                                orderby q.CreatedDate descending
                                                    select q)
                                         join b in ctx.Authors on a.AuthorId equals b.Id
@@ -1477,13 +1478,14 @@ namespace Online_book_shop.Handlers.Database
                                             Id = a.Id,
                                             BookName = a.Title,
                                             LocalBookName = a.LocalTitle,
-                                            AuthorName = b.Name,
-                                            LocalAuthorName = b.LocalName,
+                                            AuthorName ="", //b.Name,
+                                            LocalAuthorName ="", //b.LocalName,
                                             isDeleted = b.isDeleted,
                                             Rating = a.Ratings,
                                             SaleType = a.SaleType,
                                             Url = a.FriendlyName,
                                             CreatedDate = a.CreatedDate,
+                                            ItemType=a.ItemType,
                                             Property = ctx.BookProperties.Where(x => x.BookId == a.Id).ToList(),
                                             Categories = (from r in (from t in ctx.Book_Categories
                                                                      where t.BookId == a.Id && !t.isDeleted

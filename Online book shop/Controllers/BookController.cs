@@ -33,7 +33,25 @@ namespace Online_book_shop.Controllers
             
             List<ReviewVM> reviews = BusinessHandlerUserReviews.GetReviewsForBook(bookId);
             int RecentRate = BusinessHandlerUserReviews.GetRecentReviewForBook(bookId);
-            List<BookVMTile> Authorsbooks = BusinessHandlerBook.GetBooksByAuthor(book.AuthorId);
+            List<BookVMTile> Authorsbooks = new List<BookVMTile>();
+            var author_book=BusinessHandlerBook.GetBooksByAuthor(book.AuthorId);
+            if (author_book != null)
+            {
+                Authorsbooks.AddRange(author_book);
+            }
+            List<Author> otherAuthors= BusinessHandlerAuthor.GetmultipleAuthors(book.Id);
+            if(otherAuthors != null)
+            {
+                foreach (Author author in otherAuthors)
+                {
+                    var books = BusinessHandlerBook.GetBooksByAuthor(author.Id);
+                    if (book != null)
+                    {
+                        Authorsbooks.AddRange(books);
+                    }
+                }
+            }
+            
             List<BookVMTile> Suggestionbooks = book.Categories !=null?BusinessHandlerBook.GetBooksByCategories(book.Categories.Select(x=> x.Id).ToList()):null;
 
             ViewBag.book = book;
