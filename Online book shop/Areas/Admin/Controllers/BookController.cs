@@ -446,7 +446,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                     isPropertyAdded = true;
                                     //if (bp.DiscountValue > 0)
                                     //{
-                                    Promotion promotion = BusinessHandlerPromotion.Get(book.Id, bookPropertyDb.Id);
+                                    Promotion promotion = BusinessHandlerPromotion.Get(book.Id, bp.Id);
                                     if (promotion == null)
                                     {
                                         promotion = new Promotion
@@ -553,7 +553,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                 }
 
                             }
-                            BookProperties bookPropertyDb = BusinessHandlerBookProperties.GetById(bookVM.Id);
+                            BookProperties bookPropertyDb = BusinessHandlerBookProperties.GetById(bookVM.bookPack_bookPropertyId);
                             bookPropertyDb.BookId = book.Id;
                             bookPropertyDb.NumberOfPages = 0;
                             bookPropertyDb.NumberOfCopies = bookVM.NumberOfCopies;
@@ -566,7 +566,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                             bookPropertyDb.Title = bookVM.Title;
                             bookPropertyDb.Description = bookVM.Description;
                             BusinessHandlerBookProperties.Put(bookPropertyDb);
-                            Promotion promotion = BusinessHandlerPromotion.Get(book.Id, bookPropertyDb.Id);
+                            Promotion promotion = BusinessHandlerPromotion.Get(book.Id, bookVM.bookPack_bookPropertyId);
                             if (promotion == null)
                             {
                                 promotion = new Promotion
@@ -591,10 +591,10 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                 promotion.PromotionTitle = "Promotion for " + book.Title + " - " + book.Id;
                                 promotion.PromotionDescription = "";
                                 promotion.PromotionTypesFor = (int)PromotionTypesFor.Book;
-                                promotion.PromotionMethods = bookVM.BookProperties[0].PromotionMethods;
+                                promotion.PromotionMethods = bookVM.BookPackDiscountType;
                                 promotion.ObjectType = (int)ObjectTypes.Book;
                                 promotion.ObjectId = book.Id;
-                                promotion.DiscountValue = bookVM.BookProperties[0].DiscountValue;
+                                promotion.DiscountValue = bookVM.BookPackDiscountValue;
                                 promotion.OtherParameters = "{BookPropertyId:" + bookPropertyDb.Id + "}";
                                 promotion.EndDate = DateTime.Today.AddYears(5);
                                 promotion.StartDate = DateTime.Today.AddDays(-1);
