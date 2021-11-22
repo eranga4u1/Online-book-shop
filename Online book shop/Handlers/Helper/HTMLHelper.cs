@@ -148,11 +148,12 @@ namespace Online_book_shop.Handlers.Helper
             SaleStatus saleStatus = BusinessHandlerSaleStatus.GetSaleStatus(sale_type);
             if(saleStatus != null)
             {
-                if (saleStatus.Title == "pre_order" && saleStatus.isAddToCartEnables)
-                {
-                    return true;
-                }
-                else if (saleStatus.isAddToCartEnables && remaining_copies > 0)
+                //if (saleStatus.Title == "pre_order" && saleStatus.isAddToCartEnables)
+                //{
+                //    return true;
+                //}
+                //else 
+                if (saleStatus.isAddToCartEnables && remaining_copies > 0)
                 {
                     return true;
                 }
