@@ -1376,7 +1376,8 @@ namespace Online_book_shop.Handlers.Database
                     var Objin_2_weeks = ctx.SaleStatus.Where(x => !x.isDeleted && x.Title == "in_2_weeks").FirstOrDefault();
                     if (ObjPreOrder != null)
                     {
-                        List<Book> books=ctx.Books.Where(x => !x.isDeleted && x.SaleType == ObjPreOrder.Id && x.RelaseDate <= DateTime.UtcNow).ToList();
+                        DateTime slTime = DateTime.UtcNow.AddHours(5.5);
+                        List<Book> books=ctx.Books.Where(x => !x.isDeleted && x.SaleType == ObjPreOrder.Id && x.RelaseDate <= slTime).ToList();
                         if(books != null)
                         {
                             foreach(var b in books)
