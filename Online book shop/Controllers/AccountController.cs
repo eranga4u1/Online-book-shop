@@ -66,6 +66,10 @@ namespace Online_book_shop.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if (!string.IsNullOrEmpty(BusinessHandlerAuthor.GetLoginUserId()))
+            {
+                return RedirectToAction("Index","Home");
+            }
             ViewBag.ReturnUrl = returnUrl;
             return View(new LoginViewModel());
         }

@@ -169,6 +169,13 @@ $(function () {
             form.submit();
         }
     });
+    $('#item-number-of-copies').change(function () {
+        if ($('.book-pack-container').is(":visible")) {
+            if ($('#item-number-of-copies').val() > $('#iMaximumItemPerOrder').val()) {
+                bootbox.alert("Number of copies should be greater than maximum item per cart");
+            }
+        }
+    });
     $("#form-add-publisher").validate({
         rules: {
             Name: "required",
