@@ -26,7 +26,7 @@ namespace Online_book_shop.Controllers
         }
         public ActionResult Find(string search, int page = 1, int itemPerPage = 20)
         {
-            List<SearchData> searchDatas = SearchHandler.GetSearchSuggestion(search);//SearchHandler.Search(search);
+            List<SearchData> searchDatas = !string.IsNullOrEmpty(search) ? SearchHandler.GetSearchSuggestion(search.Trim()) : null;//SearchHandler.Search(search);
             if (searchDatas != null)
             {
                 searchDatas = searchDatas.Skip((page - 1) * itemPerPage).Take(itemPerPage).ToList();
@@ -79,7 +79,7 @@ namespace Online_book_shop.Controllers
         }
         public ActionResult Search(string search,int page=1,int itemPerPage=20)
         {
-           List<SearchData> searchDatas= SearchHandler.GetSearchSuggestion(search);//SearchHandler.Search(search);
+           List<SearchData> searchDatas=!string.IsNullOrEmpty(search)? SearchHandler.GetSearchSuggestion(search.Trim()):null;//SearchHandler.Search(search);
             if (searchDatas != null)
             {
                 searchDatas = searchDatas.Skip((page - 1) * itemPerPage).Take(itemPerPage).ToList();
@@ -145,7 +145,11 @@ namespace Online_book_shop.Controllers
                 //}
                 //else
                 //{
-                searchDatas = SearchHandler.GetSearchSuggestion(term);
+                if (!string.IsNullOrEmpty(term))
+                {
+                    searchDatas = SearchHandler.GetSearchSuggestion(term.Trim());
+                }
+               
 
                 if (searchDatas != null)
                 {
