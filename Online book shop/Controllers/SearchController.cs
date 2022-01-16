@@ -26,7 +26,7 @@ namespace Online_book_shop.Controllers
         }
         public ActionResult Find(string search, int page = 1, int itemPerPage = 20)
         {
-            List<SearchData> searchDatas = SearchHandler.GetSearchSuggestion(search);//SearchHandler.Search(search);
+            List<SearchData> searchDatas =!string.IsNullOrEmpty(search)? SearchHandler.GetSearchSuggestion(search.Trim()):null;//SearchHandler.Search(search);
             if (searchDatas != null)
             {
                 searchDatas = searchDatas.Skip((page - 1) * itemPerPage).Take(itemPerPage).ToList();
@@ -79,7 +79,7 @@ namespace Online_book_shop.Controllers
         }
         public ActionResult Search(string search,int page=1,int itemPerPage=20)
         {
-           List<SearchData> searchDatas= SearchHandler.GetSearchSuggestion(search);//SearchHandler.Search(search);
+           List<SearchData> searchDatas=!string.IsNullOrEmpty(search)? SearchHandler.GetSearchSuggestion(search.Trim()):null;//SearchHandler.Search(search);
             if (searchDatas != null)
             {
                 searchDatas = searchDatas.Skip((page - 1) * itemPerPage).Take(itemPerPage).ToList();
@@ -145,7 +145,7 @@ namespace Online_book_shop.Controllers
                 //}
                 //else
                 //{
-                searchDatas = SearchHandler.GetSearchSuggestion(term);
+                searchDatas =!string.IsNullOrEmpty(term)? SearchHandler.GetSearchSuggestion(term.Trim()):null;
 
                 if (searchDatas != null)
                 {
@@ -162,7 +162,7 @@ namespace Online_book_shop.Controllers
                         Book book = BusinessHandlerBook.Get(searchData.objectId);
                         if (book != null && !book.isDeleted)
                         {
-                            searchData.URL = "/book/" + searchData.objectId;
+                            searchData.URL = "/book/" + book.FriendlyName; //searchData.objectId;
                         }
                         else
                         {
@@ -174,7 +174,7 @@ namespace Online_book_shop.Controllers
                         Author author = BusinessHandlerAuthor.GetAuthorById(searchData.objectId);
                         if (author != null && !author.isDeleted)
                         {
-                            searchData.URL = "/authors/" + searchData.objectId;
+                            searchData.URL = "/authors/" + author.FriendlyName;//searchData.objectId;
                         }
                         else
                         {
