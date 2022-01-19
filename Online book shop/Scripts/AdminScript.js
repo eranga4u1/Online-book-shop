@@ -935,6 +935,7 @@ $('#bulkChangePaymentStatus').on('change', function (e) {
         }
     });
 });
+
 $('.add-new-district').on('click', function () {
     bootbox.confirm({
         message: "Are you sure you want add this item?",
@@ -1189,6 +1190,50 @@ $('.check-item-type').on('change', function (e) {
     }
 });
 
+
+$('.payment-status-dd').on('change', function(){
+    var orderId = $(this).attr('data-order-id');
+    var paymentStatus = $(this).val();
+    bootbox.confirm({
+        message: "Are you sure you want to change payment state?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+
+            if (result) {
+                var arr = [];
+                var obj = {
+                    "Id": orderId,
+                    "PaymentStatus": paymentStatus
+                }
+                arr.push(obj);
+
+                var model = JSON.stringify(arr);
+                console.log(model);
+                $.ajax({
+                    url: '/Admin/Order/BulkPaymentStatusUpdate',
+                    data: JSON.stringify(arr),
+                    type: 'POST',
+                    contentType: 'application/json;',
+                    dataType: 'json',
+                    success: function (result) {
+                        location.reload();
+                    }
+                });
+            } else {
+                location.reload();
+            }
+        }
+    }); 
+});
 //$('#select-author').on('change', function (e) {
 //    var selected_author = $('#select-author').val();
     

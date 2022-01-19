@@ -264,23 +264,31 @@
                         <i class="fa fa-sort-desc" aria-hidden="true"></i>
                     </div>
                 </td>
-                <td>
-                    @if (order.PaymentStatus == 0)
-                    {
-                        <span>PendingPayment</span>
-                    }
-                    else if (order.PaymentStatus == 1)
-                    {
-                        <span>Paid</span>
-                    }
-                    else if (order.PaymentStatus == 2)
-                    {
-                        <span>Waiting For Payhere Update</span>
-                    }
-                    else
-                    {
-                        <span>@order.PaymentStatus</span>
-                    }
+                <td> 
+                    <div>
+                        <select data-order-id="@order.Id" id="select-list-@order.Id" class="payment-status-dd" >
+                            <option  @(order.PaymentStatus == 0 ? "Selected" : "") value="0">PendingPayment</option>
+                            <option @(order.PaymentStatus == 1 ? "Selected" : "") value="1">Paid</option>
+                            <option @(order.PaymentStatus == 2 ? "Selected" : "") value="2">Waiting For Payhere Update</option>
+                        </select>
+                        <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                    </div>
+                    @*@if (order.PaymentStatus == 0)
+        {
+            <span>PendingPayment</span>
+        }
+        else if (order.PaymentStatus == 1)
+        {
+            <span>Paid</span>
+        }
+        else if (order.PaymentStatus == 2)
+        {
+            <span>Waiting For Payhere Update</span>
+        }
+        else
+        {
+            <span>@order.PaymentStatus</span>
+        }*@
                 </td>
                 <td> @order.CreatedDate.AddHours(timeOffset).ToString("yyyy/MM/dd h:mm tt")</td>
                 <td>

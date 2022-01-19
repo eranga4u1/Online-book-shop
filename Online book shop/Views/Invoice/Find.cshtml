@@ -45,7 +45,7 @@
                         <div class="col-lg-12 row"><strong>E-mail :</strong> webmaster@musespublishers.com</div>
                     </div>
                 </div>
-                             
+
             </div>
             <div class="card-header">
                 @*<table class="table table-borderless margin-left-negative-15px" style="line-height:5px;">
@@ -140,26 +140,24 @@
                             }
                         </td>
                         <td>
-                           
+
                         </td>
                     </tr>
-                </table>*@ 
+                </table>*@
                 <div class="col-lg-12 row">
                     <div class="col-lg-6 col-md-6 col-sm-6 row">
                         <div class="col-lg-6 col-md-12 col-sm-12 row"><strong>Date:</strong></div>
                         <div class="col-lg-6 col-md-12 col-sm-12 row">@order.CreatedDate.AddHours(timeOffset).ToString("dddd, dd MMMM yyyy")</div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 row">
-                        <div class="col-lg-6 col-md-12 col-sm-12 row"><strong>Delivery Status:</strong></div>
+                        <div class="col-lg-6 col-md-12 col-sm-12 row"><strong>Order Status:</strong></div>
                         <div class="col-lg-6 col-md-12 col-sm-12 row">
                             @if (deliverStatus != null)
                             {
-                                @deliverStatus.DisplayText
-                            }
+                @deliverStatus.DisplayText }
                             else
                             {
-                                @order.DeliveryStatus
-                            }
+                @order.DeliveryStatus}
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 row">
@@ -171,19 +169,16 @@
                         <div class="col-lg-6 col-md-12 col-sm-12 row">
                             @if (order.PaymentStatus == 0)
                             {
+                <span class="badge badge-secondary"></span>
+                                <span>Pending</span> }
+                                            else if (order.PaymentStatus == 1)
+                                            {
                                 <span class="badge badge-secondary"></span>
-                                <span>Pending</span>
-                            }
-                            else if (order.PaymentStatus == 1)
-                            {
-                                <span class="badge badge-secondary"></span>
-                                <span>Paid</span>
-                            }
-                            else
-                            {
-                                <span class="badge badge-secondary">@Model.PaymentStatus</span>
-                                <span>@order.PaymentStatus</span>
-                            }
+                                                <span>Paid</span> }
+                                                            else
+                                                            {
+                                                <span class="badge badge-secondary">@Model.PaymentStatus</span>
+                                                                <span>@order.PaymentStatus</span>}
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 row">
@@ -195,28 +190,22 @@
                         <div class="col-lg-6 col-md-12 col-sm-12 row">
                             @if (order.PaymentMethod == 0)
                             {
-                                <span>Cash On Delivery</span>
-                            }
+                <span>Cash On Delivery</span> }
                             else if (order.PaymentMethod == 1)
                             {
-                                <span>Online Payment</span>
-                            }
+                <span>Online Payment</span> }
                             else if (order.PaymentMethod == 2)
                             {
-                                <span>Bank Transfer/Deposit</span>
-                            }
+                <span>Bank Transfer/Deposit</span> }
                             else if (order.PaymentMethod == 3)
                             {
-                                <span>Ez Cash</span>
-                            }
+                <span>Ez Cash</span> }
                             else if (order.PaymentMethod == 4)
                             {
-                                <span>Come and Collect</span>
-                            }
+                <span>Come and Collect</span> }
                             else
                             {
-                                <span>@order.PaymentMethod</span>
-                            }
+                <span>@order.PaymentMethod</span>}
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 row">
@@ -224,20 +213,16 @@
                         <div class="col-lg-6 col-md-12 col-sm-12 row">
                             @if (order.DeliveryMethod == 0)
                             {
-                                <span>Postal</span>
-                            }
+                <span>Postal</span> }
                             else if (order.DeliveryMethod == 1)
                             {
-                                <span>Courier</span>
-                            }
+                <span>Courier</span> }
                             else if (order.DeliveryMethod == 2)
                             {
-                                <span>Collect From Store</span>
-                            }
+                <span>Collect From Store</span> }
                             else
                             {
-                                <span>@order.DeliveryMethod</span>
-                            }
+                <span>@order.DeliveryMethod</span>}
                         </div>
                     </div>
                 </div>
@@ -281,231 +266,230 @@
                         </div>
                     </div>
                 </div>
-                    @*<table class="table table-borderless margin-left-negative-15px" style="line-height:5px;">
-                        <tr>
-                            <td>
-                                <strong>
-                                    Billing:
-                                </strong>
-                            </td>
-                            <td>
-                                <strong>
-                                    Deliver To:
-                                </strong>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td> @billing.FirstName @billing.LastName</td>
-                            <td>@delivery.FirstName @delivery.LastName</td>
-                        </tr>
-                        <tr>
-                            <td>@billing.AddressLine01</td>
-                            <td>@delivery.AddressLine01</td>
-                        </tr>
-                        <tr>
-                            <td>@billing.AddressLine02</td>
-                            <td>@delivery.AddressLine02</td>
-                        </tr>
-                        <tr>
-                            <td>@billing.AddressLine03</td>
-                            <td>@delivery.AddressLine03</td>
-                        </tr>
-                        <tr>
-                            <td>@billing.District</td>
-                            <td>@delivery.District</td>
-                        </tr>
-                        <tr>
-                            <td>Email: @billing.EmailAddress</td>
-                            <td>Email: @delivery.EmailAddress</td>
-                        </tr>
-                        <tr>
-                            <td>Phone: @billing.ContactNumber1</td>
-                            <td>Phone: @delivery.ContactNumber1</td>
-                        </tr>
-                        <tr>
-                            <td>@billing.ContactNumber2</td>
-                            <td>@delivery.ContactNumber2</td>
-                        </tr>
-                    </table>*@
+                @*<table class="table table-borderless margin-left-negative-15px" style="line-height:5px;">
+                    <tr>
+                        <td>
+                            <strong>
+                                Billing:
+                            </strong>
+                        </td>
+                        <td>
+                            <strong>
+                                Deliver To:
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> @billing.FirstName @billing.LastName</td>
+                        <td>@delivery.FirstName @delivery.LastName</td>
+                    </tr>
+                    <tr>
+                        <td>@billing.AddressLine01</td>
+                        <td>@delivery.AddressLine01</td>
+                    </tr>
+                    <tr>
+                        <td>@billing.AddressLine02</td>
+                        <td>@delivery.AddressLine02</td>
+                    </tr>
+                    <tr>
+                        <td>@billing.AddressLine03</td>
+                        <td>@delivery.AddressLine03</td>
+                    </tr>
+                    <tr>
+                        <td>@billing.District</td>
+                        <td>@delivery.District</td>
+                    </tr>
+                    <tr>
+                        <td>Email: @billing.EmailAddress</td>
+                        <td>Email: @delivery.EmailAddress</td>
+                    </tr>
+                    <tr>
+                        <td>Phone: @billing.ContactNumber1</td>
+                        <td>Phone: @delivery.ContactNumber1</td>
+                    </tr>
+                    <tr>
+                        <td>@billing.ContactNumber2</td>
+                        <td>@delivery.ContactNumber2</td>
+                    </tr>
+                </table>*@
 
-                    <div class="table-responsive-sm">
-                        <table class="table table-striped">
-                            <!--<thead>
-                                <tr style="border-bottom: solid 1px gray;">-->
-                                    @*<th>Book Image</th>*@
-                                    <!--<th scope="col">Book Name</th>
-                                    <th scope="col">Edition</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col">Total Price</th>
-                                    <th scope="col">Discount</th>
-                                    <th scope="col">Net Total</th>
+                <div class="table-responsive-sm">
+                    <table class="table table-striped">
+                        <!--<thead>
+                        <tr style="border-bottom: solid 1px gray;">-->
+                        @*<th>Book Image</th>*@
+                        <!--<th scope="col">Book Name</th>
+                            <th scope="col">Edition</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Total Price</th>
+                            <th scope="col">Discount</th>
+                            <th scope="col">Net Total</th>
 
-                                </tr>
-                            </thead>-->
-                            <tbody>
-                                <tr style="border-bottom: solid 1px gray;">
-                                    @*<th>Book Image</th>*@
-                                    <th scope="col">Book Name</th>
-                                    <th scope="col">Edition</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col">Total Price</th>
-                                    <th scope="col">Discount</th>
-                                    <th scope="col">Net Total</th>
+                        </tr>
+                    </thead>-->
+                        <tbody>
+                            <tr style="border-bottom: solid 1px gray;">
+                                @*<th>Book Image</th>*@
+                                <th scope="col">Book Name</th>
+                                <th scope="col">Edition</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Total Price</th>
+                                <th scope="col">Discount</th>
+                                <th scope="col">Net Total</th>
 
-                                </tr>
-                                @foreach (Cart_Book cb in cart.Items)
+                            </tr>
+                            @foreach (Cart_Book cb in cart.Items)
+                            {
+                                BookVMTile b = BusinessHandlerBook.GetBookTileByBookId(cb.BookId);
+
+                                //List<BookProperties>bp = BusinessHandlerBookProperties.GetByBookId(cb.BookId);
+                                if (b != null)
                                 {
-                                    BookVMTile b = BusinessHandlerBook.GetBookTileByBookId(cb.BookId);
-                                    
-                                    //List<BookProperties>bp = BusinessHandlerBookProperties.GetByBookId(cb.BookId);
-                                    if (b != null)
+
+                                    string specialNote = "";
+                                    if (!string.IsNullOrEmpty(cb.SpecialNote) && cb.SpecialNote == "(Preordered book)")
                                     {
-
-                                        string specialNote = "";
-                                        if (!string.IsNullOrEmpty(cb.SpecialNote) && cb.SpecialNote == "(Preordered book)")
-                                        {
-                                            specialNote = "(Pre-Ordered book)";
-                                        }
-                                        else if (!string.IsNullOrEmpty(cb.SpecialNote))
-                                        {
-                                            specialNote = cb.SpecialNote;
-                                        }
-
-                                        <tr scope="row" style="border-bottom: solid 1px gray;">
-                                            <td>
-                                                @b.LocalBookName <strong> @specialNote</strong> <br />
-                                                (@b.ISBN)
-                                            </td>
-                                            <td>
-                                                @foreach (BookProperties p in b.Property)
-                                                {
-                                            ChangeBookPropertyVM model = new ChangeBookPropertyVM
-                                            {
-                                                bookId = cb.BookId,
-                                                OldbookPropertyId = cb.BookPropertyId,
-                                                NewpropertyId = p.Id
-                                            };
-                                            if (cb.BookPropertyId == p.Id)
-                                            {
-                                                @p.Title
-                                                    }
-                                        }
-                                            </td>
-                                            <td>
-
-                                                @cb.NumberOfItems
-                                            </td>
-                                            <td>@cb.AmountBeforeDiscount</td>
-                                            <td>@cb.Discount</td>
-                                            <td>@cb.AmountAfterDiscount</td>
-                                        </tr>
+                                        specialNote = "(Pre-Ordered book)";
                                     }
-                                }
-                            </tbody>
-                            @*<thead>
-                        <tr scope="row" class="grandtotal h4">
-                            <td scope="col"></td>
-                            <td scope="col"></td>
-                            <td scope="col">@cart.Items.Sum(x => x.NumberOfItems) Item(s)</td>
-                            <td scope="col">@cart.AmountBeforeDiscount</td>
-                            <td scope="col">@cart.Discount</td>
-                            <td scope="col">@cart.AmountAfterDiscount</td>
-                            <td></td>
-                        </tr>
-                    </thead>*@
-                        </table>
+                                    else if (!string.IsNullOrEmpty(cb.SpecialNote))
+                                    {
+                                        specialNote = cb.SpecialNote;
+                                    }
+
+                <tr scope="row" style="border-bottom: solid 1px gray;">
+                    <td>
+                        @b.LocalBookName <strong> @specialNote</strong> <br />
+                        (@b.ISBN)
+                    </td>
+                    <td>
+                        @foreach (BookProperties p in b.Property)
+                        {
+                            ChangeBookPropertyVM model = new ChangeBookPropertyVM
+                            {
+                                bookId = cb.BookId,
+                                OldbookPropertyId = cb.BookPropertyId,
+                                NewpropertyId = p.Id
+                            };
+                            if (cb.BookPropertyId == p.Id)
+                            {
+    @p.Title}
+                        }
+                    </td>
+                    <td>
+
+                        @cb.NumberOfItems
+                    </td>
+                    <td>@cb.AmountBeforeDiscount</td>
+                    <td>@cb.Discount</td>
+                    <td>@cb.AmountAfterDiscount</td>
+                </tr>}
+                            }
+                        </tbody>
+                        @*<thead>
+                            <tr scope="row" class="grandtotal h4">
+                                <td scope="col"></td>
+                                <td scope="col"></td>
+                                <td scope="col">@cart.Items.Sum(x => x.NumberOfItems) Item(s)</td>
+                                <td scope="col">@cart.AmountBeforeDiscount</td>
+                                <td scope="col">@cart.Discount</td>
+                                <td scope="col">@cart.AmountAfterDiscount</td>
+                                <td></td>
+                            </tr>
+                        </thead>*@
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-sm-5">
+
                     </div>
-                    <div class="row">
-                        <div class="col-lg-4 col-sm-5">
 
-                        </div>
+                    <div class="col-lg-4 col-sm-5 ml-auto">
+                        <table class="table table-clear">
+                            <tbody>
+                                <tr>
+                                    <td class="left">
+                                        <strong>Subtotal</strong>
+                                    </td>
+                                    <td class="right">Rs. @cart.AmountBeforeDiscount</td>
+                                </tr>
+                                <tr>
+                                    <td class="left">
+                                        <strong>Discount</strong>
+                                    </td>
+                                    <td class="right">Rs. @cart.Discount</td>
+                                </tr>
+                                @*<tr>
+                                    <td class="left">
+                                        <strong>VAT (10%)</strong>
+                                    </td>
+                                    <td class="right">$679,76</td>
+                                </tr>*@
+                                <tr>
+                                    <td class="left">
+                                        <strong>Delivery Charges</strong>
+                                    </td>
+                                    <td class="right">Rs. @order.DeliveryCharges</td>
+                                </tr>
+                                @{ decimal AmountTobeCollected = cart.AmountAfterDiscount + order.DeliveryCharges;
+                                                decimal remainingAmount = cart.AmountAfterDiscount;
+                                                if (!string.IsNullOrEmpty(cart.VoucherCode))
+                                                {
+                                                    Voucher voucher = BusinessHandlerVoucher.GetActiveVoucherByCodeForInvoice(cart.VoucherCode);
+                                                    remainingAmount = (cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount;
+                                    <tr>
+                                        <td><strong>Voucher Added (@voucher.Code)</strong></td>
+                                        <td>Rs : @voucher.VoucherAmount</td>
+                                    </tr> if ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount > -1)
+                                                    {
+                                                        AmountTobeCollected = ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount);
+                                    <tr class="grandtotal">
+                                        <td><strong>Remaining Payment</strong></td>
+                                        <td><strong>Rs : @((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount)</strong></td>
+                                    </tr> }
+                                                    else
+                                                    {
+                                                        AmountTobeCollected = 0;
+                                    <tr class="grandtotal">
+                                        <td><strong>Remaining Payment</strong></td>
+                                        <td><strong>Rs : 0.00</strong></td>
+                                    </tr> }
 
-                        <div class="col-lg-4 col-sm-5 ml-auto">
-                            <table class="table table-clear">
-                                <tbody>
+                                                }
+                                                else
+                                                {
                                     <tr>
                                         <td class="left">
-                                            <strong>Subtotal</strong>
+                                            <strong>Total</strong>
                                         </td>
-                                        <td class="right">Rs. @cart.AmountBeforeDiscount</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="left">
-                                            <strong>Discount</strong>
+                                        <td class="right">
+                                            <strong>Rs. @(cart.AmountAfterDiscount + order.DeliveryCharges)</strong>
                                         </td>
-                                        <td class="right">Rs. @cart.Discount</td>
-                                    </tr>
-                                    @*<tr>
-                                <td class="left">
-                                    <strong>VAT (10%)</strong>
-                                </td>
-                                <td class="right">$679,76</td>
-                            </tr>*@
-                                    <tr>
-                                        <td class="left">
-                                            <strong>Delivery Charges</strong>
-                                        </td>
-                                        <td class="right">Rs. @order.DeliveryCharges</td>
-                                    </tr>
-                                    @{
-                                        decimal AmountTobeCollected = cart.AmountAfterDiscount + order.DeliveryCharges;
-                                        decimal remainingAmount = cart.AmountAfterDiscount;
-                                        if (!string.IsNullOrEmpty(cart.VoucherCode))
-                                        {
-                                            Voucher voucher = BusinessHandlerVoucher.GetActiveVoucherByCodeForInvoice(cart.VoucherCode);
-                                            remainingAmount = (cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount;
-                                            <tr>
-                                                <td><strong>Voucher Added (@voucher.Code)</strong></td>
-                                                <td>Rs : @voucher.VoucherAmount</td>
-                                            </tr>
-                                            if ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount > -1)
-                                            {
-                                                AmountTobeCollected = ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount);
-                                                <tr class="grandtotal">
-                                                    <td><strong>Remaining Payment</strong></td>
-                                                    <td><strong>Rs : @((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount)</strong></td>
-                                                </tr>
-                                            }
-                                            else
-                                            {
-                                                AmountTobeCollected = 0;
-                                                <tr class="grandtotal">
-                                                    <td><strong>Remaining Payment</strong></td>
-                                                    <td><strong>Rs : 0.00</strong></td>
-                                                </tr>
-                                            }
+                                    </tr> } }
 
-                                        }
-                                        else
-                                        {
-                                            <tr>
-                                                <td class="left">
-                                                    <strong>Total</strong>
-                                                </td>
-                                                <td class="right">
-                                                    <strong>Rs. @(cart.AmountAfterDiscount + order.DeliveryCharges)</strong>
-                                                </td>
-                                            </tr>
-                                        }
-                                    }
-
-                                </tbody>
-                            </table>
-
-                        </div>
+                            </tbody>
+                        </table>
 
                     </div>
 
                 </div>
+
             </div>
+        </div>
         @if (!string.IsNullOrEmpty(order.PaymentSpecialNote))
         {
             <div class="col-lg-12">
                 <h6>Special Note</h6>
-                @order.PaymentSpecialNote
+                @order.DeliverySpecialNote
             </div>
         }
-        
+        @if (!string.IsNullOrEmpty(order.PaymentSpecialNote))
+        {
+        <div class="col-lg-12">
+            <h6>Internal Remarks</h6>
+            @order.PaymentSpecialNote
+        </div>
+        }
+
         <div class="col-12 text-center text-danger">This is computer genarated invoice. No signature required.</div>
     </div>
 </body>
