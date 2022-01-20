@@ -113,7 +113,7 @@ namespace Online_book_shop.Handlers.Database
                 using (var ctx = new ApplicationDbContext())
                 {
                     DateTime slTime = DateTime.UtcNow.AddHours(5.5);
-                    var selectedBooks = ctx.Books.Where(x => !x.isDeleted && x.ItemType == (int)ItemType.BookPack && (x.RelaseDate <= slTime)).ToList();
+                    var selectedBooks = ctx.Books.Where(x => !x.isDeleted && x.ItemType == (int)ItemType.BookPack && (x.AvailableUntil >= slTime)).ToList();
                     var Bookpacks = from a in (from q in selectedBooks
                                                orderby q.CreatedDate descending
                                                    select q)
