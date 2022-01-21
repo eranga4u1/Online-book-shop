@@ -669,6 +669,10 @@
     <Compile Include="Migrations\202111011330099_dead_line_date_for_book_pack.Designer.cs">
       <DependentUpon>202111011330099_dead_line_date_for_book_pack.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202201211540286_add_tbl_paymentstate.cs" />
+    <Compile Include="Migrations\202201211540286_add_tbl_paymentstate.Designer.cs">
+      <DependentUpon>202201211540286_add_tbl_paymentstate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActiveMenu.cs" />
@@ -698,6 +702,7 @@
     <Compile Include="Models\MPLog.cs" />
     <Compile Include="Models\Order.cs" />
     <Compile Include="Models\PayHerePayment.cs" />
+    <Compile Include="Models\PaymentStatus.cs" />
     <Compile Include="Models\Promotion.cs" />
     <Compile Include="Models\PropertyType.cs" />
     <Compile Include="Models\Publisher.cs" />
@@ -1486,6 +1491,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202111011330099_dead_line_date_for_book_pack.resx">
       <DependentUpon>202111011330099_dead_line_date_for_book_pack.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202201211540286_add_tbl_paymentstate.resx">
+      <DependentUpon>202201211540286_add_tbl_paymentstate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

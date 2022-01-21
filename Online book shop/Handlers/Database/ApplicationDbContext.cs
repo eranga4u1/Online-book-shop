@@ -52,7 +52,6 @@ namespace Online_book_shop.Handlers.Database
         public DbSet<RecentyViewItems> RecentyViewItems { get; set; }
         public DbSet<VoucherUser> VoucherUsers { get; set; }
         public DbSet<EmailItem> EmailItems { get; set; }
-
-
+        public DbSet<PaymentState> PaymentStatus { get; set; }
     }
 }
