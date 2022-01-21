@@ -93,7 +93,7 @@ namespace Online_book_shop.Controllers
                 if (searchData.ObjectType== (int)ObjectTypes.Book)
                 {
                     BookVMTile foundBook= BusinessHandlerBook.GetBookTileByBookId(searchData.objectId);
-                   if(foundBook != null) {
+                   if(foundBook != null && !foundBook.isDeleted) {
                         searchedBooks.Add(foundBook);
                     }                      
                 }
