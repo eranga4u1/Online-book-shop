@@ -21,7 +21,7 @@ namespace Online_book_shop.Controllers
                 //{
                 //    page = Convert.ToInt32(Request.QueryString["page"]);
                 //}
-                ViewBag.AllActiveBookPacks = BusinessHandlerBook.GetAllActiveBookPacks();//.Skip((page-1) *52).Take(52);                
+                ViewBag.AllActiveBookPacks = allActiveBookPacks;//BusinessHandlerBook.GetAllActiveBookPacks();//.Skip((page-1) *52).Take(52);                
                 ViewBag.Total = allActiveBookPacks.Count();
             }
             else
