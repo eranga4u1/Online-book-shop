@@ -476,6 +476,9 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                         promotion.ObjectId = book.Id;
                                         promotion.DiscountValue = bp.DiscountValue;
                                         promotion.OtherParameters = "{BookPropertyId:" + bookPropertyDb.Id + "}";
+                                        bookPropertyDb.FreeReadPDFMediaId = FreeReadPDFMediaId != 0 ? FreeReadPDFMediaId : bookPropertyDb.FreeReadPDFMediaId;
+                                        bookPropertyDb.BackCoverMediaId = BackCoverMediaId != 0 ? BackCoverMediaId : bookPropertyDb.BackCoverMediaId;
+                                        bookPropertyDb.FrontCoverMediaId = FrontCoverMediaId != 0 ? FrontCoverMediaId : bookPropertyDb.FrontCoverMediaId;
                                         promotion.EndDate = DateTime.Today.AddYears(5);
                                         promotion.StartDate = DateTime.Today.AddDays(-1);
                                         BusinessHandlerPromotion.Update(promotion);
@@ -560,6 +563,8 @@ namespace Online_book_shop.Areas.Admin.Controllers
                             bookPropertyDb.LanguageId = bookVM.LanguageId;
                             bookPropertyDb.Price = price;//bookVM.ItemPrice;
                             bookPropertyDb.WeightByGrams = weight;
+                            bookPropertyDb.FrontCoverMediaId = FrontCoverMediaId != 0 ? FrontCoverMediaId : bookPropertyDb.FrontCoverMediaId;
+
                             bookPropertyDb.FreeReadPDFMediaId = FreeReadPDFMediaId;
                             bookPropertyDb.BackCoverMediaId = BackCoverMediaId;
                             bookPropertyDb.FrontCoverMediaId = FrontCoverMediaId;
@@ -574,10 +579,10 @@ namespace Online_book_shop.Areas.Admin.Controllers
                                     PromotionTitle = "Promotion for " + book.Title + " - " + book.Id,
                                     PromotionDescription = "",
                                     PromotionTypesFor = (int)PromotionTypesFor.Book,
-                                    PromotionMethods = bookVM.BookProperties[0].PromotionMethods,
+                                    PromotionMethods = bookVM.BookPackDiscountType,
                                     ObjectType = (int)ObjectTypes.Book,
                                     ObjectId = book.Id,
-                                    DiscountValue = bookVM.BookProperties[0].DiscountValue,
+                                    DiscountValue = bookVM.BookPackDiscountValue,
                                     OtherParameters = "{BookPropertyId:" + bookPropertyDb.Id + "}",
                                     EndDate = DateTime.Today.AddYears(5),
                                     StartDate = DateTime.Today.AddDays(-1)
