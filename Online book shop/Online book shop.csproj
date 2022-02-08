@@ -673,6 +673,10 @@
     <Compile Include="Migrations\202201211540286_add_tbl_paymentstate.Designer.cs">
       <DependentUpon>202201211540286_add_tbl_paymentstate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202202011510357_alter_order_tbl_20220201.cs" />
+    <Compile Include="Migrations\202202011510357_alter_order_tbl_20220201.Designer.cs">
+      <DependentUpon>202202011510357_alter_order_tbl_20220201.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ActiveMenu.cs" />
@@ -1494,6 +1498,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202201211540286_add_tbl_paymentstate.resx">
       <DependentUpon>202201211540286_add_tbl_paymentstate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202202011510357_alter_order_tbl_20220201.resx">
+      <DependentUpon>202202011510357_alter_order_tbl_20220201.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -49,7 +49,7 @@ namespace Online_book_shop.Handlers.Database
                     {
                         foreach(Order order in order_list)
                         {
-                            order.DeliverySpecialNote= BusinessHandlerReport.GetOrderDescription(order.CartId);
+                            order.OrderSummary= BusinessHandlerReport.GetOrderDescription(order.CartId);
                         }
                         if (ctx.SaveChanges() > 0)
                         {

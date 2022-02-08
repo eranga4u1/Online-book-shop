@@ -564,10 +564,9 @@ namespace Online_book_shop.Areas.Admin.Controllers
                             bookPropertyDb.Price = price;//bookVM.ItemPrice;
                             bookPropertyDb.WeightByGrams = weight;
                             bookPropertyDb.FrontCoverMediaId = FrontCoverMediaId != 0 ? FrontCoverMediaId : bookPropertyDb.FrontCoverMediaId;
-
-                            bookPropertyDb.FreeReadPDFMediaId = FreeReadPDFMediaId;
-                            bookPropertyDb.BackCoverMediaId = BackCoverMediaId;
-                            bookPropertyDb.FrontCoverMediaId = FrontCoverMediaId;
+                            bookPropertyDb.FreeReadPDFMediaId = FreeReadPDFMediaId !=0?FreeReadPDFMediaId: bookPropertyDb.FreeReadPDFMediaId;
+                            bookPropertyDb.BackCoverMediaId = BackCoverMediaId !=0?BackCoverMediaId:bookPropertyDb.BackCoverMediaId;
+                            
                             bookPropertyDb.Title = bookVM.Title;
                             bookPropertyDb.Description = bookVM.Description;
                             BusinessHandlerBookProperties.Put(bookPropertyDb);

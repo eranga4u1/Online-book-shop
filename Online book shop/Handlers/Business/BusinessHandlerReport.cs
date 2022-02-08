@@ -138,7 +138,7 @@ namespace Online_book_shop.Handlers.Business
                     webOrder.PayerPhone = string.Format("{0} / {1}",
                        !string.IsNullOrEmpty(BillingAddress.ContactNumber1) ? BillingAddress.ContactNumber1 : "",
                        !string.IsNullOrEmpty(BillingAddress.ContactNumber2) ? BillingAddress.ContactNumber2 : "");
-                    webOrder.SpecialNote = order.PaymentSpecialNote;
+                    webOrder.SpecialNote = order.OrderSummary;
                     webOrder.PaymentMethod = paymetMethod;
                     webOrder.PaymentStatus = paymentStatus;
                     webOrder.DeliveryMethod = deliveryMethod;

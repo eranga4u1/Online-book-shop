@@ -198,7 +198,7 @@ namespace Online_book_shop.Controllers
                         }
                         DeliverStatus confiremedDeliverStatuses = BusinessHandlerDeliveryStatus.GetDeliverStatusByTitle("confirmed_order");
                         bool gate_1 = BusinessHandlerDelivery.ChangeDeliveryStatus(confiremedDeliverStatuses, order.Id);
-                        bool gate_2 = BusinessHandlerDelivery.ChangePaymentStatus(((order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery) || (order.PaymentMethod == (int)PaymentMethods.Bank_Deposit)) ? PaymentStatus.PendingPayment : PaymentStatus.Paid, order.Id);
+                        bool gate_2 = BusinessHandlerDelivery.ChangePaymentStatus(((order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery) || (order.PaymentMethod == (int)PaymentMethods.Bank_Deposit) || (order.PaymentMethod == (int)PaymentMethods.In_store_payment)) ? PaymentStatus.PendingPayment : PaymentStatus.Paid, order.Id);
                         bool gate_3 = BusinessHandlerShopingCart.ChangeCartStatus(CartStatus.OrderConfirmedCart, order.CartId);
                         bool gate_4 = BusinessHandlerStockEntry.Update(cart.Items, ("Order Id" + order.Id.ToString()));
 
