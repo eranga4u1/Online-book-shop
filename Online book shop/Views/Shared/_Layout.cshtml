@@ -40,13 +40,13 @@
     <meta property="og:image" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Image))? metaData.Image : "https://www.musesbooks.com/Content/images/logo.png")" />
     @if (Request.Url.AbsoluteUri.ToString().Contains("musesbooks"))
     {
-    <meta name="facebook-domain-verification" content="lx5ao3oy8ks7gvmvpg31do6j5won9m" />
-    <meta name="p:domain_verify" content="7373f0b6ab19a0bb1b0ee622f5bcadde" />
+        <meta name="facebook-domain-verification" content="lx5ao3oy8ks7gvmvpg31do6j5won9m" />
+        <meta name="p:domain_verify" content="7373f0b6ab19a0bb1b0ee622f5bcadde" />
     }
-                            else if (Request.Url.AbsoluteUri.ToString().Contains("musespublishers"))
-                            {
-                <meta name="facebook-domain-verification" content="xlb2rv8u6j2yezpn4kx9wmhhfylvbi" />
-}
+    else if (Request.Url.AbsoluteUri.ToString().Contains("musespublishers"))
+    {
+        <meta name="facebook-domain-verification" content="xlb2rv8u6j2yezpn4kx9wmhhfylvbi" />
+    }
     <!-- Facebook Pixel Code -->
     <script>
         !function (f, b, e, v, n, t, s) {
@@ -91,7 +91,8 @@
     @*End SEO Section*@
     @if (controllerName == "Delivery")
     {
-<link href="~/Content/bootstrap.min.css" rel="stylesheet" />}
+        <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+}
 
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
@@ -105,6 +106,7 @@
     <link href="~/Content/xzoom.css" rel="stylesheet" />
     @*@Styles.Render("~/bundles/css")*@
     <link rel="icon" href="~/Content/images/logo_uXb_icon.ico">
+    <link rel="shortcut icon" href="~/Content/images/logo_uXb_icon.ico.ico">
 </head>
 <body>
     <!-- Google Tag Manager (noscript) -->
