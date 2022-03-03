@@ -15,6 +15,7 @@
     List<string> district = ViewBag.District;
     List<DeliverStatus> deliveryStatus = BusinessHandlerDeliveryStatus.GetAllActiveDeliverStatus();
     DeliverStatus confiremedDeliverStatuses = BusinessHandlerDeliveryStatus.GetDeliverStatusByTitle("confirmed_received");
+    DeliverStatus processingDeliverStatuses = BusinessHandlerDeliveryStatus.GetDeliverStatusByTitle("confirmed_received");
 }
 
 <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
