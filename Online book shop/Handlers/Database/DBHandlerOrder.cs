@@ -255,7 +255,7 @@ namespace Online_book_shop.Handlers.Database
                         order.PaymentStatus = statusId;
                         if (!string.IsNullOrEmpty(note))
                         {
-                            order.PaymentSpecialNote = string.Format("{0} Added by admin :{1}", order.PaymentSpecialNote, note);
+                            order.PaymentSpecialNote = order.PaymentSpecialNote;//string.Format("{0} Added by admin :{1}", order.PaymentSpecialNote, note);
                         }
                         
                         if (ctx.SaveChanges() > 0)

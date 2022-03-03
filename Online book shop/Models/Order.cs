@@ -28,8 +28,11 @@ namespace Online_book_shop.Models
         public decimal DeliveryCharges { get; set; }
         public string PaymentSpecialNote { get; set; }
         public string DeliverySpecialNote { get; set; }
+
         public int DeliveryStatus { get; set; }
+
         public int PaymentStatus { get; set; }
+
         public string OrderSummary { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
