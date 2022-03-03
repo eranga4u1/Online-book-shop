@@ -15,8 +15,9 @@
     List<string> district = ViewBag.District;
     List<DeliverStatus> deliveryStatus = BusinessHandlerDeliveryStatus.GetAllActiveDeliverStatus();
     DeliverStatus confiremedDeliverStatuses = BusinessHandlerDeliveryStatus.GetDeliverStatusByTitle("confirmed_received");
-    DeliverStatus processingDeliverStatuses = BusinessHandlerDeliveryStatus.GetDeliverStatusByTitle("confirmed_received");
 
+    DeliverStatus shippedStatus = deliveryStatus != null ? deliveryStatus.Where(x => x.Title == "dispatched_from_store").FirstOrDefault():null;
+    DeliverStatus processingStatus = deliveryStatus != null ? deliveryStatus.Where(x => x.Title == "processing").FirstOrDefault():null;
 }
 
 <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
@@ -159,7 +160,6 @@
                 else
                 {
                     <div class="alert alert-dark" role="alert">
-                        <h6>You dont have any item on your whish list.</h6>
                         <strong class="text-danger">You dont have any item on your whish list.</strong>
                     </div>
                 }
@@ -301,7 +301,7 @@
                                         <a class="btn bg-info" href="https://koombiyodelivery.lk/Track/track_id?id=@o.WaybillId&phone=@o.ContactNumber" title="Track This Order"><i class="fas fa-search-location"></i></a>
                                         <a class="btn bg-info" target="_blank" href="/Invoice/Find?uid=@o.UId" title="Show Invoice"><i class="fas fa-file-invoice-dollar"></i></a>
                                     </div>
-                                    @if (confiremedDeliverStatuses !=null && o.DeliveryStatus != confiremedDeliverStatuses.Id)
+                                    @if ((processingStatus !=null && o.DeliveryStatus != processingStatus.Id) && (shippedStatus != null && o.DeliveryStatus != shippedStatus.Id))
                                     {
                                         <div class="col-lg-12">
                                             <div class="form-check form-check-inline">
