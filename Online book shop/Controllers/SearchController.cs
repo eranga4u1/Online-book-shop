@@ -211,6 +211,10 @@ namespace Online_book_shop.Controllers
 
                 }
                 // }
+                //if(searchDatas !=null && searchDatas.Count() == 0)
+                //{
+                //    searchDatas.Add(new SearchData { });
+                //}
 
                 return JsonConvert.SerializeObject(searchDatas.Where(x => x.URL != null).ToList());
             }

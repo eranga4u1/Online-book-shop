@@ -361,3 +361,7 @@ div.modal-content {
     background: #d71923;
     z-index: 14;
 }
+
+.search-sugges{
+    z-index:3;
+}

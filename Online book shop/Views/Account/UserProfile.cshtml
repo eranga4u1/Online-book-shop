@@ -14,7 +14,7 @@
     List<string> countries = ViewBag.Countries;
     List<string> district = ViewBag.District;
     List<DeliverStatus> deliveryStatus = BusinessHandlerDeliveryStatus.GetAllActiveDeliverStatus();
-    DeliverStatus confiremedDeliverStatuses = BusinessHandlerDeliveryStatus.GetDeliverStatusByTitle("confirmed_received");
+   /// DeliverStatus confiremedDeliverStatuses = BusinessHandlerDeliveryStatus.GetDeliverStatusByTitle("confirmed_received");
 
     DeliverStatus shippedStatus = deliveryStatus != null ? deliveryStatus.Where(x => x.Title == "dispatched_from_store").FirstOrDefault():null;
     DeliverStatus processingStatus = deliveryStatus != null ? deliveryStatus.Where(x => x.Title == "processing").FirstOrDefault():null;
@@ -161,7 +161,7 @@
                 }
                 else
                 {
-                    <div class="alert alert-dark" role="alert">
+                    <div class="text-center alert-dark" role="alert">
                         <strong class="text-danger">You dont have any item on your whish list.</strong>
                     </div>
                 }

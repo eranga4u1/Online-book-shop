@@ -107,7 +107,7 @@ $('.remove-address').on('click', function () {
     var url = '/User/RemoveAddress';
     $.post(url, model)
         .done(function (data) {
-            // location.reload();
+             location.reload();
         })
         .fail(function (data) {
             // console.log(data);

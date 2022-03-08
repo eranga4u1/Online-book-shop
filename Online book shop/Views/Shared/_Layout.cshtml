@@ -31,7 +31,7 @@
     <meta name="description" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Description))? metaData.Description : " Muses Publishing House (Pvt) Ltd is recognized as one of the most dynamic and creative Publishing House in Sri Lanka. Established in 2017, the company prides itself being a leader consistently at the forefront of innovation and technological advancement. Muses Publishing House also uses digital technology to create unique reading experience and expand the reach of their authors. Popular among the readers as MusesBooks, the company places strong emphasis on catering the distinct taste of the Sri Lankan reading community.")">
     <meta name="keywords" content="Muses,Books,Online Book Store,Worldwide Delivery,Muses Publisher @((metaData !=null &&!string.IsNullOrEmpty(metaData.Keywords))? metaData.Keywords : "")">
     <meta name="author" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Author))? metaData.Author : " Muses Publishing House")">
-    <meta name=”robots” content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Robots))? metaData.Robots : "index, follow")">
+    <meta name="robots" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Robots))? metaData.Robots : "index, follow")">
 
     <meta property="og:url" content="@Request.Url.ToString()" />
     <meta property="og:type" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Type))? metaData.Type : "article")" />
@@ -105,7 +105,7 @@
     <link href="~/Content/muses.css" rel="stylesheet" />
     <link href="~/Content/xzoom.css" rel="stylesheet" />
     @*@Styles.Render("~/bundles/css")*@
-    <link rel="icon" href="~/Content/images/logo_uXb_icon.ico">
+    <link rel="icon" href="~/Content/images/favicon.ico">
     <link rel="shortcut icon" href="~/Content/images/logo_uXb_icon.ico.ico">
 </head>
 <body>

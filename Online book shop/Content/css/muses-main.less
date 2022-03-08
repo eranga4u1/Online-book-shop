@@ -488,7 +488,7 @@ address {
         background: @white;
         border: @lgray 1px solid;
         border-radius: 0 0 5px 5px;
-        z-index: 5;
+        z-index: 10;
         box-shadow: 0 0px 9px 0 rgba(0, 0, 0, 0.4),
           0 0px 10px 0 rgba(0, 0, 0, 0.4);
         opacity: 0;
@@ -3343,3 +3343,8 @@ body.opensample {
     Check box radio button styling
    =============================================
 */
+@media only screen and (max-width: 600px) {
+    .countdown {
+        font-size:18px;
+    }
+}

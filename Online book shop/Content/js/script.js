@@ -294,8 +294,14 @@ var serach = {
                 .empty()
                 .append(_html);
             } else {
-              $(".search-sugges").empty();
-              $(".search-sugges").removeClass("active");
+                    _html =
+                        "<span class=\"text-danger\">No Result found</span>";
+              
+                      $(".search-sugges")
+                          .empty()
+                          .append(_html);
+                          //$(".search-sugges").empty();
+                          //$(".search-sugges").removeClass("active");
             }
           }
         });

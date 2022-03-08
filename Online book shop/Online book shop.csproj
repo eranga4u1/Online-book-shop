@@ -763,6 +763,11 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Chart.css" />
     <Content Include="Content\Chart.min.css" />
+    <Content Include="Content\css\grid.css" />
+    <Content Include="Content\css\muses-main.css" />
+    <Content Include="Content\css\responsive.css" />
+    <Content Include="Content\css\slick-theme.css" />
+    <Content Include="Content\css\slick.css" />
     <Content Include="Content\jQuery.FileUpload\css\jquery.fileupload-noscript.css" />
     <Content Include="Content\jQuery.FileUpload\css\jquery.fileupload-ui-noscript.css" />
     <Content Include="Content\jQuery.FileUpload\css\jquery.fileupload-ui.css" />
@@ -932,6 +937,10 @@
     <Content Include="libmongocrypt.dylib" />
     <Content Include="Areas\Admin\Views\Report\AdvancedSearch.cshtml" />
     <Content Include="Areas\Admin\Views\Promotion\BulkPromotion.cshtml" />
+    <Content Include="Content\css\muses-main.css.map" />
+    <Content Include="Content\css\muses-main.less" />
+    <Content Include="Content\css\responsive.css.map" />
+    <Content Include="Content\css\responsive.less" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.js" />
