@@ -604,9 +604,11 @@ namespace Online_book_shop.Handlers.Database
             {
 
                 List<BookVMTile> list = new List<BookVMTile>();
+                DateTime fromDate = DateTime.UtcNow.AddDays(-7);
+
                 using (var ctx = new ApplicationDbContext())
                 {
-                    var result = ctx.StockEntries.Where(x=> x.Operation=="Out").GroupBy(x => x.BookId).Select(g => new {
+                    var result = ctx.StockEntries.Where(x=> x.Operation=="Out" && x.CreatedDate>=fromDate).GroupBy(x => x.BookId).Select(g => new {
                                         BookId =g.Select(x=>x.BookId).FirstOrDefault(),
                                         Total = g.Sum(x => x.NumberOfBook)
                                     }).OrderByDescending(x=> x.Total).Take(12).Select(i=> i.BookId).ToList();

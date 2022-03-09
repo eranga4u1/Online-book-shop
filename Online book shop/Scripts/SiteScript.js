@@ -110,6 +110,7 @@ $('.remove-address').on('click', function () {
              location.reload();
         })
         .fail(function (data) {
+            location.reload();
             // console.log(data);
         });
 });

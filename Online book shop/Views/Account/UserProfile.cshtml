@@ -18,8 +18,6 @@
 
     DeliverStatus shippedStatus = deliveryStatus != null ? deliveryStatus.Where(x => x.Title == "dispatched_from_store").FirstOrDefault():null;
     DeliverStatus processingStatus = deliveryStatus != null ? deliveryStatus.Where(x => x.Title == "processing").FirstOrDefault():null;
-    //Processing
-    //Shipped
 }
 
 <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
