@@ -117,12 +117,12 @@ var slider = {
     if ($("div").hasClass("book-overview")) {
       $(id).slick({
         dots: false,
-        infinite: false,
+        infinite: true,
         speed: 300,
         slidesToShow: 4,
         adaptiveHeight: false,
-        autoplaySpeed: 3000,
-        autoplay: false,
+        autoplaySpeed: 6000,
+        autoplay: true,
         responsive: [
           {
             breakpoint: 1024,

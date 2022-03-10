@@ -8,7 +8,7 @@
                 int NumberOfBooks = ViewBag.TotalNumberOfBooks != null ? ViewBag.TotalNumberOfBooks : 0; }
 
 <div class="container">
-    <h3>සියලු පොත් - All Books</h3>
+    <h3 class="mobile-padding-left-sm">සියලු පොත් - All Books</h3>
     <div class="elementfound">@NumberOfBooks Books found</div>
     @{ int CurrentPage = 1;
                     if (Request.QueryString["page"] != null && Convert.ToInt32(Request.QueryString["page"]) > 1)

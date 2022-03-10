@@ -1,14 +1,15 @@
+/* Box sizing rules */
 *,
 *::before,
 *::after {
     box-sizing: border-box;
 }
-
+/* Remove default padding */
 ul[class],
 ol[class] {
     padding: 0;
 }
-
+/* Remove default margin */
 body,
 h1,
 h2,
@@ -25,39 +26,39 @@ dl,
 dd {
     margin: 0;
 }
-
+/* Set core body defaults */
 body {
     min-height: 100vh;
     scroll-behavior: smooth;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
 }
-
+/* Remove list styles on ul, ol elements with a class attribute */
 ul[class],
 ol[class] {
     list-style: none;
 }
-
+/* A elements that don't have a class get default styles */
 a:not([class]) {
     text-decoration-skip-ink: auto;
 }
-
+/* Make images easier to work with */
 img {
     max-width: 100%;
     display: block;
 }
-
+/* Natural flow and rhythm in articles by default */
 article > * + * {
     margin-top: 1em;
 }
-
+/* Inherit fonts for inputs and buttons */
 input,
 button,
 textarea,
 select {
     font: inherit;
 }
-
+/* Remove all animations and transitions for people that prefer not to see them */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
@@ -281,7 +282,7 @@ address {
 
                 .header-top .middlebar .cart .wrapp-minicart .minicart-padding {
                     padding: 0;
-                    box-shadow: 0 0px 9px 0 rgba(0,0,0,0.4), 0 0px 10px 0 rgba(0,0,0,0.4);
+                    box-shadow: 0 0px 9px 0 rgba(0, 0, 0, 0.4), 0 0px 10px 0 rgba(0, 0, 0, 0.4);
                     line-height: 40px;
                 }
 
@@ -469,7 +470,7 @@ address {
                 border: #f0eded 1px solid;
                 border-radius: 0 0 5px 5px;
                 z-index: 10;
-                box-shadow: 0 0px 9px 0 rgba(0,0,0,0.4), 0 0px 10px 0 rgba(0,0,0,0.4);
+                box-shadow: 0 0px 9px 0 rgba(0, 0, 0, 0.4), 0 0px 10px 0 rgba(0, 0, 0, 0.4);
                 opacity: 0;
                 -webkit-transition: all 0.5s ease;
                 -moz-transition: all 0.5s ease;
@@ -701,7 +702,7 @@ address {
         display: flex;
         justify-content: center;
         align-items: center;
-        background: rgba(0,0,0,0.2);
+        background: rgba(0, 0, 0, 0.2);
     }
 
         .slider .slick-dots li {
@@ -766,7 +767,7 @@ address {
     padding: 20px 30px;
     border: 1px solid #f0eded;
     border-radius: 5px;
-    box-shadow: 0 0px 9px 0 rgba(0,0,0,0.05), 0 0px 10px 0 rgba(0,0,0,0.05);
+    box-shadow: 0 0px 9px 0 rgba(0, 0, 0, 0.05), 0 0px 10px 0 rgba(0, 0, 0, 0.05);
     background: #f7f7f7;
 }
 
@@ -844,7 +845,7 @@ address {
                 -moz-transition: all 0.5s ease;
                 -o-transition: all 0.5s ease;
                 transition: all 0.5s ease;
-                box-shadow: 0 5px 8px rgba(0,0,0,0.1);
+                box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
             }
 
                 .bookcat-col .book-overview .item .item-inner:hover:before {
@@ -854,9 +855,9 @@ address {
                     position: absolute;
                     top: 0;
                     left: 0;
-                    background: rgba(255,255,255,0.4);
+                    background: rgba(255, 255, 255, 0.4);
                     z-index: 2;
-                    box-shadow: 0 5px 8px rgba(0,0,0,0.6);
+                    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.6);
                     border-radius: 8px;
                 }
 
@@ -983,7 +984,7 @@ address {
                 flex-direction: column;
                 position: relative;
                 padding: 0;
-                box-shadow: 0 0px 9px 0 rgba(0,0,0,0.2), 0 0px 10px 0 rgba(0,0,0,0.19);
+                box-shadow: 0 0px 9px 0 rgba(0, 0, 0, 0.2), 0 0px 10px 0 rgba(0, 0, 0, 0.19);
             }
 
                 .bookcat-col .book-overview .item .book-image img {
@@ -1295,13 +1296,13 @@ address {
         transition: all 0.5s ease;
         padding: 20px;
         margin-bottom: 30px;
-        box-shadow: 0 5px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
         cursor: pointer;
         position: relative;
     }
 
         .about-offers .offers:hover {
-            box-shadow: 0 5px 8px rgba(0,0,0,0.6);
+            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.6);
         }
 
         .about-offers .offers h2 {
@@ -1382,7 +1383,7 @@ address {
             position: absolute;
             top: 0;
             left: 0;
-            background: rgba(255,255,255,0.4);
+            background: rgba(255, 255, 255, 0.4);
             z-index: 1;
             border-radius: 8px;
         }
@@ -1569,14 +1570,14 @@ address {
         width: 185px;
         padding: 7px 0;
         background-color: #d71923;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
         color: #fff;
         font: 700 18px/1 "Lato", sans-serif;
-        text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
         text-transform: uppercase;
         text-align: center;
     }
-
+/* top left*/
 .ribbon-top-left {
     top: -10px;
     left: -10px;
@@ -1719,6 +1720,7 @@ address {
                     display: inline;
                     padding: 0.45rem;
                     font-size: 25px;
+                    /* Needs prefixing */
                     box-decoration-break: clone;
                     -webkit-box-decoration-break: clone;
                     border-radius: 10px 0 0 0;
@@ -1947,7 +1949,7 @@ footer {
     float: none;
     margin: 50px auto;
     border: 1px solid #f0eded;
-    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
     .registration-form a,
@@ -1968,13 +1970,13 @@ footer {
 
     .registration-form .eye-icon,
     .login-form .eye-icon {
-        position: absolute;
-        background: url("../images/icon.png");
         width: 38px;
         height: 38px;
+        background: url("../images/icon.png");
         background-repeat: no-repeat;
         background-size: auto 130px;
         background-position: -58px -85px;
+        position: absolute;
         right: 10px;
         bottom: 2px;
         z-index: 1;
@@ -2122,7 +2124,7 @@ input[type="submit"] {
 
     input[type="submit"]:hover {
         background-color: #9c0911;
-        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
 
 textarea {
@@ -2265,7 +2267,7 @@ select {
     .addedtocart:before {
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.6);
+        background: rgba(0, 0, 0, 0.6);
         position: fixed;
         left: 0;
         top: 0;
@@ -2535,7 +2537,7 @@ ul.category {
         width: 200px;
         height: 300px;
         z-index: 1;
-        box-shadow: 0 5px 8px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
     }
 
         .author-coverimage .authorphotos img {
@@ -2554,7 +2556,7 @@ ul.category {
         font-size: 30px;
         font-family: "open_sansbold";
         padding: 0 20px;
-        background: rgba(255,255,255,0.5);
+        background: rgba(255, 255, 255, 0.5);
     }
 
 .author-wrapper {
@@ -2598,7 +2600,7 @@ ul.category {
             width: 100%;
             height: 100%;
             background-size: cover;
-            box-shadow: 0 0px 9px 0 rgba(0,0,0,0.2), 0 0px 10px 0 rgba(0,0,0,0.2);
+            box-shadow: 0 0px 9px 0 rgba(0, 0, 0, 0.2), 0 0px 10px 0 rgba(0, 0, 0, 0.2);
         }
 
 .authors-work,
@@ -2696,261 +2698,273 @@ ul.category {
             font-size: 15px;
         }
 
-    .book-details .book-image {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100%;
-        flex-direction: column;
+@media only screen and (max-width: 600px) {
+    .book-details .dorating-block h3 {
+        font-size: 14px;
+    }
+}
+
+.book-details .book-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
+}
+
+    .book-details .book-image .slick-track {
+        margin: initial;
     }
 
-        .book-details .book-image .slick-track {
-            margin: initial;
+    .book-details .book-image .book {
+        width: 300px;
+        height: auto;
+        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+    }
+
+        .book-details .book-image .book .slick-slide {
+            opacity: 0.3;
         }
 
-        .book-details .book-image .book {
-            width: 300px;
+        .book-details .book-image .book .slick-active {
+            opacity: 0.6;
+        }
+
+        .book-details .book-image .book .slick-center {
+            opacity: 1;
+        }
+
+        .book-details .book-image .book .slick-dotted.slick-slider {
+            margin-bottom: 0;
+        }
+
+            .book-details .book-image .book .slick-dotted.slick-slider .slick-list {
+                margin-top: 20px;
+            }
+
+        .book-details .book-image .book img {
+            width: 100%;
             height: auto;
-            box-shadow: 0 5px 8px rgba(0,0,0,0.1);
         }
 
-            .book-details .book-image .book .slick-slide {
-                opacity: 0.3;
-            }
+        .book-details .book-image .book .slick-arrow {
+            border: solid #8a8a8a;
+            border-width: 0 6px 6px 0;
+            display: inline-block;
+            padding: 3px;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+        }
 
-            .book-details .book-image .book .slick-active {
-                opacity: 0.6;
-            }
+        .book-details .book-image .book .slick-next {
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+            right: -30px;
+            z-index: 5;
+        }
 
-            .book-details .book-image .book .slick-center {
-                opacity: 1;
-            }
+        .book-details .book-image .book .slick-prev {
+            transform: rotate(135deg);
+            -webkit-transform: rotate(135deg);
+            left: -30px;
+            z-index: 5;
+        }
 
-            .book-details .book-image .book .slick-dotted.slick-slider {
-                margin-bottom: 0;
-            }
+.book-details .book-content {
+    padding-left: 30px;
+    display: flex;
+    flex-direction: column;
+}
 
-                .book-details .book-image .book .slick-dotted.slick-slider .slick-list {
-                    margin-top: 20px;
-                }
-
-            .book-details .book-image .book img {
-                width: 100%;
-                height: auto;
-            }
-
-            .book-details .book-image .book .slick-arrow {
-                border: solid #8a8a8a;
-                border-width: 0 6px 6px 0;
-                display: inline-block;
-                padding: 3px;
-                top: 0;
-                bottom: 0;
-                margin: auto;
-            }
-
-            .book-details .book-image .book .slick-next {
-                transform: rotate(-45deg);
-                -webkit-transform: rotate(-45deg);
-                right: -30px;
-                z-index: 5;
-            }
-
-            .book-details .book-image .book .slick-prev {
-                transform: rotate(135deg);
-                -webkit-transform: rotate(135deg);
-                left: -30px;
-                z-index: 5;
-            }
-
-    .book-details .book-content {
-        padding-left: 30px;
-        display: flex;
-        flex-direction: column;
+    .book-details .book-content h2 {
+        font-size: 30px;
+        font-family: "open_sansbold";
+        color: #02ace6;
     }
 
-        .book-details .book-content h2 {
-            font-size: 30px;
-            font-family: "open_sansbold";
+@media only screen and (max-width: 600px) {
+    .book-details .book-content h2 {
+        font-size: 20px;
+    }
+}
+
+.book-details .book-content h3 {
+    margin-bottom: 18px;
+}
+
+    .book-details .book-content h3 a {
+        font-size: 20px;
+        font-family: "open_sansbold";
+        color: #000000;
+        text-decoration: none;
+    }
+
+        .book-details .book-content h3 a:hover {
             color: #02ace6;
         }
 
-        .book-details .book-content h3 {
-            margin-bottom: 18px;
+.book-details .book-content .rating-details {
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+}
+
+    .book-details .book-content .rating-details .rating {
+        justify-content: left;
+        margin-right: 10px;
+        position: relative;
+    }
+
+        .book-details .book-content .rating-details .rating .stars {
+            margin-left: 10px;
+            margin-top: 3px;
         }
 
-            .book-details .book-content h3 a {
-                font-size: 20px;
-                font-family: "open_sansbold";
+    .book-details .book-content .rating-details .count {
+        margin-right: 10px;
+    }
+
+.book-details .book-content .availability {
+    font-family: "open_sansbold";
+    margin: 15px 0;
+}
+
+    .book-details .book-content .availability > span {
+        color: #ffffff;
+        padding: 5px 15px;
+        border-radius: 5px;
+    }
+
+        .book-details .book-content .availability > span.preorder {
+            background: #000000;
+        }
+
+        .book-details .book-content .availability > span.outofstock {
+            background: #d71923;
+        }
+
+        .book-details .book-content .availability > span.instock {
+            background: #0f7e00;
+        }
+
+.book-details .book-content .countdown-wrapper {
+    padding: 10px;
+    background: #f0eded;
+    border-radius: 10px;
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+
+    .book-details .book-content .countdown-wrapper h3 {
+        font-family: "open_sansbold";
+        font-size: 20px;
+    }
+
+    .book-details .book-content .countdown-wrapper .countdown {
+        font-family: "open_sansbold";
+        font-size: 35px;
+        color: #d71923;
+    }
+
+.book-details .book-content .bookdetails {
+    display: flex;
+    flex-direction: column;
+}
+
+    .book-details .book-content .bookdetails .row-element {
+        display: flex;
+        flex-direction: row;
+    }
+
+        .book-details .book-content .bookdetails .row-element .column-left {
+            width: 30%;
+            line-height: 35px;
+        }
+
+        .book-details .book-content .bookdetails .row-element .column-right {
+            width: 70%;
+            line-height: 35px;
+        }
+
+            .book-details .book-content .bookdetails .row-element .column-right a {
                 color: #000000;
                 text-decoration: none;
             }
 
-                .book-details .book-content h3 a:hover {
-                    color: #02ace6;
+                .book-details .book-content .bookdetails .row-element .column-right a:hover {
+                    color: #d71923;
                 }
 
-        .book-details .book-content .rating-details {
-            margin: 15px 0;
-            display: flex;
-            align-items: center;
+.book-details .book-content .price-selectcover {
+    width: 70%;
+    display: flex;
+    flex-direction: row;
+    margin: 20px 0;
+}
+
+    .book-details .book-content .price-selectcover .price-wrapper {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .book-details .book-content .price-selectcover .price-wrapper .addtocart .btn-addtocart {
+            background: #d71923;
+            color: #ffffff;
+            font-size: 16px;
+            font-family: "open_sansbold";
+            height: 40px;
+            border: 0;
+            border-radius: 0 5px 5px 0;
+            padding: 0 15px;
+            cursor: pointer;
+        }
+
+        .book-details .book-content .price-selectcover .price-wrapper .addtocart input[type="number"] {
+            height: 40px;
+            padding: 0 7px;
+            box-sizing: border-box;
+            float: left;
+        }
+
+        .book-details .book-content .price-selectcover .price-wrapper .price.hasdiscount {
+            text-decoration: line-through;
+            color: #000000;
+            font-size: 23px;
+            font-family: "open_sansbold";
+        }
+
+        .book-details .book-content .price-selectcover .price-wrapper .discount-price {
+            font-size: 32px;
+            font-family: "open_sansbold";
+            color: #f75326;
+        }
+
+    .book-details .book-content .price-selectcover .selectcover {
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        color: #d71923;
+        padding-top: 8px;
+    }
+
+        .book-details .book-content .price-selectcover .selectcover .sinhala-label {
             font-size: 12px;
         }
 
-            .book-details .book-content .rating-details .rating {
-                justify-content: left;
-                margin-right: 10px;
-                position: relative;
-            }
-
-                .book-details .book-content .rating-details .rating .stars {
-                    margin-left: 10px;
-                    margin-top: 3px;
-                }
-
-            .book-details .book-content .rating-details .count {
-                margin-right: 10px;
-            }
-
-        .book-details .book-content .availability {
-            font-family: "open_sansbold";
-            margin: 15px 0;
+        .book-details .book-content .price-selectcover .selectcover select {
+            width: 80%;
         }
 
-            .book-details .book-content .availability > span {
-                color: #ffffff;
-                padding: 5px 15px;
-                border-radius: 5px;
-            }
-
-                .book-details .book-content .availability > span.preorder {
-                    background: #000000;
-                }
-
-                .book-details .book-content .availability > span.outofstock {
-                    background: #d71923;
-                }
-
-                .book-details .book-content .availability > span.instock {
-                    background: #0f7e00;
-                }
-
-        .book-details .book-content .countdown-wrapper {
-            padding: 10px;
-            background: #f0eded;
-            border-radius: 10px;
-            width: 70%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin: 20px 0;
+        .book-details .book-content .price-selectcover .selectcover > div {
+            height: 68px;
         }
-
-            .book-details .book-content .countdown-wrapper h3 {
-                font-family: "open_sansbold";
-                font-size: 20px;
-            }
-
-            .book-details .book-content .countdown-wrapper .countdown {
-                font-family: "open_sansbold";
-                font-size: 35px;
-                color: #d71923;
-            }
-
-        .book-details .book-content .bookdetails {
-            display: flex;
-            flex-direction: column;
-        }
-
-            .book-details .book-content .bookdetails .row-element {
-                display: flex;
-                flex-direction: row;
-            }
-
-                .book-details .book-content .bookdetails .row-element .column-left {
-                    width: 30%;
-                    line-height: 35px;
-                }
-
-                .book-details .book-content .bookdetails .row-element .column-right {
-                    width: 70%;
-                    line-height: 35px;
-                }
-
-                    .book-details .book-content .bookdetails .row-element .column-right a {
-                        color: #000000;
-                        text-decoration: none;
-                    }
-
-                        .book-details .book-content .bookdetails .row-element .column-right a:hover {
-                            color: #d71923;
-                        }
-
-        .book-details .book-content .price-selectcover {
-            width: 70%;
-            display: flex;
-            flex-direction: row;
-            margin: 20px 0;
-        }
-
-            .book-details .book-content .price-selectcover .price-wrapper {
-                width: 50%;
-                display: flex;
-                flex-direction: column;
-            }
-
-                .book-details .book-content .price-selectcover .price-wrapper .addtocart .btn-addtocart {
-                    background: #d71923;
-                    color: #ffffff;
-                    font-size: 16px;
-                    font-family: "open_sansbold";
-                    height: 40px;
-                    border: 0;
-                    border-radius: 0 5px 5px 0;
-                    padding: 0 15px;
-                    cursor: pointer;
-                }
-
-                .book-details .book-content .price-selectcover .price-wrapper .addtocart input[type="number"] {
-                    height: 40px;
-                    padding: 0 7px;
-                    box-sizing: border-box;
-                    float: left;
-                }
-
-                .book-details .book-content .price-selectcover .price-wrapper .price.hasdiscount {
-                    text-decoration: line-through;
-                    color: #000000;
-                    font-size: 23px;
-                    font-family: "open_sansbold";
-                }
-
-                .book-details .book-content .price-selectcover .price-wrapper .discount-price {
-                    font-size: 32px;
-                    font-family: "open_sansbold";
-                    color: #f75326;
-                }
-
-            .book-details .book-content .price-selectcover .selectcover {
-                width: 50%;
-                display: flex;
-                flex-direction: column;
-                color: #d71923;
-                padding-top: 8px;
-            }
-
-                .book-details .book-content .price-selectcover .selectcover .sinhala-label {
-                    font-size: 12px;
-                }
-
-                .book-details .book-content .price-selectcover .selectcover select {
-                    width: 80%;
-                }
-
-                .book-details .book-content .price-selectcover .selectcover > div {
-                    height: 68px;
-                }
 
 .bookcat-col.contentblock .book-overview {
     overflow: hidden;
@@ -2964,7 +2978,7 @@ ul.category {
 .booksample-wrapper {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 0;
     bottom: 0;
@@ -2994,7 +3008,7 @@ ul.category {
         }
 
             .booksample-wrapper .booksample .innerblock img {
-                box-shadow: 0 5px 8px rgba(0,0,0,0.5);
+                box-shadow: 0 5px 8px rgba(0, 0, 0, 0.5);
             }
 
 .contact {
@@ -3014,7 +3028,7 @@ ul.category {
 .reviewform-wrapper {
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     position: fixed;
     top: 0;
     bottom: 0;
@@ -3252,7 +3266,10 @@ body.opensample {
     .small.stars[data-rating="5"]:before {
         width: 70px;
     }
-
+/* =============================================
+    Check box radio button styling
+   =============================================
+*/
 .form-block {
     display: block;
     position: relative;
@@ -3269,7 +3286,7 @@ body.opensample {
     justify-content: space-between;
     align-items: center;
 }
-
+    /* Hide the browser's default checkbox */
     .form-block input {
         position: absolute;
         opacity: 0;
@@ -3277,7 +3294,7 @@ body.opensample {
         height: 0;
         width: 0;
     }
-
+/* Create a custom checkbox */
 .radio-label {
     padding: 0 0 0 40px;
     box-sizing: border-box;
@@ -3298,25 +3315,25 @@ body.opensample {
     bottom: 0;
     margin: auto;
 }
-
+/* On mouse-over, add a grey background color */
 .form-block:hover input ~ .radiomark {
     background-color: #ccc;
 }
-
+/* When the checkbox is checked, add a blue background */
 .form-block input:checked ~ .radiomark {
     background-color: #d71923;
 }
-
+/* Create the checkmark/indicator (hidden when not checked) */
 .radiomark:after {
     content: "";
     position: absolute;
     display: none;
 }
-
+/* Show the checkmark when checked */
 .form-block input:checked ~ .radiomark:after {
     display: block;
 }
-
+/* Style the checkmark/indicator */
 .form-block .radiomark:after {
     top: 9px;
     left: 9px;
@@ -3325,9 +3342,12 @@ body.opensample {
     border-radius: 50%;
     background: white;
 }
-
+/* =============================================
+    Check box radio button styling
+   =============================================
+*/
 @media only screen and (max-width: 600px) {
-    .countdown {
+    #countdown {
         font-size: 18px;
     }
 }

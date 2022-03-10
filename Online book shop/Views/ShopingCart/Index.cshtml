@@ -115,119 +115,99 @@
         }
         <div class="book-overview" id="muses-voucher">
 
-                        <div class="col-lg-6">
+                        <div class="">
                             <h4>If you wish to estimate your delivery cost, choose your destination</h4>
-                            <table class="col-lg-12">
-                                <tr>
-                                    <td class="col-lg-6">
-                                        @*@if (isPostEnable)
-                                        {*@
-                                            <input type="radio" id="post" name="delivery_method" checked value="post">
-                                            <label>Post Service/තැපැල් සේවය හරහා</label><br>
-                                        @*}*@
-
-                                    </td>
-                                    <td class="col-lg-6">
-                                        @*@if (isCourierEnable)
-                                        {*@
-                                            <input type="radio" id="courier" name="delivery_method"  value="courier">
-                                            <label>Courier Service/කුරියර් සේවය </label><br>
-                                        @*}*@
-
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-6">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
+                                        <input type="radio" id="post" name="delivery_method" checked value="post">
+                                        <label>Post Service/තැපැල් සේවය හරහා</label><br>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
+                                        <input type="radio" id="courier" name="delivery_method" value="courier">
+                                        <label>Courier Service/කුරියර් සේවය </label><br>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
                                         <label>Country:</label>
-                                    </td>
-                                    <td class="col-lg-6">
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
                                         <select id="country" name="country">
-                                            @{
-                                                List<string> countryList = BusinessHandlerDeliveryCharges.GetEnabledCountryForDelivery();
+                                            @{ List<string> countryList = BusinessHandlerDeliveryCharges.GetEnabledCountryForDelivery();
                                                 if (countryList != null)
                                                 {
                                                     foreach (string c in countryList)
                                                     {
-                                                        if (c== "Sri Lanka")
+                                                        if (c == "Sri Lanka")
                                                         {
-                                                            <option id="origin-country" value="@c" selected>@c</option>
-                                                        }
-                                                        else
-                                                        {
-                                                            <option value="@c">@c</option>
-                                                        }
+                                <option id="origin-country" value="@c" selected>@c</option>
+ }
+                            else
+                            {
+                                <option value="@c">@c</option>
+ }
 
-                                                    }
+                        }
 
-                                                }
-                                            }
-                                           
+                    } }
+
                                         </select>
-                                    </td>
-                                </tr>
-                                <tr id="shoping-cart-district-selection-row">
-                                    <td class="col-lg-6"><label>District:</label></td>
-                                    <td class="col-lg-6">
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
+                                        <label>District:</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
                                         <select name="AreaId" id="shoping-cart-district-selection">
                                             @foreach (DeliveryCharge d in courierCharges)
                                             {
                                                 if (!d.isDynamic)
                                                 {
-                                                    <option data-charge="@d.Amount" value="@d.Area">@d.Area</option>
-                                                }
+                                <option data-charge="@d.Amount" value="@d.Area">@d.Area</option>
+}
 
-                                            }
+                        }
                                         </select>
-                                    </td>
-                                </tr>
-                            </table>
+                                    </div>
+                                </div>
+                            </div>
+                           
 
                         </div>
-                        <div class="col-lg-6">
+                        <div >
                             <h4>Shipping Estimate</h4>
-                            <table class="col-lg-12">
-                                <tr>
-                                    <td class="col-lg-6">
-                                        Total
-                                    </td>
-                                    <td class="col-lg-6">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
+                                        <label>Total</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
                                         Rs. <span id="cart-amout">@cart.AmountAfterDiscount</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-6">
-                                        Package Weight
-                                    </td>
-                                    <td class="col-lg-6">
-                                        @{
-                                            decimal weight = @BusinessHandlerShopingCart.GetTotalWeightForCart(cart);
-                                        }
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
+                                        <label>Package Weight</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
+                                        @{ decimal weight = @BusinessHandlerShopingCart.GetTotalWeightForCart(cart); }
                                         <span id="cart-weight">@weight</span>  g
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-6">
-                                        Delivery Cost
-                                    </td>
-                                    <td class="col-lg-6">
-                                        @{
-                                            decimal deliveryCost = BusinessHandlerDeliveryCharges.GetDeliveryCharge(weight, DeliveryTypes.Postal_Service, "Sri Lanka", "Sri Lanka");
-                                        }
-                                        Rs. <spn id="cart-delivery-cost">@deliveryCost</spn>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-lg-6">
-                                        Total With Delivery Charges
-                                    </td>
-                                    <td class="col-lg-6">
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
+                                        <label> Delivery Cost</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
+                                        @{ decimal deliveryCost = BusinessHandlerDeliveryCharges.GetDeliveryCharge(weight, DeliveryTypes.Postal_Service, "Sri Lanka", "Sri Lanka"); }
+                                        Rs. <span id="cart-delivery-cost">@deliveryCost</span>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
+                                        <label> Total With Delivery Charges</label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12">
                                         Rs.<spn id="cart-delivery-total">@(cart.AmountAfterDiscount+ deliveryCost)</spn>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                               
+                            </div>
 
-        </div>
+                        </div>
     </div>
 
 
