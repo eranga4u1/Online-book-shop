@@ -30,6 +30,12 @@ namespace Online_book_shop.Handlers.Business
         {
             return DBHandlerPublisher.GetPublisher(id);
         }
+
+        public static int GetPublisherIdByFriendlyName(string id)
+        {
+            return DBHandlerPublisher.GetPublisherIdByFriendlyName(id);
+        }
+
         public static Publisher UpdatePublisher(Publisher publisher)
         {
             publisher.FriendlyName = HTMLHelper.RemoveSpecialCharacters(publisher.Name);

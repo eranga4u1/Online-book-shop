@@ -49,6 +49,28 @@ namespace Online_book_shop.Handlers.Database
                 return null;
             }
         }
+
+        internal static int GetPublisherIdByFriendlyName(string id)
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    var publisher = ctx.Publishers.Where(a => a.FriendlyName.Trim() == id.Trim()).FirstOrDefault();
+                    if (publisher != null)
+                    {
+                        return publisher.Id;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                BusinessHandlerMPLog.Log(LogType.Exception, ex.ToString(), "GetAuthorIdByFriendlyName", "DBHandlerAuthor");
+            }
+            return 0;
+        }
+
         public static Publisher UpdatePublisher(Publisher publisher)
         {
             try

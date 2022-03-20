@@ -12,18 +12,31 @@ namespace Online_book_shop.Controllers
     public class PublisherController : Controller
     {
         // GET: Publisher
-        public ActionResult Index(int id)
+        public ActionResult Index(string id)
         {
             int page = 1;
+            Publisher publisher;
+
             if (Request.QueryString["page"] != null)
             {
                 page = Convert.ToInt32(Request.QueryString["page"]);
             }
-            ViewBag.publisher = BusinessHandlerPublisher.GetPublisherById(id);
-            List<BookVMTile> books = BusinessHandlerBook.GetBooksByPublisher(id, page);
+            int publisherId = 9;
+            bool isNumeric = int.TryParse(id, out publisherId);
+            if (!isNumeric)
+            {
+                publisherId = BusinessHandlerPublisher.GetPublisherIdByFriendlyName(id);
+                publisher= BusinessHandlerPublisher.GetPublisherById(publisherId);
+            }
+            else
+            {
+                publisher = BusinessHandlerPublisher.GetPublisherById(publisherId);
+            }
+            ViewBag.publisher = publisher;
+            List<BookVMTile> books = BusinessHandlerBook.GetBooksByPublisher(publisherId, page);
             ViewBag.TotalNumberOfBooks = books != null ? books.Count : 0;
             ViewBag.Books = books.OrderByDescending(x=> x.Id).Skip(12 * (page-1)).Take(12).ToList();
-            if (id == 9)
+            if (publisherId == 9)
             {
                ViewBag.MethodName= "muses";
             }
