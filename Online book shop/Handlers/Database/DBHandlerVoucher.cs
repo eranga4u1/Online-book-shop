@@ -127,18 +127,18 @@ namespace Online_book_shop.Handlers.Database
                     var list= ctx.VoucherUsers.Where(x => x.UserId == user && x.VoucherId == voucherID).ToList();
                     if (list !=null && list.Count > 0)
                     {
-                        return false;
+                        return true;
                     }
                     else
                     {
-                        return true;
+                        return false;
                     }
                 }
             }catch(Exception ex)
             {
 
             }
-            return false;
+            return true;
         }
     }
 }

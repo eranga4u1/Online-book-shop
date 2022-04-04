@@ -434,7 +434,7 @@
                                                 decimal remainingAmount = cart.AmountAfterDiscount;
                                                 if (!string.IsNullOrEmpty(cart.VoucherCode))
                                                 {
-                                                    Voucher voucher = BusinessHandlerVoucher.GetActiveVoucherByCodeForInvoice(cart.VoucherCode);
+                                                    Voucher voucher = BusinessHandlerVoucher.GetVoucherByCode(cart.VoucherCode);
                                                     remainingAmount = (cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount;
                                     <tr>
                                         <td><strong>Voucher Added (@voucher.Code)</strong></td>

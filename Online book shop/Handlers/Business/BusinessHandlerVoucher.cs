@@ -91,10 +91,22 @@ namespace Online_book_shop.Handlers.Business
             Voucher voucher = DBHandlerVoucher.GetAllActiveVouchers(true).Where(v => v.Code.ToLower() == code.ToLower()).FirstOrDefault();
             if (voucher != null)
             {
-                if (DBHandlerVoucher.IsVoucherUsed(BusinessHandlerAuthor.GetLoginUserId(), voucher.Id))
+                if (!DBHandlerVoucher.IsVoucherUsed(BusinessHandlerAuthor.GetLoginUserId(), voucher.Id))
                 {
                     return voucher;
                 }
+
+            }
+            return null;
+        }
+        public static Voucher GetVoucherByCode(string code)
+        {
+
+            Voucher voucher = DBHandlerVoucher.GetAllActiveVouchers(true).Where(v => v.Code.ToLower() == code.ToLower()).FirstOrDefault();
+            if (voucher != null)
+            {
+                
+                    return voucher;
 
             }
             return null;

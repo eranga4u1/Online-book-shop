@@ -97,13 +97,19 @@
     <div class="bookcat-col">
         <h3 class="acordian-tab">Use Muses Voucher Code</h3>
         <div class="book-overview" id="muses-voucher">
-            <table>
-                <tr>
-                    <td><input class="col-sm-5 voucher-code" type="text" placeholder="Add Voucher Code" /></td>
-                    <td><input type="button" value="Add" id="add-voucher-code" class="btn-common" /></td>
-                </tr>
-            </table>
-
+            @if (BusinessHandlerAuthor.GetLoginUserId() != null)
+            {
+                <table>
+                    <tr>
+                        <td><input class="col-sm-5 voucher-code" type="text" placeholder="Add Voucher Code" /></td>
+                        <td><input type="button" value="Add" id="add-voucher-code" class="btn-common" /></td>
+                    </tr>
+                </table>
+            }
+            else
+            {
+                <a href="/Account/Login?returnUrl=/ShopingCart"><Span>Please Login to system for adding vouchers</Span></a>
+            }
         </div>
     </div>
     <div class="bookcat-col">
