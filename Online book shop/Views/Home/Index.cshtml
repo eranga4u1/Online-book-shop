@@ -14,17 +14,17 @@
     List<Article> Articles = ViewBag.Articles;
     List<Promotion> Promotions = ViewBag.LatestPromotion;
     Configuration configabtUs = BusinessHandlerConfigurations.GetConfigByKey("ABOUT-US");
-    InstantMessage Obj_instant_message = BusinessHandlerConfigurations.GetInstantMessage();
+    //InstantMessage Obj_instant_message = BusinessHandlerConfigurations.GetInstantMessage();
     string Obj__contactNumbers = BusinessHandlerConfigurations.GetHomeContactNumber();
 }
 
 <div class="slider">
-    @if (Obj_instant_message != null && !string.IsNullOrEmpty(Obj_instant_message.Message))
+    @*@if (Obj_instant_message != null && !string.IsNullOrEmpty(Obj_instant_message.Message))
     {
         <div class=" alert-danger container " style="background-color:@Obj_instant_message.BackgroundColor;color:@Obj_instant_message.FontColor" role="alert">
             <h3>@Html.Raw(Obj_instant_message.Message)</h3> 
         </div>
-    }
+    }*@
     <div class="homeslider container">
         @if (HomeBanners != null)
         {

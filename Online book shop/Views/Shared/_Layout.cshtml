@@ -12,6 +12,7 @@
     SocialNetworkURLs SNU = BusinessHandlerConfigurations.GetSocialMediaURLs();
     List<Author> allAuthors = BusinessHandlerAuthor.GetAuthors();
     string Obj__contactNumbers = BusinessHandlerConfigurations.GetHomeContactNumber();
+    InstantMessage Obj_instant_message = BusinessHandlerConfigurations.GetInstantMessage();
 
     MetaData metaData = ViewBag.MetaValues;
     var environment= System.Configuration.ConfigurationManager.AppSettings["Environment"];
@@ -145,7 +146,7 @@
                                         name = name.Substring(0, 10);
                                     }
 
-                @Html.AntiForgeryToken()
+                                    @Html.AntiForgeryToken()
                                     <div class="myprofile-block">
                                         @Html.ActionLink("Hello " + name + "..", "UserProfile", "Account", routeValues: null, htmlAttributes: new { title = "Manage", @class = "myprofile" })
                                         <div class="profiledropdown">
@@ -158,12 +159,12 @@
                                         </div>
                                     </div>
 
-                                                        <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a> }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                        @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
-                                                                        @Html.ActionLink("Login", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })}
+                                    <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a> }
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })
+                                @Html.ActionLink("Login", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })}
 
                         </div>
                     </div>
@@ -191,16 +192,16 @@
                         <a>
                             <div class="icon"></div>
                             @{ int itemCount = 0;
-                                            decimal TotalAmount = 0;
-                                            if (Session["cart"] != null)
-                                            {
-                                                Cart cart = Session["cart"] as Cart;
-                                                itemCount = cart.Items != null ? cart.Items.Sum(x => x.NumberOfItems) : 0;
-                                                TotalAmount = cart.Items != null ? cart.AmountAfterDiscount : 0;
-                                <div id="cart-item-count" class="amount">(@itemCount)&nbsp;Rs.<span id="total-amount">@Math.Round(TotalAmount, 2)</span></div> }
-                                            else
-                                            {
-                                <div id="cart-item-count" class="amount">(0)&nbsp;Rs.<span id="total-amount">0.00</span></div> } }
+                                decimal TotalAmount = 0;
+                                if (Session["cart"] != null)
+                                {
+                                    Cart cart = Session["cart"] as Cart;
+                                    itemCount = cart.Items != null ? cart.Items.Sum(x => x.NumberOfItems) : 0;
+                                    TotalAmount = cart.Items != null ? cart.AmountAfterDiscount : 0;
+                                    <div id="cart-item-count" class="amount">(@itemCount)&nbsp;Rs.<span id="total-amount">@Math.Round(TotalAmount, 2)</span></div> }
+                                else
+                                {
+                                    <div id="cart-item-count" class="amount">(0)&nbsp;Rs.<span id="total-amount">0.00</span></div> } }
                         </a>
                         <div class="wrapp-minicart">
                             <div class="minicart-padding">
@@ -219,38 +220,38 @@
                                     foreach (Cart_Book cb in cartItems)
                                     {
                                         BookVMTile b = BusinessHandlerBook.GetSearchedBookForView(cb.BookId);
-                    <div class="books-listing">
-                        <div class="item">
-                            <div class="bookname">
-                                @b.BookName
-                            </div>
-                            <div class="quantity">
-                                x @cb.NumberOfItems
-                            </div>
-                            <div class="price">
-                                Rs. @Math.Round(cb.AmountAfterDiscount, 2)
-                            </div>
-                        </div>
-                    </div> //TotalNumberOfItems = TotalNumberOfItems + cb.NumberOfItems;
+                                        <div class="books-listing">
+                                            <div class="item">
+                                                <div class="bookname">
+                                                    @b.BookName
+                                                </div>
+                                                <div class="quantity">
+                                                    x @cb.NumberOfItems
+                                                </div>
+                                                <div class="price">
+                                                    Rs. @Math.Round(cb.AmountAfterDiscount, 2)
+                                                </div>
+                                            </div>
+                                        </div> //TotalNumberOfItems = TotalNumberOfItems + cb.NumberOfItems;
                                     }
-                    <div class="summary">
-                        <div class="row-1">
-                            <div class="total-item">
-                                Total Item(s)
-                            </div>
-                            <div class="total-count">
-                                @cart.Items.Sum(x => x.NumberOfItems)
-                            </div>
-                        </div>
-                        <div class="row-2">
-                            <div class="total">
-                                Total
-                            </div>
-                            <div class="total-price">
-                                Rs. @Math.Round(cart.AmountAfterDiscount, 2)
-                            </div>
-                        </div>
-                    </div>}
+                                    <div class="summary">
+                                        <div class="row-1">
+                                            <div class="total-item">
+                                                Total Item(s)
+                                            </div>
+                                            <div class="total-count">
+                                                @cart.Items.Sum(x => x.NumberOfItems)
+                                            </div>
+                                        </div>
+                                        <div class="row-2">
+                                            <div class="total">
+                                                Total
+                                            </div>
+                                            <div class="total-price">
+                                                Rs. @Math.Round(cart.AmountAfterDiscount, 2)
+                                            </div>
+                                        </div>
+                                    </div>}
 
 
                             </div>
@@ -278,36 +279,39 @@
                                     if (counter == 3)
                                     {
 
-                <li class="@cls author-mega-menu">
-                    <a href="/authors" target="@m.target">
-                        <span class="english">Authors</span>
-                        <span class="sinhala">කතුවරු</span>
-                    </a>
-                    @if (m.children != null && m.children.Count > 0)
-                    {
-<ul class="submenu">
-    @foreach (MenuItem sm in m.children)
-    {
-<li>
-    <a href="@sm.href" target="@sm.target">
-        <span class="english">@sm.text</span>
-        <span class="sinhala">@sm.title</span>
-    </a>
-    @if (sm.children != null && sm.children.Count > 0)
-    {
-<ul class="submenu">
-    @foreach (MenuItem ssm in sm.children)
-    {
-<li>
-    <a href="@ssm.href" target="@ssm.target">
-        <span class="english">@ssm.text</span>
-        <span class="sinhala">@ssm.title</span>
-    </a>
-</li>}
-</ul>}
-</li>}
-</ul>}
-                </li> @*<li class="@cls">
+                                        <li class="@cls author-mega-menu">
+                                            <a href="/authors" target="@m.target">
+                                                <span class="english">Authors</span>
+                                                <span class="sinhala">කතුවරු</span>
+                                            </a>
+                                            @if (m.children != null && m.children.Count > 0)
+                                            {
+                                                <ul class="submenu">
+                                                    @foreach (MenuItem sm in m.children)
+                                                    {
+                                                        <li>
+                                                            <a href="@sm.href" target="@sm.target">
+                                                                <span class="english">@sm.text</span>
+                                                                <span class="sinhala">@sm.title</span>
+                                                            </a>
+                                                            @if (sm.children != null && sm.children.Count > 0)
+                                                            {
+                                                                <ul class="submenu">
+                                                                    @foreach (MenuItem ssm in sm.children)
+                                                                    {
+                                                                        <li>
+                                                                            <a href="@ssm.href" target="@ssm.target">
+                                                                                <span class="english">@ssm.text</span>
+                                                                                <span class="sinhala">@ssm.title</span>
+                                                                            </a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>}
+                                                        </li>
+                                                    }
+                                                </ul>}
+                                        </li>
+                                        @*<li class="@cls">
                                                 <a href="@m.href" target="@m.target">
                                                     <span class="english">@m.text</span>
                                                     <span class="sinhala">@m.title</span>
@@ -316,36 +320,39 @@
                                             </li>*@ }
                                     else
                                     {
-                <li class="@cls">
-                    <a href="@m.href" target="@m.target">
-                        <span class="english">@m.text</span>
-                        <span class="sinhala">@m.title</span>
-                    </a>
-                    @if (m.children != null && m.children.Count > 0)
-                    {
-<ul class="submenu">
-    @foreach (MenuItem sm in m.children)
-    {
-<li>
-    <a href="@sm.href" target="@sm.target">
-        <span class="english">@sm.text</span>
-        <span class="sinhala">@sm.title</span>
-    </a>
-    @if (sm.children != null && sm.children.Count > 0)
-    {
-<ul class="submenu">
-    @foreach (MenuItem ssm in sm.children)
-    {
-<li>
-    <a href="@ssm.href" target="@ssm.target">
-        <span class="english">@ssm.text</span>
-        <span class="sinhala">@ssm.title</span>
-    </a>
-</li>}
-</ul>}
-</li>}
-</ul>}
-                </li>}
+                                        <li class="@cls">
+                                            <a href="@m.href" target="@m.target">
+                                                <span class="english">@m.text</span>
+                                                <span class="sinhala">@m.title</span>
+                                            </a>
+                                            @if (m.children != null && m.children.Count > 0)
+                                            {
+                                                <ul class="submenu">
+                                                    @foreach (MenuItem sm in m.children)
+                                                    {
+                                                        <li>
+                                                            <a href="@sm.href" target="@sm.target">
+                                                                <span class="english">@sm.text</span>
+                                                                <span class="sinhala">@sm.title</span>
+                                                            </a>
+                                                            @if (sm.children != null && sm.children.Count > 0)
+                                                            {
+                                                                <ul class="submenu">
+                                                                    @foreach (MenuItem ssm in sm.children)
+                                                                    {
+                                                                        <li>
+                                                                            <a href="@ssm.href" target="@ssm.target">
+                                                                                <span class="english">@ssm.text</span>
+                                                                                <span class="sinhala">@ssm.title</span>
+                                                                            </a>
+                                                                        </li>
+                                                                    }
+                                                                </ul>}
+                                                        </li>
+                                                    }
+                                                </ul>}
+                                        </li>
+                                    }
                                     counter++;
                                 }
                             }
@@ -354,12 +361,13 @@
                             <ul>
                                 @foreach (var author in allAuthors)
                                 {
-                    <li>
-                        <a href="/authors/@author.FriendlyName">
-                            @*<span class="english">@author.Name</span>*@
-                            <span class="sinhala">@author.LocalName</span>
-                        </a>
-                    </li>}
+                                    <li>
+                                        <a href="/authors/@author.FriendlyName">
+                                            @*<span class="english">@author.Name</span>*@
+                                            <span class="sinhala">@author.LocalName</span>
+                                        </a>
+                                    </li>
+                                }
                             </ul>
                         </div>
 
@@ -372,6 +380,7 @@
         </div>
     </header>
     @RenderBody()
+
     <footer>
         <div class="container">
             <div class="footer">
@@ -384,20 +393,21 @@
                         int i = (fMenuCount % 3 == 0) ? (fMenuCount / 3) : (fMenuCount / 3) + 1;
                         for (int j = 0; j < i + 1; j++)
                         {
-        <div class="links-block">
-            @foreach (MenuItem menu in footermenus.Skip(3 * j).Take(3).ToList())
-            {
-<div class="link-block-col">
-    <h3>@menu.text </h3>
-    @if (menu.children != null)
-    {
-<ul>
-    @foreach (MenuItem m in menu.children)
-    {
-<li><a href="@m.href" target="@m.target">@m.text</a></li>}
-</ul>}
-</div>}
-        </div>}
+                            <div class="links-block">
+                                @foreach (MenuItem menu in footermenus.Skip(3 * j).Take(3).ToList())
+                                {
+                                    <div class="link-block-col">
+                                        <h3>@menu.text </h3>
+                                        @if (menu.children != null)
+                                        {
+                                            <ul>
+                                                @foreach (MenuItem m in menu.children)
+                                                {
+                                                    <li><a href="@m.href" target="@m.target">@m.text</a></li>
+                                                }
+                                            </ul>}
+                                    </div>}
+                            </div>}
 
                     }
 
@@ -436,6 +446,41 @@
             </div>
         </div>
     </footer>
+    @if (Obj_instant_message != null && !string.IsNullOrEmpty(Obj_instant_message.Message))
+    {
+        if (Request.Cookies["show_alert"] != null)
+        {
+            if (Request.Cookies["show_alert"].Value != "true")
+            {
+                
+                Response.Cookies["show_alert"].Value = "true";
+                <div id="myModal" class="alert-modal">
+
+                    <!-- Modal content -->
+                    <div class="modal-content" style="background-color:@Obj_instant_message.BackgroundColor;">
+                        <span class="alert-close">&times;</span>
+                        <div class=" text-center" style="color:@Obj_instant_message.FontColor">@Html.Raw(Obj_instant_message.Message)</div>
+                    </div>
+
+                </div>
+            }
+        }
+        else
+        {
+            
+            Response.Cookies["show_alert"].Value = "true";
+            <div id="myModal" class="alert-modal">
+
+                <!-- Modal content -->
+                <div class="modal-content" style="background-color:@Obj_instant_message.BackgroundColor;">
+                    <span class="alert-close">&times;</span>
+                    <div class=" text-center" style="color:@Obj_instant_message.FontColor">@Html.Raw(Obj_instant_message.Message)</div>
+                </div>
+
+            </div>
+        }
+
+    }
 
     @Scripts.Render("~/bundles/Scripts")
     @RenderSection("scripts", required: false)
@@ -480,5 +525,6 @@
 </body>
 
 </html>
+
 
 <script id="mcjs">!function (c, h, i, m, p) { m = c.createElement(h), p = c.getElementsByTagName(h)[0], m.async = 1, m.src = i, p.parentNode.insertBefore(m, p) }(document, "script", "https://chimpstatic.com/mcjs-connected/js/users/7c1d9fb400543d637963e99dc/5b3141f7ebadc8bfbff872946.js")</script>

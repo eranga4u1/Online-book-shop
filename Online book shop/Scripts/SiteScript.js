@@ -497,4 +497,11 @@ $("#frm-payment-details").submit(function (event) {
         });
 });
 
+$(document).ready(function () {
+    $('.alert-modal').show();
+   // modal.style.display = "block";
+});
 
+$('.alert-close').on('click', function () {
+    $('.alert-modal').hide();
+});
