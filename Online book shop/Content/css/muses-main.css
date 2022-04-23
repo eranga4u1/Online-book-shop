@@ -1,64 +1,43 @@
-/* Box sizing rules */
-*,
-*::before,
-*::after {
+*, *::before, *::after {
     box-sizing: border-box;
 }
-/* Remove default padding */
-ul[class],
-ol[class] {
+
+ul[class], ol[class] {
     padding: 0;
 }
-/* Remove default margin */
-body,
-h1,
-h2,
-h3,
-h4,
-p,
-ul[class],
-ol[class],
-li,
-figure,
-figcaption,
-blockquote,
-dl,
-dd {
+
+body, h1, h2, h3, h4, p, ul[class], ol[class], li, figure, figcaption, blockquote, dl, dd {
     margin: 0;
 }
-/* Set core body defaults */
+
 body {
     min-height: 100vh;
     scroll-behavior: smooth;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
 }
-/* Remove list styles on ul, ol elements with a class attribute */
-ul[class],
-ol[class] {
+
+ul[class], ol[class] {
     list-style: none;
 }
-/* A elements that don't have a class get default styles */
+
 a:not([class]) {
     text-decoration-skip-ink: auto;
 }
-/* Make images easier to work with */
+
 img {
     max-width: 100%;
     display: block;
 }
-/* Natural flow and rhythm in articles by default */
+
 article > * + * {
     margin-top: 1em;
 }
-/* Inherit fonts for inputs and buttons */
-input,
-button,
-textarea,
-select {
+
+input, button, textarea, select {
     font: inherit;
 }
-/* Remove all animations and transitions for people that prefer not to see them */
+
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
@@ -89,8 +68,7 @@ address {
     line-height: 24px;
 }
 
-.hamburger,
-.btn-mobile-search {
+.hamburger, .btn-mobile-search {
     display: none;
 }
 
@@ -282,7 +260,7 @@ address {
 
                 .header-top .middlebar .cart .wrapp-minicart .minicart-padding {
                     padding: 0;
-                    box-shadow: 0 0px 9px 0 rgba(0, 0, 0, 0.4), 0 0px 10px 0 rgba(0, 0, 0, 0.4);
+                    box-shadow: 0 0px 9px 0 rgba(0,0,0,0.4), 0 0px 10px 0 rgba(0,0,0,0.4);
                     line-height: 40px;
                 }
 
@@ -470,7 +448,7 @@ address {
                 border: #f0eded 1px solid;
                 border-radius: 0 0 5px 5px;
                 z-index: 10;
-                box-shadow: 0 0px 9px 0 rgba(0, 0, 0, 0.4), 0 0px 10px 0 rgba(0, 0, 0, 0.4);
+                box-shadow: 0 0px 9px 0 rgba(0,0,0,0.4), 0 0px 10px 0 rgba(0,0,0,0.4);
                 opacity: 0;
                 -webkit-transition: all 0.5s ease;
                 -moz-transition: all 0.5s ease;
@@ -702,7 +680,7 @@ address {
         display: flex;
         justify-content: center;
         align-items: center;
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(0,0,0,0.2);
     }
 
         .slider .slick-dots li {
@@ -748,13 +726,11 @@ address {
         z-index: 5;
     }
 
-.slick-prev:before,
-.slick-next:before {
+.slick-prev:before, .slick-next:before {
     font-size: 0;
 }
 
-.slick-next.slick-disabled,
-.slick-prev.slick-disabled {
+.slick-next.slick-disabled, .slick-prev.slick-disabled {
     opacity: 0;
 }
 
@@ -767,7 +743,7 @@ address {
     padding: 20px 30px;
     border: 1px solid #f0eded;
     border-radius: 5px;
-    box-shadow: 0 0px 9px 0 rgba(0, 0, 0, 0.05), 0 0px 10px 0 rgba(0, 0, 0, 0.05);
+    box-shadow: 0 0px 9px 0 rgba(0,0,0,0.05), 0 0px 10px 0 rgba(0,0,0,0.05);
     background: #f7f7f7;
 }
 
@@ -845,7 +821,7 @@ address {
                 -moz-transition: all 0.5s ease;
                 -o-transition: all 0.5s ease;
                 transition: all 0.5s ease;
-                box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 5px 8px rgba(0,0,0,0.1);
             }
 
                 .bookcat-col .book-overview .item .item-inner:hover:before {
@@ -855,9 +831,9 @@ address {
                     position: absolute;
                     top: 0;
                     left: 0;
-                    background: rgba(255, 255, 255, 0.4);
+                    background: rgba(255,255,255,0.4);
                     z-index: 2;
-                    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.6);
+                    box-shadow: 0 5px 8px rgba(0,0,0,0.6);
                     border-radius: 8px;
                 }
 
@@ -867,8 +843,7 @@ address {
                     bottom: 30px;
                 }
 
-                .bookcat-col .book-overview .item .item-inner:hover .price,
-                .bookcat-col .book-overview .item .item-inner:hover .discount-price {
+                .bookcat-col .book-overview .item .item-inner:hover .price, .bookcat-col .book-overview .item .item-inner:hover .discount-price {
                     opacity: 0;
                 }
 
@@ -984,7 +959,7 @@ address {
                 flex-direction: column;
                 position: relative;
                 padding: 0;
-                box-shadow: 0 0px 9px 0 rgba(0, 0, 0, 0.2), 0 0px 10px 0 rgba(0, 0, 0, 0.19);
+                box-shadow: 0 0px 9px 0 rgba(0,0,0,0.2), 0 0px 10px 0 rgba(0,0,0,0.19);
             }
 
                 .bookcat-col .book-overview .item .book-image img {
@@ -1094,13 +1069,11 @@ address {
         overflow: initial;
     }
 
-    .bookcat-col #searchedBooks,
-    .bookcat-col #searchedAuthors {
+    .bookcat-col #searchedBooks, .bookcat-col #searchedAuthors {
         display: block;
     }
 
-        .bookcat-col #searchedBooks .item,
-        .bookcat-col #searchedAuthors .item {
+        .bookcat-col #searchedBooks .item, .bookcat-col #searchedAuthors .item {
             display: flex;
             flex-wrap: wrap;
             float: left;
@@ -1296,13 +1269,13 @@ address {
         transition: all 0.5s ease;
         padding: 20px;
         margin-bottom: 30px;
-        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 8px rgba(0,0,0,0.1);
         cursor: pointer;
         position: relative;
     }
 
         .about-offers .offers:hover {
-            box-shadow: 0 5px 8px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 5px 8px rgba(0,0,0,0.6);
         }
 
         .about-offers .offers h2 {
@@ -1383,7 +1356,7 @@ address {
             position: absolute;
             top: 0;
             left: 0;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255,255,255,0.4);
             z-index: 1;
             border-radius: 8px;
         }
@@ -1393,8 +1366,7 @@ address {
             bottom: 30px;
         }
 
-        .about-offers .book-item:hover .price,
-        .about-offers .book-item:hover .discount-price {
+        .about-offers .book-item:hover .price, .about-offers .book-item:hover .discount-price {
             opacity: 0;
         }
 
@@ -1555,8 +1527,7 @@ address {
     position: absolute;
 }
 
-    .ribbon::before,
-    .ribbon::after {
+    .ribbon::before, .ribbon::after {
         position: absolute;
         z-index: -1;
         content: "";
@@ -1570,21 +1541,20 @@ address {
         width: 185px;
         padding: 7px 0;
         background-color: #d71923;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         color: #fff;
         font: 700 18px/1 "Lato", sans-serif;
-        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+        text-shadow: 0 1px 1px rgba(0,0,0,0.2);
         text-transform: uppercase;
         text-align: center;
     }
-/* top left*/
+
 .ribbon-top-left {
     top: -10px;
     left: -10px;
 }
 
-    .ribbon-top-left::before,
-    .ribbon-top-left::after {
+    .ribbon-top-left::before, .ribbon-top-left::after {
         border-top-color: transparent;
         border-left-color: transparent;
     }
@@ -1720,7 +1690,6 @@ address {
                     display: inline;
                     padding: 0.45rem;
                     font-size: 25px;
-                    /* Needs prefixing */
                     box-decoration-break: clone;
                     -webkit-box-decoration-break: clone;
                     border-radius: 10px 0 0 0;
@@ -1940,8 +1909,7 @@ footer {
         font-size: 12px;
     }
 
-.registration-form,
-.login-form {
+.registration-form, .login-form {
     padding: 30px;
     display: flex;
     justify-content: center;
@@ -1949,18 +1917,16 @@ footer {
     float: none;
     margin: 50px auto;
     border: 1px solid #f0eded;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
-    .registration-form a,
-    .login-form a {
+    .registration-form a, .login-form a {
         color: #d71923;
         font-size: 14px;
         text-decoration: none;
     }
 
-    .registration-form .form-group,
-    .login-form .form-group {
+    .registration-form .form-group, .login-form .form-group {
         position: relative;
         width: 100%;
         height: auto;
@@ -1968,8 +1934,7 @@ footer {
         display: block;
     }
 
-    .registration-form .eye-icon,
-    .login-form .eye-icon {
+    .registration-form .eye-icon, .login-form .eye-icon {
         width: 38px;
         height: 38px;
         background: url("../images/icon.png");
@@ -2080,8 +2045,7 @@ footer {
         width: 100%;
     }
 
-.login-form input[type="text"],
-.login-form input[type="password"] {
+.login-form input[type="text"], .login-form input[type="password"] {
     margin-bottom: 0;
 }
 
@@ -2097,9 +2061,7 @@ footer {
     padding: 0;
 }
 
-input[type="text"],
-input[type="password"],
-input[type="number"] {
+input[type="text"], input[type="password"], input[type="number"] {
     width: 100%;
     height: 40px;
     font-size: 14px;
@@ -2124,7 +2086,7 @@ input[type="submit"] {
 
     input[type="submit"]:hover {
         background-color: #9c0911;
-        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     }
 
 textarea {
@@ -2267,7 +2229,7 @@ select {
     .addedtocart:before {
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(0,0,0,0.6);
         position: fixed;
         left: 0;
         top: 0;
@@ -2429,8 +2391,7 @@ select {
     border-radius: 5px;
 }
 
-    .close::before,
-    .close::after {
+    .close::before, .close::after {
         content: "";
         position: absolute;
         height: 2px;
@@ -2461,8 +2422,7 @@ select {
         transform: rotate(-45deg);
     }
 
-    .close.black::before,
-    .close.black::after {
+    .close.black::before, .close.black::after {
         height: 3px;
         margin-top: -4px;
     }
@@ -2537,7 +2497,7 @@ ul.category {
         width: 200px;
         height: 300px;
         z-index: 1;
-        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 8px rgba(0,0,0,0.1);
     }
 
         .author-coverimage .authorphotos img {
@@ -2556,7 +2516,7 @@ ul.category {
         font-size: 30px;
         font-family: "open_sansbold";
         padding: 0 20px;
-        background: rgba(255, 255, 255, 0.5);
+        background: rgba(255,255,255,0.5);
     }
 
 .author-wrapper {
@@ -2600,18 +2560,16 @@ ul.category {
             width: 100%;
             height: 100%;
             background-size: cover;
-            box-shadow: 0 0px 9px 0 rgba(0, 0, 0, 0.2), 0 0px 10px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0px 9px 0 rgba(0,0,0,0.2), 0 0px 10px 0 rgba(0,0,0,0.2);
         }
 
-.authors-work,
-.recommended-books {
+.authors-work, .recommended-books {
     width: 100%;
     display: block;
     clear: both;
 }
 
-    .authors-work h2,
-    .recommended-books h2 {
+    .authors-work h2, .recommended-books h2 {
         padding: 0 0 20px 0;
         margin: auto;
         text-align: left;
@@ -2719,7 +2677,7 @@ ul.category {
     .book-details .book-image .book {
         width: 300px;
         height: auto;
-        box-shadow: 0 5px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 5px 8px rgba(0,0,0,0.1);
     }
 
         .book-details .book-image .book .slick-slide {
@@ -2978,7 +2936,7 @@ ul.category {
 .booksample-wrapper {
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0,0,0,0.5);
     position: fixed;
     top: 0;
     bottom: 0;
@@ -3008,7 +2966,7 @@ ul.category {
         }
 
             .booksample-wrapper .booksample .innerblock img {
-                box-shadow: 0 5px 8px rgba(0, 0, 0, 0.5);
+                box-shadow: 0 5px 8px rgba(0,0,0,0.5);
             }
 
 .contact {
@@ -3028,7 +2986,7 @@ ul.category {
 .reviewform-wrapper {
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0,0,0,0.5);
     position: fixed;
     top: 0;
     bottom: 0;
@@ -3081,8 +3039,7 @@ ul.category {
         opacity: 1;
     }
 
-    .btn-close:before,
-    .btn-close:after {
+    .btn-close:before, .btn-close:after {
         position: absolute;
         left: 13px;
         content: " ";
@@ -3099,8 +3056,7 @@ ul.category {
         transform: rotate(-45deg);
     }
 
-body.openreview,
-body.opensample {
+body.openreview, body.opensample {
     overflow: hidden;
     padding-right: 17px;
 }
@@ -3266,10 +3222,7 @@ body.opensample {
     .small.stars[data-rating="5"]:before {
         width: 70px;
     }
-/* =============================================
-    Check box radio button styling
-   =============================================
-*/
+
 .form-block {
     display: block;
     position: relative;
@@ -3286,7 +3239,7 @@ body.opensample {
     justify-content: space-between;
     align-items: center;
 }
-    /* Hide the browser's default checkbox */
+
     .form-block input {
         position: absolute;
         opacity: 0;
@@ -3294,7 +3247,7 @@ body.opensample {
         height: 0;
         width: 0;
     }
-/* Create a custom checkbox */
+
 .radio-label {
     padding: 0 0 0 40px;
     box-sizing: border-box;
@@ -3315,25 +3268,25 @@ body.opensample {
     bottom: 0;
     margin: auto;
 }
-/* On mouse-over, add a grey background color */
+
 .form-block:hover input ~ .radiomark {
     background-color: #ccc;
 }
-/* When the checkbox is checked, add a blue background */
+
 .form-block input:checked ~ .radiomark {
     background-color: #d71923;
 }
-/* Create the checkmark/indicator (hidden when not checked) */
+
 .radiomark:after {
     content: "";
     position: absolute;
     display: none;
 }
-/* Show the checkmark when checked */
+
 .form-block input:checked ~ .radiomark:after {
     display: block;
 }
-/* Style the checkmark/indicator */
+
 .form-block .radiomark:after {
     top: 9px;
     left: 9px;
@@ -3342,32 +3295,27 @@ body.opensample {
     border-radius: 50%;
     background: white;
 }
-/* =============================================
-    Check box radio button styling
-   =============================================
-*/
+
 @media only screen and (max-width: 600px) {
     #countdown {
         font-size: 18px;
     }
 }
 
-/* The Modal (background) */
 .alert-modal {
     display: block;
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
+    position: fixed;
+    z-index: 4;
+    padding-top: 100px;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: #000000;
+    background-color: rgba(0,0,0,0.4);
 }
 
-    /* Modal Content */
     .alert-modal .modal-content {
         background-color: #fefefe;
         margin: auto;
@@ -3376,7 +3324,6 @@ body.opensample {
         width: 80%;
     }
 
-    /* The Close Button */
 .alert-close {
     color: #aaaaaa;
     float: right;
@@ -3384,11 +3331,8 @@ body.opensample {
     font-weight: bold;
 }
 
-    .alert-close:hover,
-    .alert-close .close:focus {
+    .alert-close:hover, .alert-close .close:focus {
         color: #000;
         text-decoration: none;
         cursor: pointer;
     }
-
-

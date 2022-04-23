@@ -72,11 +72,13 @@ namespace Online_book_shop.Areas.Admin.Controllers
             Sheet.Cells["L1"].Value = "Payer's Name";
             Sheet.Cells["M1"].Value = "Billing Address";
             Sheet.Cells["N1"].Value = "Payer's Phone";
-            Sheet.Cells["O1"].Value = "Special Note";
-            Sheet.Cells["P1"].Value = "Payment Method";
-            Sheet.Cells["Q1"].Value = "Payment Status";
-            Sheet.Cells["R1"].Value = "Delivery Method";
-            Sheet.Cells["S1"].Value = "Total";
+            Sheet.Cells["O1"].Value = "Delivery Special Note";
+            Sheet.Cells["P1"].Value = "Payment Special Note";
+            Sheet.Cells["Q1"].Value = "Order Summary";
+            Sheet.Cells["R1"].Value = "Payment Method";
+            Sheet.Cells["S1"].Value = "Payment Status";
+            Sheet.Cells["T1"].Value = "Delivery Method";
+            Sheet.Cells["U1"].Value = "Total";
 
             int row = 2;
             foreach (var item in collection)
@@ -96,11 +98,13 @@ namespace Online_book_shop.Areas.Admin.Controllers
                 Sheet.Cells[string.Format("L{0}", row)].Value = item.PayerName;
                 Sheet.Cells[string.Format("M{0}", row)].Value = item.PayerAddress; 
                 Sheet.Cells[string.Format("N{0}", row)].Value = item.PayerPhone;
-                Sheet.Cells[string.Format("O{0}", row)].Value = item.SpecialNote;
-                Sheet.Cells[string.Format("P{0}", row)].Value = item.PaymentMethod;
-                Sheet.Cells[string.Format("Q{0}", row)].Value = item.PaymentStatus;
-                Sheet.Cells[string.Format("R{0}", row)].Value = item.DeliveryMethod;
-                Sheet.Cells[string.Format("S{0}", row)].Value = item.Total;
+                Sheet.Cells[string.Format("O{0}", row)].Value = item.DeliverySpecialNote;
+                Sheet.Cells[string.Format("P{0}", row)].Value = item.PaymentSpecialNote;
+                Sheet.Cells[string.Format("Q{0}", row)].Value = item.OrderSummary;
+                Sheet.Cells[string.Format("R{0}", row)].Value = item.PaymentMethod;
+                Sheet.Cells[string.Format("S{0}", row)].Value = item.PaymentStatus;
+                Sheet.Cells[string.Format("T{0}", row)].Value = item.DeliveryMethod;
+                Sheet.Cells[string.Format("U{0}", row)].Value = item.Total;
                 
                 row++;
             }

@@ -20,11 +20,13 @@ namespace Online_book_shop.Models.ViewModel.Report
         public string PayerName { get; set; }
         public string PayerAddress { get; set; }
         public string PayerPhone { get; set; }
-        public string SpecialNote { get; set; }
+        public string DeliverySpecialNote { get; set; }
+        public string PaymentSpecialNote { get; set; }
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }
         public string DeliveryMethod { get; set; }
         public decimal Total { get; set; }
         public string Email { get; set; }
+        public string OrderSummary { get; set; }
     }
 }
