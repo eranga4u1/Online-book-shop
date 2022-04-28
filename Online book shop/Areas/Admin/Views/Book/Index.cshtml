@@ -36,7 +36,7 @@
             <th scope="col">Author</th>
             <th scope="col">Created date</th>
              <th scope="col">Type</th>
-            <th scope="col">Operation</th>
+            <th width="20%" scope="col">Operation</th>
         </tr>
     </thead>
     <tbody>
@@ -71,14 +71,14 @@
             <td>@book.CreatedDate.AddHours(timeOffset).ToString("yyyy/MM/dd")</td>
             <td>@(book.ItemType == 0?"Book":"Book Pack" )</td>
             <td>
-                <a href="/Admin/Book/edit/@book.Id" class="btn-xs btn-info">Edit Book</a><br /><br />
+                <a href="/Admin/Book/edit/@book.Id" class="btn-xs btn-info">Edit</a>
                 @if (book.isDeleted)
                 {
-                    <a href="/Admin/Book/ShowItem/@book.Id" class="btn-xs btn-warning">Show In Site</a>
+                    <a href="/Admin/Book/ShowItem/@book.Id" class="btn-xs btn-warning">Show</a>
                 }
                 else
                 {
-                    <a href="/Admin/Book/HideItem/@book.Id" class="btn-xs btn-danger">Hide From Site</a>
+                    <a href="/Admin/Book/HideItem/@book.Id" class="btn-xs btn-danger">Hide</a>
                 }
             </td>
         </tr>
