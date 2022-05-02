@@ -292,8 +292,8 @@
                 </td>
                 <td> @order.CreatedDate.AddHours(timeOffset).ToString("yyyy/MM/dd h:mm tt")</td>
                 <td>
-                    <a href="/Admin/order/Get/@order.Id" class="btn-sm btn-info">Details</a>
-                    <a target="_blank" href="/Invoice/Find?uid=@order.UId" class="btn-sm btn-info">Show Invoice</a>
+                    <a href="/Admin/order/Get/@order.Id" class="btn-xs btn-info">Details</a>
+                    <a target="_blank" href="/Invoice/Find?uid=@order.UId" class="btn-xs btn-info">Invoice</a>
                 </td>
             </tr>
         }
