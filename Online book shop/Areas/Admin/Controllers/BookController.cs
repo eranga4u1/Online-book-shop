@@ -268,7 +268,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                 bookvm.LocalTitle = book.LocalTitle;
                 bookvm.Ratings = book.Ratings;
                 bookvm.SaleType = book.SaleType;
-                bookvm.MaximumItemPerOrder = book.MaximumItemPerOrder;
+                bookvm.MaximumItemPerOrder = book.MaximumItemPerOrder== 10000?0: book.MaximumItemPerOrder;
                 bookvm.PreReleaseEndDate = book.RelaseDate;// !=null?book.PreReleaseEndDate.ToString("yyyy-MM-dd"):book.CreatedDate.ToString("yyyy-MM-dd");
                 bookvm.Categories= string.Join(",", bookCategories.Select(x=> x.CategoryId));
                 bookvm.OtherAthors = BusinessHandlerAuthor.GetmultipleAuthors(book.Id).Select(x=> x.Id).ToArray();
@@ -365,7 +365,7 @@ namespace Online_book_shop.Areas.Admin.Controllers
                     book.SaleType = bookVM.SaleType;
                     book.RelaseDate = bookVM.PreReleaseEndDate;//) ? Convert.ToDateTime(bookVM.PreReleaseEndDate) : DateTime.Today.AddDays(-1);
                     book.YoutubeUrl = bookVM.YoutubeUrl;
-                    book.MaximumItemPerOrder = bookVM.MaximumItemPerOrder;
+                    book.MaximumItemPerOrder = bookVM.MaximumItemPerOrder== 0? 10000: bookVM.MaximumItemPerOrder;
                     book.AvailableUntil = bookVM.AvailableUntil;
                     BusinessHandlerBook.Put(book);
                     int FrontCoverMediaId = 0, BackCoverMediaId = 0, FreeReadPDFMediaId = 0;

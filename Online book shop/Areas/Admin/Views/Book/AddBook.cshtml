@@ -74,18 +74,18 @@
                     <input type="text" class="form-control" id="YoutubeUrl" name="YoutubeUrl" placeholder="Youtube Url">
                 </div>
                 <div class="form-group publisherId-container">
-                    <label>Publisher<span class="text-success refresh-publishers" style="cursor:pointer;"></span></label>
+                    <label>Publisher<span class="text-success refresh-publishers" style="cursor:pointer;"><i class="fa fa-refresh" aria-hidden="true"></i></span></label>
                     <div class="select">
                         <select id="PublisherId" class="form-control" name="PublisherId">
                             @foreach (Publisher publisher in ViewBag.Publishers)
                             {
-                <option value="@publisher.Id">@publisher.Name</option>
-}
+                                <option value="@publisher.Id">@publisher.Name</option>
+                            }
                         </select>
                     </div>
                 </div>
                 <div class="form-group  author-block">
-                    <label>Author<span class="text-success refresh-authors" style="cursor:pointer;"></span></label>
+                    <label>Author<span class="text-success refresh-authors" style="cursor:pointer;"><i class="fa fa-refresh" aria-hidden="true"></i></span></label>
                     <div class="select  main-author-block">
                         <select id="AuthorId" class="form-control selected-author-drop" name="AuthorId">
                             <option value="0">--Select--</option>
