@@ -158,6 +158,11 @@ namespace Online_book_shop.Handlers.Business
             return webOrders;
         }
 
+        internal static object GetStocks()
+        {
+            return DBHandlerReport.GetBookStocks();
+        }
+
         public static string GetOrderDescription(int CartId)
         {
             string responce = "";

@@ -737,6 +737,7 @@
     <Compile Include="Models\ViewModel\MetaData.cs" />
     <Compile Include="Models\ViewModel\OrderStatus.cs" />
     <Compile Include="Models\ViewModel\Pager.cs" />
+    <Compile Include="Models\ViewModel\Report\BookStock.cs" />
     <Compile Include="Models\ViewModel\Report\DeliveryReport.cs" />
     <Compile Include="Models\ViewModel\Report\WebOrder.cs" />
     <Compile Include="Models\ViewModel\ReviewVM.cs" />
@@ -941,6 +942,7 @@
     <Content Include="Content\css\muses-main.less" />
     <Content Include="Content\css\responsive.css.map" />
     <Content Include="Content\css\responsive.less" />
+    <Content Include="Areas\Admin\Views\Report\Stocks.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -1529,7 +1531,6 @@
   <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
     <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
   </Target>
-
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
@@ -1564,11 +1565,11 @@
   </Target>
   <Target Name="AfterBuild">
   </Target> -->
-<Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'">
+  <Target Name="CopyRoslynFiles" AfterTargets="AfterBuild" Condition="!$(Disable_CopyWebApplication) And '$(OutDir)' != '$(OutputPath)'">
     <ItemGroup>
       <RoslynFiles Include="$(CscToolPath)\*" />
     </ItemGroup>
     <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
-</Target>
+  </Target>
 </Project>

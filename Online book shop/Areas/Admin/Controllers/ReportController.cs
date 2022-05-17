@@ -118,5 +118,12 @@ namespace Online_book_shop.Areas.Admin.Controllers
             Response.End();
         }
 
+        public ActionResult Stocks()
+        {
+            var result = BusinessHandlerReport.GetStocks();
+            ViewBag.Stocks = result;
+            return View();
+        }
+
     }
 }

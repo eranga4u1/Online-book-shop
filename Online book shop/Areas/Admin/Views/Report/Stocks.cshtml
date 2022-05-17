@@ -1,0 +1,69 @@
+﻿@using Online_book_shop.Models.ViewModel.Report
+@{
+    ViewBag.Title = "Stocks";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    List <BookStock> stocks= ViewBag.Stocks;
+    List<BookStock> filtered = stocks;
+    if(!string.IsNullOrEmpty(Request.QueryString["type"]) && Request.QueryString["type"] == "out")
+    {
+        var f = stocks.Where(x => x.RemainingAmount == 0);
+        if(f != null)
+        {
+            filtered = f.ToList();
+        }
+        else
+        {
+            filtered = new List<BookStock>();
+        }
+    }
+}
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading col-lg-12">
+        Remaining Stocks
+    </div>
+
+    <div class="panel-body">
+        <div class="card">
+            <div class="card-body">
+                <table class="table">
+
+                    <tbody>
+                        @if (stocks != null)
+                        {
+                            foreach (BookStock s in filtered)
+                            {
+                                string bcColor = "aquamarine";
+                                if (s.RemainingAmount == 0)
+                                {
+                                    bcColor = "coral";
+                                }
+                                else if(s.RemainingAmount < 25)
+                                {
+                                    bcColor = "antiquewhite";
+                                }
+
+                                <tr style="background-color:@bcColor">
+                                    <td>
+                                        <h6>@s.Id</h6> 
+                                    </td>
+                                    <td>
+                                        <h6>@s.Name</h6>
+                                    </td>
+                                    <td>
+                                        <h6>@s.RemainingAmount</h6>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+</div>

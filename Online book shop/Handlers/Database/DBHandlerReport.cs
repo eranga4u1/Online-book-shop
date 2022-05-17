@@ -73,5 +73,29 @@ namespace Online_book_shop.Handlers.Database
                 return null;
             }
         }
+
+        internal static List<BookStock> GetBookStocks()
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    var data = from p in ctx.BookProperties join b in ctx.Books on p.BookId equals b.Id where 
+                               !b.isDeleted select new BookStock
+                               {
+                                   Id = b.Id,
+                                   Name=b.Title,
+                                   RemainingAmount=p.NumberOfCopies<0?0: p.NumberOfCopies
+                               };
+                    return data.OrderBy(x=> x.RemainingAmount).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                BusinessHandlerMPLog.Log(LogType.Exception, string.Format("{0}", ex.Message), "DBHandlerReport", "GetTodayHandOverItems");
+
+                return null;
+            }
+        }
     }
 }
