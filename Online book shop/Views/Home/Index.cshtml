@@ -138,23 +138,27 @@
                                                             {
                                                                 if (promo.DiscountAmount > 0)
                                                                 {
-                                    <div class="price hasdiscount">Rs.@promo.BookPrice </div>
-                                                                    <div class="discount-price">Rs.@promo.BookPriceAfterDiscount </div> }
-                                                                                                else
-                                                                                                {
-                                                                    <div class="discount-price">Rs.@bookProperty.Price </div> }
-                                                                                            }
-                                                                    <div class="@(HTMLHelper.isCartEnabled(b.SaleType,bookProperty.NumberOfCopies)?"addto-cart btn-active add-to-cart":"addto-cart btn-active add-to-cart tile-addto-cart-dissabled")" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
-                                                                        Add to Cart
-                                                                        <div class="icon"></div>
-                                                                    </div> }
-                                                                                        else
-                                                                                        {
-                                                                    <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
-                                                                                            <div class="addto-cart btn-active add-to-cart tile-addto-cart-dissabled">
-                                                                                                Add to Cart
-                                                                                                <div class="icon"></div>
-                                                                                            </div> } }
+                                                                    <div class="price hasdiscount">Rs.@promo.BookPrice </div>
+                                                                    <div class="discount-price">Rs.@promo.BookPriceAfterDiscount </div> 
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class="discount-price">Rs.@bookProperty.Price </div> 
+                                                                }
+                                                            }
+                                                            <div class="@(HTMLHelper.isCartEnabled(b.SaleType,bookProperty.NumberOfCopies)?"addto-cart btn-active add-to-cart":"addto-cart btn-active add-to-cart tile-addto-cart-dissabled")" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
+                                                                        Add to Cart <div class="icon"></div>
+                                                            </div> 
+                                                        }
+                                                        else
+                                                        {
+                                                            <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
+                                                            <div class="addto-cart btn-active add-to-cart tile-addto-cart-dissabled">
+                                                                Add to Cart
+                                                                <div class="icon"></div>
+                                                            </div> 
+                                                        } 
+                                    }
                             </div>
                         </div>
                     }
