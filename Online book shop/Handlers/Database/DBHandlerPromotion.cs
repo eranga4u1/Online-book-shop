@@ -22,6 +22,8 @@ namespace Online_book_shop.Handlers.Database
                         item.UpdatedDate = DateTime.Today;
                         item.isDeleted = true;
                     }
+                    // promotion.StartDate = promotion.StartDate.AddHours(BusinessHandlerUtility.GetTimeOffset());
+                    //promotion.EndDate = promotion.EndDate.AddHours(BusinessHandlerUtility.GetTimeOffset());
                     ctx.Promotions.Add(promotion);
                     ctx.SaveChanges();
                 }
@@ -30,6 +32,34 @@ namespace Online_book_shop.Handlers.Database
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        internal static void SetToDefaultPromotion(Promotion p)
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    var promotion = ctx.Promotions.Where(x=> p.Id == x.Id).FirstOrDefault();
+                    if (promotion != null)
+                    {
+                        promotion.isDeleted= false;
+                        promotion.UpdatedDate = DateTime.Today;
+                        promotion.UpdatedBy = "Sheduler";
+                        promotion.StartDate= DateTime.Today.AddDays(1);
+                        promotion.EndDate = DateTime.Today.AddYears(5);
+                        promotion.PromotionMethods = (int)PromotionMethods.Percentage;
+                        promotion.DiscountValue = 20;
+
+                        ctx.SaveChanges();
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
@@ -196,6 +226,27 @@ namespace Online_book_shop.Handlers.Database
                     if (promotions != null)
                     {
                         return promotions.Take(5).ToList();
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        internal static List<Promotion> GetExpiredPromotion()
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    var promotions = ctx.Promotions.Where(p => p.EndDate == DateTime.Today && !p.isDeleted);
+                    if (promotions != null)
+                    {
+                        return promotions.ToList();
                     }
                 }
 

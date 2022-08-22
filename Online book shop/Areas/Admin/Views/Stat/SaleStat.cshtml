@@ -1,0 +1,78 @@
+﻿@using Online_book_shop.Models.ViewModel;
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "SaleStat";
+}
+
+<h2>Find Sale Stat</h2>
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $(".datepicker").datepicker();
+        });
+    </script>
+</head>
+@{ 
+    string fromdate = DateTime.Now.AddMonths(-1).ToString("MM/dd/yyyy");
+    string todate =DateTime.Now.ToString("MM/dd/yyyy");
+    if (ViewBag.fromdate !=null)
+    {
+        fromdate = ((DateTime)ViewBag.fromdate).Date.ToString("MM/dd/yyyy");
+    }
+    if (ViewBag.todate !=null)
+    {
+        todate = ((DateTime)ViewBag.todate).Date.ToString("MM/dd/yyyy");
+    }
+}
+<div class="col-lg-12">
+    <form method="post" action="">
+        <div class="form-row">
+            @*<div class="col-lg-3">*@
+                <input type="text" name="fromdate" value="@fromdate" class="form-control datepicker" placeholder="From Date">
+            @*</div>
+            <div class="col-lg-3">*@
+                <input type="text" name="todate" value="@todate" class="form-control datepicker" placeholder="To Date">
+            @*</div>
+            <div class="col-lg-12">*@
+                <input class="btn btn-info float-left" type="submit" value="Show Results" />
+            @*</div>*@
+        </div>
+    </form>
+    <div class="col-lg-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Book ID</th>
+                    <th scope="col">Book Name</th>
+                    <th scope="col">Number Of Books</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    if (ViewBag.Results != null)
+                    {
+                        foreach (BookStat item in ViewBag.Results)
+                        {
+                                <tr>
+                                    <td>@item.BookId</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.NumberOfBooks</td>
+                                </tr>
+                        }
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+</div>
+

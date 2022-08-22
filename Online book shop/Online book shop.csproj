@@ -286,6 +286,7 @@
     <Compile Include="Areas\Admin\Controllers\PublisherController.cs" />
     <Compile Include="Areas\Admin\Controllers\ReportController.cs" />
     <Compile Include="Areas\Admin\Controllers\SaleStatusController.cs" />
+    <Compile Include="Areas\Admin\Controllers\StatController.cs" />
     <Compile Include="Areas\Admin\Controllers\VoucherController.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -346,8 +347,10 @@
     <Compile Include="Handlers\Business\BusinessHandlerStockEntry.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerUser.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerUserReviews.cs" />
+    <Compile Include="Handlers\Business\BusinessHandlerUtility.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerVoucher.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerWishListItem.cs" />
+    <Compile Include="Handlers\Business\BusinessStatHandler.cs" />
     <Compile Include="Handlers\Business\enum.cs" />
     <Compile Include="Handlers\Database\ApplicationDbContext.cs" />
     <Compile Include="Handlers\Database\DBHandlerActiveMenu.cs" />
@@ -719,6 +722,7 @@
     <Compile Include="Models\ViewModel\BookPackItemVM.cs" />
     <Compile Include="Models\ViewModel\BookPrice.cs" />
     <Compile Include="Models\ViewModel\BookPromotionVM.cs" />
+    <Compile Include="Models\ViewModel\BookStat.cs" />
     <Compile Include="Models\ViewModel\BookVM.cs" />
     <Compile Include="Models\ViewModel\BookVMTile.cs" />
     <Compile Include="Models\ViewModel\ChangeBookPropertyVM.cs" />
@@ -731,6 +735,7 @@
     <Compile Include="Models\ViewModel\DeliveryMethod.cs" />
     <Compile Include="Models\ViewModel\Dictrict.cs" />
     <Compile Include="Models\ViewModel\District.cs" />
+    <Compile Include="Models\ViewModel\FilterByDate.cs" />
     <Compile Include="Models\ViewModel\ItemProperty.cs" />
     <Compile Include="Models\ViewModel\JsonMenu.cs" />
     <Compile Include="Models\ViewModel\MenuVM.cs" />
@@ -943,6 +948,7 @@
     <Content Include="Content\css\responsive.css.map" />
     <Content Include="Content\css\responsive.less" />
     <Content Include="Areas\Admin\Views\Report\Stocks.cshtml" />
+    <Content Include="Areas\Admin\Views\Stat\SaleStat.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.js" />
