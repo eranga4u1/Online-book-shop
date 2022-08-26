@@ -2,9 +2,12 @@
 @{
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "SaleStat";
+    PageResults pr= ViewBag.PageResults as PageResults;
+    int page = 1;
+    int numberOfPages = pr.NumberOfPages;
 }
 
-<h2>Find Sale Stat</h2>
+@*<h2>Sales</h2>*@
 
 
 
@@ -34,20 +37,55 @@
     }
 }
 <div class="col-lg-12">
-    <form method="post" action="">
-        <div class="form-row">
+    <!--<form method="post" action="">
+        <div class="form-row">-->
             @*<div class="col-lg-3">*@
-                <input type="text" name="fromdate" value="@fromdate" class="form-control datepicker" placeholder="From Date">
+            <!--<input type="text" name="fromdate" value="@fromdate" class="form-control datepicker" placeholder="From Date">-->
             @*</div>
-            <div class="col-lg-3">*@
-                <input type="text" name="todate" value="@todate" class="form-control datepicker" placeholder="To Date">
+                <div class="col-lg-3">*@
+            <!--<input type="text" name="todate" value="@todate" class="form-control datepicker" placeholder="To Date">-->
             @*</div>
-            <div class="col-lg-12">*@
-                <input class="btn btn-info float-left" type="submit" value="Show Results" />
+                <div class="col-lg-12">*@
+            <!--<input class="btn btn-info float-left" type="submit" value="Show Results" />-->
             @*</div>*@
-        </div>
-    </form>
+        <!--</div>
+    </form>-->
+
     <div class="col-lg-12">
+        <form class="form-inline float-right" method="post" action="">
+            <div class="form-group">
+                <label for="email">From:</label>
+                <input type="text" name="fromdate" value="@fromdate" class="form-control datepicker" placeholder="From Date">
+            </div>
+            <div class="form-group">
+                <label for="pwd">To:</label>
+                <input type="text" name="todate" value="@todate" class="form-control datepicker" placeholder="To Date">
+            </div>
+            <input class="btn btn-info float-left" type="submit" value="Show Results" />
+        </form>
+    </div>
+    
+    <div class="col-lg-12">
+        <nav class="text-center">
+            @{
+
+                if (!string.IsNullOrEmpty(Request.QueryString["page"]))
+                {
+                    page = Convert.ToInt32(Request.QueryString["page"]);
+                }
+
+                <ul class="pagination pagination-lg">
+                    @for (int i = 1; i < (numberOfPages + 1); i++)
+                    {
+                        <li class="page-item @(page==i?"disabled":"")">
+                            <a class="page-link" href="/Admin/Stat/SaleStat?page=@i" tabindex="-1">@i</a>
+                        </li>
+                    }
+                </ul>
+
+            }
+
+        </nav>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -62,17 +100,38 @@
                     {
                         foreach (BookStat item in ViewBag.Results)
                         {
-                                <tr>
-                                    <td>@item.BookId</td>
-                                    <td>@item.Name</td>
-                                    <td>@item.NumberOfBooks</td>
-                                </tr>
+                            <tr>
+                                <td>@item.BookId</td>
+                                <td>@item.Name</td>
+                                <td>@item.NumberOfBooks</td>
+                            </tr>
                         }
                     }
                 }
 
             </tbody>
         </table>
+        <nav class="text-center">
+            @{
+             
+                if (!string.IsNullOrEmpty(Request.QueryString["page"]))
+                {
+                    page = Convert.ToInt32(Request.QueryString["page"]);
+                }
+
+                <ul class="pagination pagination-lg">
+                    @for (int i = 1; i < (numberOfPages + 1); i++)
+                    {
+                        <li class="page-item @(page==i?"disabled":"")">
+                            <a class="page-link" href="/Admin/Stat/SaleStat?page=@i" tabindex="-1">@i</a>
+                        </li>
+                    }
+                </ul>
+
+            }
+
+        </nav>
     </div>
+    
 </div>
 

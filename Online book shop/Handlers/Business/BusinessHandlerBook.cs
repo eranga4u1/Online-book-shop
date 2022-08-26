@@ -47,6 +47,10 @@ namespace Online_book_shop.Handlers.Business
         {
             return DBHandlerBook.GetAllBooks(withDeleted);
         }
+        public static PageResults GetAllBooksAsPageResults(bool withDeleted, int page,int numberOfPages)
+        {
+            return DBHandlerBook.GetAllBooksAsPageResults(withDeleted, page, numberOfPages);
+        }
         public static Book Get(int id)
         {
             return DBHandlerBook.Get(id);

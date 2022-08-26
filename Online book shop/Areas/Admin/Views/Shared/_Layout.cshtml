@@ -75,13 +75,14 @@
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        @{ 
+                        @{
                             string default_endDt = DateTime.UtcNow.AddHours(5.5).ToString("yyyy-MM-dd HH:mm:ss");
                             string default_startDt = DateTime.UtcNow.AddHours(5.5).AddDays(-7).ToString("yyyy-MM-dd HH:mm:ss");
-                         }
+                        }
                         <li><a href="/Admin/Order/GetAll?deliveryStatus=-1&OrderType=-1&StartDate=@default_startDt&EndDate=@default_endDt"><strong class="nav-item">Orders</strong></a></li>
                         <li><a href="/admin/promotion/"><strong class="nav-item">Promotions</strong></a></li>
                         <li><a href="/admin/Voucher/"><strong class="nav-item">Vouchers</strong></a></li>
+                        <li><a href="/admin/Stat/SaleStat"><strong class="nav-item">sale statistics</strong></a></li>
 
                         @*<li><a href="/Admin/Configuration"><h5 class="nav-item">Articles</h5></a></li>*@
                     </ul>

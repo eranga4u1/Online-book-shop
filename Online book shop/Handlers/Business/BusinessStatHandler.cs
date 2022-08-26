@@ -9,9 +9,9 @@ namespace Online_book_shop.Handlers.Business
 {
     public class BusinessStatHandler
     {
-        public static List<BookStat> GetBookStats(FilterByDate model)
+        public static PageResults GetBookStats(FilterByDate model, int page)
         {
-            return DBHandlerStockEntry.GetBookStats(model);
+            return DBHandlerStockEntry.GetBookStats(model, page);
         }
 
     }

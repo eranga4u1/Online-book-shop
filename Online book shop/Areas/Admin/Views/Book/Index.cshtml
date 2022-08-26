@@ -2,14 +2,38 @@
 @using Online_book_shop.Handlers.Helper;
 @using Online_book_shop.Handlers.Business;
 @using Online_book_shop.Controllers;
+@using Online_book_shop.Models.ViewModel;
 @{
     ViewBag.Title = "Index";
-    List<Book> books = ViewBag.Books;
+    PageResults pr = ViewBag.PageResults as PageResults;
+    List<Book> books = pr.Results as List<Book>;//ViewBag.Books;
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     UtilityController uc = new UtilityController();
     double timeOffset = BusinessHandlerConfigurations.GetTimeOffSet();
+    int page = 1;
+    int numberOfPages = pr.NumberOfPages;
 }
 <h1>Books / Book Packs</h1>
+<nav class="text-center">
+    @{
+
+        if (!string.IsNullOrEmpty(Request.QueryString["page"]))
+        {
+            page = Convert.ToInt32(Request.QueryString["page"]);
+        }
+
+        <ul class="pagination pagination-lg">
+            @for (int i = 1; i < (numberOfPages + 1); i++)
+            {
+                <li class="page-item @(page==i?"disabled":"")">
+                    <a class="page-link" href="/Admin/Book/Index?page=@i&numberOfPages=@numberOfPages" tabindex="-1">@i</a>
+                </li>
+            }
+        </ul>
+
+    }
+
+</nav>
 <table class="table">
     <thead>
         <tr>
@@ -17,7 +41,7 @@
             <th scope="col"></th>
             <th scope="col"></th>
             <th scope="col"><a href="/Admin/Book/AddBook" class="btn btn-xs btn-info">New Book/Book Pack</a></th>
-            @if (Request.QueryString["hidden"] !=null && Request.QueryString["hidden"] == "true")
+            @if (Request.QueryString["hidden"] != null && Request.QueryString["hidden"] == "true")
             {
                 <th scope="col"><a href="/Admin/Book" class="btn btn-xs btn-warning">Hide hidden books</a></th>
             }
@@ -35,7 +59,7 @@
             <th scope="col">Title</th>
             <th scope="col">Author</th>
             <th scope="col">Created date</th>
-             <th scope="col">Type</th>
+            <th scope="col">Type</th>
             <th width="20%" scope="col">Operation</th>
         </tr>
     </thead>
@@ -43,45 +67,45 @@
         @foreach (Book book in books)
         {
             List<BookProperties> bps = BusinessHandlerBookProperties.GetByBookId(book.Id);
-        <tr class="author-card">
-            <th scope="row">@book.Id</th>
-            <td>
-                @if (bps != null && bps.Count > 0)
-                {
-                    Media m = BusinessHandlerMedia.Get(bps.FirstOrDefault().FrontCoverMediaId);
-                    if (m != null && HTMLHelper.isImageExist("/Content/UploadFiles/Images/BookFrontCover/" + m.FileName))
+            <tr class="author-card">
+                <th scope="row">@book.Id</th>
+                <td>
+                    @if (bps != null && bps.Count > 0)
                     {
-                        <img  src="@Url.Action("ResizeImage", "AdminUtility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+m.FileName,width=67,height=102})" height="100" alt="" />
-                        @*<img  src = "/Content/UploadFiles/Images/BookFrontCover/@m.FileName" height = "100" alt = "" />*@
+                        Media m = BusinessHandlerMedia.Get(bps.FirstOrDefault().FrontCoverMediaId);
+                        if (m != null && HTMLHelper.isImageExist("/Content/UploadFiles/Images/BookFrontCover/" + m.FileName))
+                        {
+                            <img src="@Url.Action("ResizeImage", "AdminUtility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+m.FileName,width=67,height=102})" height="100" alt="" />
+                            @*<img  src = "/Content/UploadFiles/Images/BookFrontCover/@m.FileName" height = "100" alt = "" />*@
+                        }
+                        else
+                        {
+                            <img height="100" src="~/Content/images/NoImage.jpg">
+
+                        }
                     }
                     else
                     {
                         <img height="100" src="~/Content/images/NoImage.jpg">
 
                     }
-                }
-                else
-                {
-                    <img height="100" src="~/Content/images/NoImage.jpg">
-
-                }
-            </td>
-            <td>@book.Title</td>
-            <td>@book.AuthorName</td>
-            <td>@book.CreatedDate.AddHours(timeOffset).ToString("yyyy/MM/dd")</td>
-            <td>@(book.ItemType == 0?"Book":"Book Pack" )</td>
-            <td>
-                <a href="/Admin/Book/edit/@book.Id" class="btn-xs btn-info">Edit</a>
-                @if (book.isDeleted)
-                {
-                    <a href="/Admin/Book/ShowItem/@book.Id" class="btn-xs btn-warning">Show</a>
-                }
-                else
-                {
-                    <a href="/Admin/Book/HideItem/@book.Id" class="btn-xs btn-danger">Hide</a>
-                }
-            </td>
-        </tr>
+                </td>
+                <td>@book.Title</td>
+                <td>@book.AuthorName</td>
+                <td>@book.CreatedDate.AddHours(timeOffset).ToString("yyyy/MM/dd")</td>
+                <td>@(book.ItemType == 0?"Book":"Book Pack" )</td>
+                <td>
+                    <a href="/Admin/Book/edit/@book.Id" class="btn-xs btn-info">Edit</a>
+                    @if (book.isDeleted)
+                    {
+                        <a href="/Admin/Book/ShowItem/@book.Id" class="btn-xs btn-warning">Show</a>
+                    }
+                    else
+                    {
+                        <a href="/Admin/Book/HideItem/@book.Id" class="btn-xs btn-danger">Hide</a>
+                    }
+                </td>
+            </tr>
         }
 
     </tbody>

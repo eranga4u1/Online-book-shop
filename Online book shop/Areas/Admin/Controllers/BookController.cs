@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PagedList;
 
 namespace Online_book_shop.Areas.Admin.Controllers
 {
@@ -14,15 +15,15 @@ namespace Online_book_shop.Areas.Admin.Controllers
     public class BookController : Controller
     {
         // GET: Admin/Book
-        public ActionResult Index()
+        public ActionResult Index(int page = 1,int numberOfPages=0)
         {
             if(Request.QueryString["hidden"] != null && Request.QueryString["hidden"] == "true")
             {
-                ViewBag.Books = BusinessHandlerBook.GetAllBooks(true);
+                ViewBag.PageResults = BusinessHandlerBook.GetAllBooksAsPageResults(true, page, numberOfPages);
             }
             else
             {
-                ViewBag.Books = BusinessHandlerBook.GetAllBooks(false);
+                ViewBag.PageResults = BusinessHandlerBook.GetAllBooksAsPageResults(false,page, numberOfPages);
             }
             
             return View();
@@ -858,6 +859,50 @@ namespace Online_book_shop.Areas.Admin.Controllers
             }
             jr.Data = result;
             return jr;
+        }
+
+        public ViewResult PagedBooks(string sortOrder, string currentFilter, string searchString, int? page)
+        {
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var books = BusinessHandlerBook.GetAllBooks(true);
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                books = books.Where(s => s.Title.Contains(searchString)
+                                       || s.Description.Contains(searchString)).ToList();
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    books = books.OrderByDescending(s => s.Title).ToList();
+                    break;
+                case "Date":
+                    books = books.OrderBy(s => s.CreatedDate).ToList();
+                    break;
+                case "date_desc":
+                    books = books.OrderByDescending(s => s.CreatedDate).ToList();
+                    break;
+                default:  // Name ascending 
+                    books = books.OrderBy(s => s.Title).ToList();
+                    break;
+            }
+
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+            return View(books.ToPagedList(pageNumber, pageSize));
         }
     }
 }

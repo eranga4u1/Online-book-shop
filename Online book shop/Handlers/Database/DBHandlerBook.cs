@@ -880,6 +880,52 @@ namespace Online_book_shop.Handlers.Database
             }
         }
 
+        public static PageResults GetAllBooksAsPageResults(bool withDeleted, int page,int numberOfPages)
+        {
+            List<Book> results = new List<Book>();
+            PageResults p = new PageResults();
+            int numberOfItem = 0;
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    if (withDeleted)
+                    {
+                        results = ctx.Books.OrderBy(book => book.Title).Skip(100 * (page - 1)).Take(100).ToList();
+                        numberOfItem = numberOfPages == 0?ctx.Books.OrderBy(book => book.Title).Count():0;
+                    }
+                    else
+                    {
+                        results = ctx.Books.Where(b => !b.isDeleted).OrderBy(book => book.Title).Skip(100 * (page - 1)).Take(100).ToList();
+                        numberOfItem = numberOfPages == 0?ctx.Books.Where(b => !b.isDeleted).OrderBy(book => book.Title).Count():0;
+                    }
+                    if (results != null)
+                    {                       
+                        p.CurrentPage = page;
+                        p.NumberOfPages = numberOfPages==0?(int)Math.Ceiling(Convert.ToDouble(numberOfItem / 100)): numberOfPages;
+                        p.Results = results;//!= null ? results.Skip(20 * (page - 1)).Take(20).ToList() : null;
+                        if(p.Results != null)
+                        {
+                            var allAuthors = ctx.Authors;
+                            foreach (var b in (List<Book>)p.Results)
+                            {
+                                var authors = allAuthors.Where(a => a.Id == b.AuthorId).FirstOrDefault();
+
+                                b.AuthorName = authors != null ? authors.Name : "";
+                            }
+                        }
+                        
+                    }
+
+                    return p;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
         internal static Book Put(Book book)
         {
             try

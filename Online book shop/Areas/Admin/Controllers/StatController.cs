@@ -8,6 +8,8 @@ using System.Web.Mvc;
 
 namespace Online_book_shop.Areas.Admin.Controllers
 {
+
+    [Authorize(Roles = "Admin")]
     public class StatController : Controller
     {
         // GET: Admin/Stat
@@ -15,15 +17,18 @@ namespace Online_book_shop.Areas.Admin.Controllers
         {
             return View();
         }
-        public ActionResult SaleStat(FilterByDate model=null)
+        public ActionResult SaleStat(FilterByDate model=null,int page=1)
         {
-            if(model.fromdate == null && model.todate==null)
+
+            if (model.fromdate == null && model.todate==null)
             {
                 model = new FilterByDate();
                 model.fromdate = DateTime.Now.AddMonths(-1);
                 model.todate = DateTime.Now;
             }
-            ViewBag.Results = BusinessStatHandler.GetBookStats(model);
+            var pageResult= BusinessStatHandler.GetBookStats(model, page);
+            ViewBag.PageResults = pageResult;
+            ViewBag.Results = (List<BookStat>)pageResult.Results;
             ViewBag.fromdate=model.fromdate;
             ViewBag.todate=model.todate;
             return View();

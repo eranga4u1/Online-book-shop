@@ -27,11 +27,13 @@ namespace Online_book_shop.Handlers.Database
             }
         }
 
-        internal static List<BookStat> GetBookStats(FilterByDate model)
+        internal static PageResults GetBookStats(FilterByDate model, int page)
         {
+            PageResults p = new PageResults();
             try
             {
                 List<BookStat> result = new List<BookStat>();
+                
                 using (var ctx = new ApplicationDbContext())
                 {
                     List<BookStat> entryList = (from a in ctx.StockEntries.Where(stockEntry => stockEntry.Operation == "Out" &&
@@ -50,11 +52,14 @@ namespace Online_book_shop.Handlers.Database
                                            }).OrderByDescending(x=> x.NumberOfBooks).ToList();
                                     }                   
                 }
-                return result;
+                p.CurrentPage= page;
+                p.NumberOfPages = (int) Math.Ceiling(Convert.ToDouble(result.Count/100));
+                p.Results= result != null ? result.Skip(100 * (page - 1)).Take(100).ToList() : null;
+                return p;
             }
             catch (Exception ex)
             {
-                return null;
+                return p;
             }
         }
 
