@@ -252,7 +252,14 @@ var viewSample = {
   },
   show: function() {
     $(".btn-readsample").on("click", function() {
-      $(".booksample-wrapper").fadeIn("slow");
+        $(".booksample-wrapper").fadeIn("slow");
+        var fileName = $('#file_for_free_read').val();
+        var object = "<object data=\"{FileName}\" type=\"application/pdf\" width=\"100%\" height=\"300px\">";
+        object += "If you are unable to view file, you can download from <a href=\"{FileName}\">here</a>";
+        object += " or download <a target = \"_blank\" href = \"http://get.adobe.com/reader/\">Adobe PDF Reader</a> to view the file.";
+        object += "</object>";
+        object = object.replace(/{FileName}/g, "/Content/UploadFiles/PDF/" + fileName);
+        $("#dialog").html(object);
       $("body").addClass("opensample");
     });
   },
