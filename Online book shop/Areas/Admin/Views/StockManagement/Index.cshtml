@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "Stock Management";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Stock Management</h2>
+<div class="col-lg-12">
+    <div class="card ">
+        <div class="card-header py-3 padding-top-bottom">
+            <h2 class="my-0 fw-normal">Summary Of Stocks</h2>
+        </div>
+        <div class="card-body">
+            <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+                <div class="col-lg-3 minicart-padding">
+                    <div class="card mb-4 rounded-3 shadow-sm rounded-border">
+                        <div class="card-header py-3 bg-dark padding-top-bottom">
+                            <h2 class="my-0 fw-normal">Total Items</h2>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">000</h1>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 minicart-padding">
+                    <div class="card mb-4 rounded-3 shadow-sm rounded-border">
+                        <div class="card-header py-3 bg-danger padding-top-bottom">
+                            <h2 class="my-0 fw-normal">Out Of Stocks</h2>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">000</h1>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 minicart-padding">
+                    <div class="card mb-4 rounded-3 shadow-sm border-primary rounded-border">
+                        <div class="card-header py-3 text-bg-primary border-primary bg-success padding-top-bottom">
+                            <h2 class="my-0 fw-normal">Available</h2>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">000</h1>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 minicart-padding">
+                    <div class="card mb-4 rounded-3 shadow-sm border-primary rounded-border">
+                        <div class="card-header py-3 text-bg-primary border-primary bg-danger padding-top-bottom">
+                            <h2 class="my-0 fw-normal">Red Line</h2>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">000</h1>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="card ">
+        <div class="card-header py-3 padding-top-bottom">
+            <h2 class="my-0 fw-normal">Advanced Stock Management</h2>
+        </div>
+        <div class="card-body">
+            <table class="col-lg-12 ">
+                <thead>
+                    <tr>
+                        <td>Filter by author</td>
+                        <td>Filter by publisher</td>
+                        <td>Filter by stock status</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="select">
+                                <select id="PublisherId" class="form-control" name="PublisherId">
+                                    <option value="0">XXXXXX</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select id="PublisherId" class="form-control" name="PublisherId">
+                                    <option value="0">XXXXXX</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select">
+                                <select id="PublisherId" class="form-control" name="PublisherId">
+                                    <option value="0">XXXXXX</option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <button type="submit" class="btn btn-info float-right">Search</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="card ">
+        <div class="card-header py-3 padding-top-bottom">
+            <h2 class="my-0 fw-normal">Bulk Stock Update</h2>
+        </div>
+        <div class="card-body">
+            <div class="margin-bottom-25">
+                <div class="col-lg-6">
+                    Update Stock Status To
+                </div>
+                <div class="select col-lg-4">
+                    <select id="PublisherId" class="form-control" name="PublisherId">
+                        <option value="0">XXXXXX</option>
+                    </select>
+                </div>
+            </div>
+            <div class="bg-info  margin-bottom-25">
+                <div class="col-lg-6">
+                    Update Item Count To
+                </div>
+                <div class="select col-lg-4">
+                    <select id="PublisherId" class="form-control" name="PublisherId">
+                        <option value="0">XXXXXX</option>
+                    </select>
+
+                </div>
+                <button type="submit" class="btn btn-success float-right">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+

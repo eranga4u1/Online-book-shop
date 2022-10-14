@@ -515,3 +515,23 @@ select.form-control {
 .collapsible-pannel{
     margin-bottom:10px;
 }
+.bg-dark{
+    background-color:black;
+    color:white;
+}
+.bg-danger {
+    background-color: red;
+    color: white;
+}
+.bg-success {
+    background-color: green;
+    color: white;
+}
+.padding-top-bottom{
+    padding-top:5px;
+    padding-bottom:5px;
+}
+.rounded-border{
+    border:solid 2px;
+    border-radius:5px;
+}

@@ -1,0 +1,208 @@
+﻿@using Online_book_shop.Models
+@{
+    ViewBag.Title = "Stock Management";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    StockVM summaryModel = ViewBag.Summary;
+    List<Publisher> publishers = ViewBag.Publishers;
+    List<Author> authors = ViewBag.Authers;
+    int SelectedAuthorId = 0;
+    int SelectedPublisherId = 0;
+    int SelectedStockStatusId = 0;
+    int PageId = 0;
+    int ItemsPerPage = 10;
+
+    List<StockVM> list = ViewBag.FilteredBookStock;
+
+    if (!string.IsNullOrEmpty(Request.QueryString["author"]))
+    {
+        SelectedAuthorId = int.Parse(Request.QueryString["author"]);
+    }
+    if (!string.IsNullOrEmpty(Request.QueryString["publisher"]))
+    {
+        SelectedPublisherId= int.Parse(Request.QueryString["publisher"]);
+    }
+    if (!string.IsNullOrEmpty(Request.QueryString["stockstatus"]))
+    {
+        SelectedStockStatusId= int.Parse(Request.QueryString["stockstatus"]);
+    }
+    if (!string.IsNullOrEmpty(Request.QueryString["page"]))
+    {
+        PageId = int.Parse(Request.QueryString["page"]);
+    }
+    if (!string.IsNullOrEmpty(Request.QueryString["ItemsPerPage"]))
+    {
+        ItemsPerPage = int.Parse(Request.QueryString["ItemsPerPage"]);
+    }
+}
+
+<h2>Stock Management</h2>
+<div class="col-lg-12">
+    <div class="col-lg-12" style="background-color: antiquewhite;margin:10px;">
+        <div class="card padding-top-bottom" >
+            <div class="card-header py-3 padding-top-bottom">
+                <h2 class="my-0 fw-normal">Summary Of Stocks</h2>
+            </div>
+            <div class="card-body">
+                <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+                    <div class="col-lg-3 minicart-padding">
+                        <div class="card mb-4 rounded-3 shadow-sm rounded-border">
+                            <div class="card-header py-3 bg-dark padding-top-bottom">
+                                <h2 class="my-0 fw-normal">Total Items</h2>
+                            </div>
+                            <div class="card-body">
+                                <h1 class="card-title pricing-card-title">@(summaryModel !=null? summaryModel.TotalItem:0)</h1>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 minicart-padding">
+                        <div class="card mb-4 rounded-3 shadow-sm rounded-border">
+                            <div class="card-header py-3 bg-danger padding-top-bottom">
+                                <h2 class="my-0 fw-normal">Out Of Stocks</h2>
+                            </div>
+                            <div class="card-body">
+                                <h1 class="card-title pricing-card-title">@(summaryModel !=null? summaryModel.OutOfStock:0)</h1>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 minicart-padding">
+                        <div class="card mb-4 rounded-3 shadow-sm border-primary rounded-border">
+                            <div class="card-header py-3 text-bg-primary border-primary bg-success padding-top-bottom">
+                                <h2 class="my-0 fw-normal">Available</h2>
+                            </div>
+                            <div class="card-body">
+                                <h1 class="card-title pricing-card-title">@(summaryModel !=null? summaryModel.Available:0)</h1>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 minicart-padding">
+                        <div class="card mb-4 rounded-3 shadow-sm border-primary rounded-border">
+                            <div class="card-header py-3 text-bg-primary border-primary bg-danger padding-top-bottom">
+                                <h2 class="my-0 fw-normal">Red Line</h2>
+                            </div>
+                            <div class="card-body">
+                                <h1 class="card-title pricing-card-title">@(summaryModel !=null? summaryModel.RedLine:0)</h1>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div><small>Total Items:- All the books currently in the site except hidden ones.</small></div>
+                <div><small>Out Of Stock:- Out of stock books currently available on the site except hidden books.</small></div>
+                <div><small>Available:-Books in stock from all books currently available on the site except hidden books.</small></div>
+                <div><small>Red Line:-Books that have reached the out of stock limit from all books currently availabel on the site except hidden books(The out of stock limit is 05).</small></div>
+
+            </div>
+        </div>
+
+    </div>
+    <hr />
+    <div class="col-lg-12 margin-top-5px" style="background-color: antiquewhite; margin: 10px;">
+        <div class="card padding-top-bottom">
+            <div class="card-header py-3 padding-top-bottom">
+                <h2 class="my-0 fw-normal">Advanced Stock Management</h2>
+            </div>
+
+            <div class="card-body">
+                <table class="col-lg-12 ">
+                    <thead>
+                        <tr>
+                            <td><h4>Filter by author</h4></td>
+                            <td><h4>Filter by publisher</h4></td>
+                            <td><h4>Filter by stock status</h4></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="select">
+                                    <select id="authors" class="form-control" name="PublisherId">
+                                        <option @(SelectedAuthorId == 0 ? "selected" : "") value="0">All</option>
+                                        @if (authors != null)
+                                        {
+                                            foreach (Author a in authors)
+                                            {
+                                                <option @(SelectedAuthorId == a.Id ? "selected" : "") value="@a.Id">@a.Name</option>
+                                            }
+
+                                        }
+
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="select">
+                                    <select id="publisher" class="form-control" name="PublisherId">
+                                        <option @(SelectedPublisherId == 0 ? "selected" : "") value="0">All</option>
+                                        @if (publishers != null)
+                                        {
+                                            foreach (Publisher a in publishers)
+                                            {
+                                                <option @(SelectedPublisherId == a.Id ? "selected" : "") value="@a.Id">@a.Name</option>
+                                            }
+
+                                        }
+                                    </select>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="select">
+                                    <select id="stock_status" class="form-control" name="PublisherId">
+                                        <option @(SelectedStockStatusId == 0 ? "selected" : "") value="0">All</option>
+                                        <option @(SelectedStockStatusId == 1 ? "selected" : "") value="1">Available</option>
+                                        <option @(SelectedStockStatusId == 2 ? "selected" : "") value="2">Red Line</option>
+                                        <option @(SelectedStockStatusId == 3 ? "selected" : "") value="3">Out Of Stock</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <button type="submit" class="btn btn-info float-right">Search</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <hr />
+    <div class="col-lg-12 margin-top-5px" style="background-color: antiquewhite; margin: 10px;">
+        <div class="card padding-top-bottom" >
+            <div class="card-header py-3 padding-top-bottom">
+                <h2 class="my-0 fw-normal">Bulk Stock Update</h2>
+            </div>
+            <div class="card-body" style="background-color: antiquewhite;">
+                @*<div class="margin-bottom-25">
+                    <div class="col-lg-6">
+                        Update Stock Status To
+                    </div>
+                    <div class="select col-lg-4">
+                        <select id="stock_status" class="form-control" name="PublisherId">
+                            <option @(SelectedStockStatusId == 0 ? "selected" : "") value="0">All</option>
+                            <option @(SelectedStockStatusId == 1 ? "selected" : "") value="1">Available</option>
+                            <option @(SelectedStockStatusId == 2 ? "selected" : "") value="2">Red Line</option>
+                            <option @(SelectedStockStatusId == 3 ? "selected" : "") value="3">Out Of Stock</option>
+                        </select>
+                    </div>
+                </div>*@
+                <div class="bg-info  margin-bottom-25">
+                    <div class="col-lg-6">
+                        Update Item Count To
+                    </div>
+                    <div class=" col-lg-4">
+                        <input type="number" min="0" max="1000" class="form-control" id="bulk_update_amount" />                   
+                    </div>
+                    <button type="submit" class="btn btn-success float-right">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+

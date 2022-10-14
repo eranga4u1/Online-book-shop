@@ -293,7 +293,9 @@
     <Compile Include="Areas\Admin\Controllers\ReportController.cs" />
     <Compile Include="Areas\Admin\Controllers\SaleStatusController.cs" />
     <Compile Include="Areas\Admin\Controllers\StatController.cs" />
+    <Compile Include="Areas\Admin\Controllers\StockController.cs" />
     <Compile Include="Areas\Admin\Controllers\VoucherController.cs" />
+    <Compile Include="Areas\Admin\StockManagementController.cs" />
     <Compile Include="Controllers\AboutController.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AuthorController.cs" />
@@ -350,6 +352,7 @@
     <Compile Include="Handlers\Business\BusinessHandlerSaleStatus.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerScheduller.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerShopingCart.cs" />
+    <Compile Include="Handlers\Business\BusinessHandlerStock.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerStockEntry.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerUser.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerUserReviews.cs" />
@@ -722,9 +725,11 @@
     <Compile Include="Models\RecentyViewItems.cs" />
     <Compile Include="Models\SaleType.cs" />
     <Compile Include="Models\StockEntry.cs" />
+    <Compile Include="Models\StockVM.cs" />
     <Compile Include="Models\UserReview.cs" />
     <Compile Include="Models\ViewModel\AboutUs.cs" />
     <Compile Include="Models\ViewModel\BillingVM.cs" />
+    <Compile Include="Models\ViewModel\BookCountVM.cs" />
     <Compile Include="Models\ViewModel\BookPackItemVM.cs" />
     <Compile Include="Models\ViewModel\BookPrice.cs" />
     <Compile Include="Models\ViewModel\BookPromotionVM.cs" />
@@ -958,6 +963,8 @@
     <Content Include="Areas\Admin\Views\Report\Stocks.cshtml" />
     <Content Include="Areas\Admin\Views\Stat\SaleStat.cshtml" />
     <Content Include="Areas\Admin\Views\Book\PagedBooks.cshtml" />
+    <Content Include="Areas\Admin\Views\StockManagement\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Stock\Index.cshtml" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.js" />

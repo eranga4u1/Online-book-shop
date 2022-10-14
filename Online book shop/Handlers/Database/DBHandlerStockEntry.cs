@@ -1,10 +1,12 @@
-﻿using Online_book_shop.Handlers.Business;
+﻿using iTextSharp.text.pdf.parser;
+using Online_book_shop.Handlers.Business;
 using Online_book_shop.Models;
 using Online_book_shop.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using static iTextSharp.text.pdf.AcroFields;
 
 namespace Online_book_shop.Handlers.Database
 {
@@ -84,6 +86,103 @@ namespace Online_book_shop.Handlers.Database
             {
                 return false;
             }
+        }
+
+        internal static StockVM GetStockVM()
+        {
+            StockVM vm = new StockVM();
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    var books = from a in ctx.Books
+                                join b in ctx.BookProperties on a.Id equals b.BookId where !a.isDeleted && a.ItemType==(int)ItemType.Book
+                                select new BookCountVM { BookId = a.Id, Count = b.NumberOfCopies };
+
+                   var filteredBooks= books.GroupBy(d => d.BookId)
+                                            .Select(
+                                            g => new BookCountVM
+                                            {
+                                             BookId = g.Key,
+                                             Count = g.Sum(s => s.Count)
+                                            });
+                if(filteredBooks != null)
+                    {
+                        vm.TotalItem= filteredBooks.Count();
+                        vm.Available = filteredBooks.Where(x => x.Count > 0).Count();
+                        vm.OutOfStock = filteredBooks.Where(x => x.Count <= 0).Count();
+                        vm.RedLine = filteredBooks.Where(x => x.Count>0 && x.Count<5).Count();
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return vm;
+        }
+        internal static List<BookCountVM> GetBookStockDetails(int authorId,int publisherId,int stocktype, int page, int itemsperpage)
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    var books = from a in ctx.Books
+                                join b in ctx.BookProperties on a.Id equals b.BookId
+                                where !a.isDeleted && a.ItemType == (int)ItemType.Book
+                                select new BookCountVM { 
+                                    BookId = a.Id, 
+                                    Count = b.NumberOfCopies,
+                                    BookName=a.Title,
+                                    BookPropertyName=b.Title,
+                                    AuthorId=a.AuthorId,
+                                    PublisherId=a.PublisherId };
+                    List<BookCountVM> filtered = new List<BookCountVM>();
+                    if(authorId>0 && publisherId>0)
+                    {
+                        filtered = books.Where(x => x.AuthorId == authorId && x.PublisherId == publisherId).ToList();
+                       
+                    }else if (authorId > 0)
+                    {
+                        filtered = books.Where(x => x.AuthorId == authorId).ToList();
+
+                    }
+                    else if (publisherId > 0)
+                    {
+                        filtered = books.Where(x => x.PublisherId == publisherId).ToList();
+
+                    }
+                    else
+                    {
+                        filtered = books.ToList();
+                    }
+                    if (filtered.Count > 0)
+                    {
+                        if (stocktype == 0)
+                        {
+                            return filtered.Where(x => x.Count > 0).Skip((page-1)* itemsperpage).Take(itemsperpage).ToList();
+                        }
+                        else if (stocktype == 1)
+                        {
+                            return filtered.Where(x => x.Count > 0).Skip((page - 1) * itemsperpage).Take(itemsperpage).ToList();
+                        }
+                        else if (stocktype == 2)
+                        {
+                            return filtered.Where(x => x.Count > 0 && x.Count < 5).Skip((page - 1) * itemsperpage).Take(itemsperpage).ToList();
+                        }
+                        else if (stocktype == 3)
+                        {
+                            return filtered.Where(x => x.Count < 1).Skip((page - 1) * itemsperpage).Take(itemsperpage).ToList();
+                        }
+                    }
+                    return filtered;
+                }
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return null;
         }
     }
 }
