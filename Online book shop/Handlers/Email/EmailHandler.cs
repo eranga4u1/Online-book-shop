@@ -21,16 +21,18 @@ namespace Online_book_shop.Handlers.Email
                 message.Subject = Subject;
                 message.IsBodyHtml = true; //to make message body as html  
                 message.Body = htmlString;
-                smtp.Port = 25;
+                smtp.Port = 587;
                 smtp.Host = host; //for gmail host  
-                smtp.EnableSsl = false;
+                smtp.EnableSsl = true;
                 smtp.UseDefaultCredentials = false;
                 smtp.Credentials = new NetworkCredential(user, pwd);
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.Send(message);
                 return "Done";
             }
-            catch (Exception ex) { return ex.Message; }
+            catch (Exception ex) { 
+                return ex.Message; 
+            }
         }
         public static string ReadHtmlTemplate(string fileName)
         {

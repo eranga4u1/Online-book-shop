@@ -1,4 +1,5 @@
 ﻿@using Online_book_shop.Models
+@using Online_book_shop.Models.ViewModel;
 @{
     ViewBag.Title = "Stock Management";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -11,7 +12,7 @@
     int PageId = 0;
     int ItemsPerPage = 10;
 
-    List<StockVM> list = ViewBag.FilteredBookStock;
+    List<BookCountVM> list = ViewBag.FilteredBookStock;
 
     if (!string.IsNullOrEmpty(Request.QueryString["author"]))
     {
@@ -204,5 +205,32 @@
         </div>
     </div>
     
+    <hr />
+    <table>
+        <thead>
+            <tr>
+                <td></td>
+                <td>Book name</td>
+                <td>Property name</td>
+                <td>Remaining count</td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (list != null)
+            {
+                foreach (BookCountVM s in list)
+                {
+                    <tr>
+                        <td></td>
+                        <td>@s.BookName</td>
+                        <td>@s.BookPropertyName</td>
+                        <td>@s.Count</td>
+                    </tr>
+                }
+
+            }
+
+        </tbody>
+    </table>
 </div>
 

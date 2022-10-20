@@ -4,6 +4,7 @@ using Online_book_shop.Models;
 using Online_book_shop.Models.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -226,6 +227,15 @@ namespace Online_book_shop.Handlers.Helper
             //{
             //    return 0;
             //}
+        }
+        public static string ConvertTextToTitleCase(string value)
+        {
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+            if (!string.IsNullOrEmpty(value))
+            {
+                return textInfo.ToTitleCase(value);
+            }
+            return "";
         }
     }
 
