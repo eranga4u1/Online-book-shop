@@ -49,30 +49,30 @@
             {
                 if (promo.PromotionMethods == (int)PromotionMethods.DeductFromFinalAmount)
                 {
-    <div class="discount-pers">Offer<br />Off</div> }
-else if (promo.PromotionMethods == (int)PromotionMethods.FixedAmount)
-{
-    <div class="discount-pers">@promo.DiscountValue<br />Off</div> }
-else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
-{
-    <div class="discount-pers">@promo.DiscountValue%<br />Off</div>}
-}
+                    <div class="discount-pers">Offer<br />Off</div> }
+                else if (promo.PromotionMethods == (int)PromotionMethods.FixedAmount)
+                {
+                    <div class="discount-pers">@promo.DiscountValue<br />Off</div> }
+                else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
+                {
+                    <div class="discount-pers">@promo.DiscountValue%<br />Off</div>}
+            }
             <div class="viewmore-discprice">
                 <a href="/book/@b.Id" class="viewmore"></a>
                 @if (promo != null && promo.DiscountValue > 0)
                 {
-    <div class="discounted-price">-Rs.@promo.DiscountAmount/=</div>}
+                    <div class="discounted-price">-Rs.@promo.DiscountAmount/=</div>}
             </div>
             <div class="book-image">
                 @if (b.FrontCover != null && HTMLHelper.isImageExist("Content/UploadFiles/Images/BookFrontCover/" + b.FrontCover.FileName))
                 {
-    <img src="@Url.Action("Thumbnail", "Utility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+b.FrontCover.FileName})"
-         class="img-fluid"
-         title="@b.BookName"
-         alt="muses @b.BookName" /> @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@b.FrontCover.FileName?w=160&h=100" alt="@b.BookName" />*@ }
-    else
-    {
-    <img src="~/Content/images/no-image-book.jpg" alt="@b.BookName" />}
+                    <img src="@Url.Action("Thumbnail", "Utility", new {FileName="~/Content/UploadFiles/Images/BookFrontCover/"+b.FrontCover.FileName})"
+                         class="img-fluid"
+                         title="@b.BookName"
+                         alt="muses @b.BookName" /> @*<img src="~/Content/UploadFiles/Images/BookFrontCover/@b.FrontCover.FileName?w=160&h=100" alt="@b.BookName" />*@ }
+                    else
+                    {
+                        <img src="~/Content/images/no-image-book.jpg" alt="@b.BookName" />}
 
             </div>
             <div class="book-name-author ">
@@ -85,7 +85,7 @@ else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
             <div class="category">
                 @foreach (Category c in b.Categories.Take(2))
                 {
-    <span class="cat-name">@c.CategoryName</span>}
+                    <span class="cat-name">@c.CategoryName</span>}
             </div>
             <div class="rating">
                 <div class="stars" data-rating="@BusinessHandlerUserReviews.GetBookRating(b.Id)"></div>
@@ -96,23 +96,27 @@ else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
                     {
                         if (promo.DiscountAmount > 0)
                         {
-    <div class="price hasdiscount">Rs.@promo.BookPrice/=</div>
-                                        <div class="discount-price">Rs.@promo.BookPriceAfterDiscount/=</div> }
-                                    else
-                                    {
-    <div class="discount-price">Rs.@bookProperty.Price/=</div> }
-}
-    <div class="addto-cart btn-active add-to-cart" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
-        Add to Cart
-        <div class="icon"></div>
-    </div> }
-else
-{
-    <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
-                                <div class="addto-cart btn-active">
-                                    Add to Cart
-                                    <div class="icon"></div>
-                                </div> } }
+                            <div class="price hasdiscount">Rs.@promo.BookPrice </div>
+                            <div class="discount-price">Rs.@promo.BookPriceAfterDiscount </div>
+                        }
+                        else
+                        {
+                            <div class="discount-price">Rs.@bookProperty.Price </div>
+                        }
+                    }
+                    <div class="@(HTMLHelper.isCartEnabled(b.SaleType,bookProperty.NumberOfCopies)?"addto-cart btn-active add-to-cart":"addto-cart btn-active add-to-cart tile-addto-cart-dissabled")" data-book_id="@b.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">
+                        Add to Cart <div class="icon"></div>
+                    </div>
+                }
+                else
+                {
+                    <div class="price msg-availability">@HTMLHelper.GetNoStockMessage(b.SaleType)</div>
+                    <div class="addto-cart btn-active add-to-cart tile-addto-cart-dissabled">
+                        Add to Cart
+                        <div class="icon"></div>
+                    </div>
+                }
+            }
         </div>
     </div>}
             </div>

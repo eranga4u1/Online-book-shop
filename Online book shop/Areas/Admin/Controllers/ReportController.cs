@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace Online_book_shop.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ReportController : Controller
     {
         // GET: Admin/Report

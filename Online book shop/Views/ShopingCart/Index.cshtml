@@ -74,7 +74,7 @@
                         <input class="numberOfItems" id="numberOfItems_@cb.BookId" data-book_id="@cb.BookId" data-max-item="@(b.MaximumItemPerOrder>0?b.MaximumItemPerOrder:999)" data-book_prop_id="@cb.BookPropertyId" type="number" min="1" max="100" value="@cb.NumberOfItems" />Item(s)
                     </td>
                     <td>@cb.AmountBeforeDiscount</td>
-                    <td>@cb.Discount</td>
+                    <td>@String.Format("{0:0.00}", cb.Discount)</td>
                     <td>@cb.AmountAfterDiscount</td>
                     <td><span class="btn-remove-wrapper"><span class="close rounded black"></span><input type="button" value="Remove" data-book_id="@cb.BookId" data-book_prop_id="@cb.BookPropertyId" class="btn btn-danger btn-sm remove-from-cart" /></span></td>
                 </tr>

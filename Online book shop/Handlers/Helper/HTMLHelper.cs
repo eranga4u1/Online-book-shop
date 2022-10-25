@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
-
+using System.Globalization;
 namespace Online_book_shop.Handlers.Helper
 {
     public class HTMLHelper
@@ -215,7 +215,15 @@ namespace Online_book_shop.Handlers.Helper
             }
             return id.ToString();
         }
-
+        public static string ConvertTextToTitleCase(string s)
+        {
+            TextInfo textInfo = CultureInfo.CurrentCulture.TextInfo;
+            if (!string.IsNullOrEmpty(s))
+            {
+              return  textInfo.ToTitleCase(s);
+            }
+            return "";
+        }
         public static Cart GetCart(int cartId)
         {
             return BusinessHandlerShopingCart.GetById(cartId);

@@ -24,12 +24,19 @@
     <div class="panel-heading col-lg-12">
         Remaining Stocks
     </div>
-
+    <div class="panel-heading col-lg-12"></div>
     <div class="panel-body">
         <div class="card">
             <div class="card-body">
                 <table class="table">
-
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th><input class="col-lg-12 float-lg-right" id="searchInput" type="text" placeholder="Search.."></th>
+                        </tr>
+                    </thead>
                     <tbody>
                         @if (stocks != null)
                         {
@@ -45,17 +52,20 @@
                                     bcColor = "antiquewhite";
                                 }
 
-                                <tr style="background-color:@bcColor">
-                                    <td>
-                                        <h6>@s.Id</h6> 
-                                    </td>
-                                    <td>
-                                        <h6>@s.Name</h6>
-                                    </td>
-                                    <td>
-                                        <h6>@s.RemainingAmount</h6>
-                                    </td>
-                                </tr>
+                        <tr style="background-color:@bcColor" class="author-card">
+                            <td>
+                                <h6>@s.Id</h6>
+                            </td>
+                            <td>
+                                <h6>@s.Name</h6>
+                            </td>
+                            <td>
+                                <h6>@s.RemainingAmount</h6>
+                            </td>
+                            <td>
+                                <a href="/Admin/Book/ShowItem/@s.Id" class="btn-xs btn-warning">Update Stock</a>
+                            </td>
+                        </tr>
                             }
                         }
 

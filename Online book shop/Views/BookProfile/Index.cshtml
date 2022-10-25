@@ -713,11 +713,22 @@
 
         </form>
     </div>
-    @if (book.Property != null && book.Property.FirstOrDefault() != null && book.Property.FirstOrDefault().FreeReadPDFMediaId > 0)
-    {
-        Media m = BusinessHandlerMedia.Get(book.Property.FirstOrDefault().FreeReadPDFMediaId);
-        string domainName = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
-        domainName = domainName.Replace("https://", "").Replace("http://", "");
+    <div class="booksample-wrapper">
+        <div class="booksample">
+            <div class="innerblock">
+                <div class="sample">
+                    @if (book.Property != null && book.Property.FirstOrDefault() != null && book.Property.FirstOrDefault().FreeReadPDFMediaId > 0)
+                    {
+                        Media m = BusinessHandlerMedia.Get(book.Property.FirstOrDefault().FreeReadPDFMediaId);
+                        string domainName = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority);
+                        domainName = domainName.Replace("https://", "").Replace("http://", "");
+                        if (m != null && HTMLHelper.isImageExist("Content/UploadFiles/PDF/" + m.FileName))
+                        {
+                            <div>
+                                <embed src="/Content/UploadFiles/PDF/@m.FileName" type="application/pdf" width="100%" style="height:30rem;">
+                            </div>
+
+                            @*<iframe src="https://docs.google.com/gview?url=@domainName/Content/UploadFiles/PDF/@m.FileName&embedded=true" style="width:740px; height:500px;" frameborder="0"></iframe>*@
 
         <input type="hidden" value="@m.FileName" id="file_for_free_read" />
     }
