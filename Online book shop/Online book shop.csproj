@@ -813,6 +813,7 @@
     <Content Include="Content\js\pdfobject.min.js" />
     <Content Include="Content\js\script.js" />
     <Content Include="Content\js\slick.min.js" />
+    <Content Include="Content\js\snowstorm-min.js" />
     <Content Include="Content\muses.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\script.js" />

@@ -104,7 +104,7 @@ $(function () {
             // of an input field. Validation rules are defined
             // on the right side
             CategoryName: "required",
-            CategoryDescription: "required",
+            //CategoryDescription: "required",
             //email: {
             //    required: true,
             //    // Specify that email should be validated
@@ -119,7 +119,7 @@ $(function () {
         // Specify validation error messages
         messages: {
             CategoryName: "Please enter Category Name",
-            CategoryDescription: "Please enter Category Description",
+           // CategoryDescription: "Please enter Category Description",
             //password: {
             //    required: "Please provide a password",
             //    minlength: "Your password must be at least 5 characters long"

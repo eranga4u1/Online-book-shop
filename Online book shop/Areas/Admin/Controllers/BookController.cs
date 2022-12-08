@@ -19,11 +19,13 @@ namespace Online_book_shop.Areas.Admin.Controllers
         {
             if(Request.QueryString["hidden"] != null && Request.QueryString["hidden"] == "true")
             {
-                ViewBag.PageResults = BusinessHandlerBook.GetAllBooksAsPageResults(true, page, numberOfPages);
+                //ViewBag.PageResults = BusinessHandlerBook.GetAllBooksAsPageResults(true, page, numberOfPages);
+                ViewBag.Books = BusinessHandlerBook.GetAllBooks(true);
             }
             else
             {
-                ViewBag.PageResults = BusinessHandlerBook.GetAllBooksAsPageResults(false,page, numberOfPages);
+                // ViewBag.PageResults = BusinessHandlerBook.GetAllBooksAsPageResults(false,page, numberOfPages);
+                ViewBag.Books = BusinessHandlerBook.GetAllBooks(false);
             }
             
             return View();

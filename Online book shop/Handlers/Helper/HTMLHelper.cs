@@ -236,15 +236,15 @@ namespace Online_book_shop.Handlers.Helper
             //    return 0;
             //}
         }
-        public static string ConvertTextToTitleCase(string value)
-        {
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-            if (!string.IsNullOrEmpty(value))
-            {
-                return textInfo.ToTitleCase(value);
-            }
-            return "";
-        }
+        //public static string ConvertTextToTitleCase(string value)
+        //{
+        //    TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+        //    if (!string.IsNullOrEmpty(value))
+        //    {
+        //        return textInfo.ToTitleCase(value);
+        //    }
+        //    return "";
+        //}
     }
 
 }

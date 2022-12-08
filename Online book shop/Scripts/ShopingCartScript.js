@@ -95,6 +95,9 @@ $(".numberOfItems").change(function () {
     var bookPropId = $(this).attr("data-book_prop_id");
     var numberOfItems = $(this).val();
     var maxnumberOfItems = $(this).attr("data-max-item");
+    if (maxnumberOfItems == 10000) {
+        maxnumberOfItems = 0;
+    }
     if ($("#quantity-" + bookPropId).length > 0) {
         numberOfItems = $("#quantity-" + bookPropId).val();
     }
@@ -102,7 +105,7 @@ $(".numberOfItems").change(function () {
         PopupDangerMessage("Invalid item count !");
     } else if (!(numberOfItems % 1 === 0)) {
         PopupDangerMessage("Invalid item count !");
-    } else if (numberOfItems > maxnumberOfItems) {
+    } else if (parseInt(numberOfItems) > parseInt(maxnumberOfItems)) {
         PopupDangerMessage("Invalid item count, Updated for maximum");
         $("#quantity-" + bookPropId).val(maxnumberOfItems);
         var url = '/ShopingCart/ChangeAmountOfItems';

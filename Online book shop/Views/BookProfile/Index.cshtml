@@ -353,14 +353,20 @@
                                         <div class="price hasdiscount" style="color:#ffffff;">Rs. @bookProperty.Price</div>
                                         <div class="discount-price">Rs. @bookProperty.Price</div>}
 
-                                    <div class="addtocart addtocart-@bookProperty.Id">
-                                        <input type="number" class="bp-quantity" data-id="@bookProperty.Id" id="quantity-@bookProperty.Id" name="quantity-@bookProperty.Id" min="1" max="@(book.MaximumItemPerOrder>0?book.MaximumItemPerOrder:999)" value="1">
-                                        @if (book.MaximumItemPerOrder > 0)
-                                        {
-                                            <small>Available only @book.MaximumItemPerOrder item(s) per order</small>}
+                                <div class="addtocart addtocart-@bookProperty.Id">
+                                    <input type="number" class="bp-quantity" data-id="@bookProperty.Id" id="quantity-@bookProperty.Id" name="quantity-@bookProperty.Id" min="1" max="@(book.MaximumItemPerOrder>0?book.MaximumItemPerOrder:999)" value="1">
+                                    @if (book.MaximumItemPerOrder > 0 && book.MaximumItemPerOrder < 10000)
+                                    {
+                                        <small>Available only @book.MaximumItemPerOrder item(s) per order</small>
+                                    }
+                                    else
+                                    {
+                                        <small>Available only @bookProperty.NumberOfCopies item(s) per order</small>
+                                        
+                                    }
 
-                                        <button id="bp-btn-addtocart-@bookProperty.Id" class="@(HTMLHelper.isCartEnabled(book.SaleType,bookProperty.NumberOfCopies)?"btn-addtocart add-to-cart":"addto-cart-dissabled")" data-book_id="@book.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">Add to Cart</button>
-                                    </div>
+                                    <button id="bp-btn-addtocart-@bookProperty.Id" class="@(HTMLHelper.isCartEnabled(book.SaleType,bookProperty.NumberOfCopies)?"btn-addtocart add-to-cart":"addto-cart-dissabled")" data-book_id="@book.Id" data-book_prop_id="@bookProperty.Id" data-number_of_items="1">Add to Cart</button>
+                                </div>
                                 </div> }
                             else
                             {
@@ -730,13 +736,16 @@
 
                             @*<iframe src="https://docs.google.com/gview?url=@domainName/Content/UploadFiles/PDF/@m.FileName&embedded=true" style="width:740px; height:500px;" frameborder="0"></iframe>*@
 
-        <input type="hidden" value="@m.FileName" id="file_for_free_read" />
-    }
-    else
-    {
-        <iframe src="https://docs.google.com/gview?url=http://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf&embedded=true" style="width:740px; height:500px;" frameborder="0"></iframe>
-    }
-    <div class="booksample-wrapper">
+                            <input type="hidden" value="@m.FileName" id="file_for_free_read" />
+                        }
+                    }
+                </div>
+                <div class="btn-close"></div>
+            </div>
+            </div>
+        </div>
+
+    @*<div class="booksample-wrapper">
         <div class="booksample">
             <div class="innerblock">
                 <div id="dialog" class="sample">
@@ -745,7 +754,7 @@
                 <div class="btn-close"></div>
             </div>
         </div>
-    </div>
+    </div>*@
 
     @foreach (KeyValuePair<string, string> entry in Images)
     {
