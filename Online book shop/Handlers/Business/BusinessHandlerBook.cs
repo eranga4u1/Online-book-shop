@@ -25,7 +25,8 @@ namespace Online_book_shop.Handlers.Business
 
         internal static List<BookVMTile> GetBookPacksForView()
         {
-            return DBHandlerBook.GetBookPacksForView();
+            return DBHandlerBook.GetBookPacksFromStoredProcedures();
+            // return DBHandlerBook.GetBookPacksForView();
         }
 
         public static int GetIdFromFriendlyName(string name)
@@ -40,7 +41,8 @@ namespace Online_book_shop.Handlers.Business
 
         internal static List<BookVMTile> GetBestSellingBooksForView()
         {
-            return DBHandlerBook.GetBestSellingBooksForView();
+            return DBHandlerBook.GetBestSellingBooksFromStoredProcedures();
+            //return DBHandlerBook.GetBestSellingBooksForView();
         }
 
         public static List<Book> GetAllBooks(bool withDeleted)
@@ -84,7 +86,9 @@ namespace Online_book_shop.Handlers.Business
 
         public static List<BookVMTile> GetPreOrderBooksForView()
         {
-            return DBHandlerBook.GetPreOrderBooksForView();
+
+            return DBHandlerBook.GetPreOrderBooksFromStoredProcedures();
+            //return DBHandlerBook.GetPreOrderBooksForView();
         }
         public static Media GetBookFrontCover(int bookId)
         {
@@ -92,7 +96,8 @@ namespace Online_book_shop.Handlers.Business
         } 
         public static List<BookVMTile> GetLatestBooksForView()
         {
-            return DBHandlerBook.GetLatestBooksForView();
+            return DBHandlerBook.GetLatestBooksFromStoredProcedures();
+            //return DBHandlerBook.GetLatestBooksForView();
         }
         public static BookVMTile GetSearchedBookForView(int bookId)
         {

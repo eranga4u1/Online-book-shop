@@ -2,6 +2,7 @@
 using Online_book_shop.Handlers.Business;
 using Online_book_shop.Handlers.Database;
 using Online_book_shop.Models;
+using Online_book_shop.Models.ViewModel;
 using Online_book_shop.Models.ViewModel.Report;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,16 @@ namespace Online_book_shop.Areas.Admin.Controllers
             //CreateExcell(dt);
             //return "";
         }
+        public void DownloadStockExcell(int author=0, int publisher=0, int stocksttaus=0)
+        {
+            DataTable dt = new DataTable("New_DataTable");
+            List<BookCountVM> List = BusinessHandlerStock.GetBookStockDetails(author, publisher, stocksttaus, 1, 100000); ;
+            //dt = List != null ? BusinessHandlerReport.ToDataTable(BusinessHandlerReport.GetWebOrders(List)) : null;
+            string fileName = string.Format("stock_{0}_type_{1}_start{2}_end_{3}", author.ToString(), publisher.ToString(), stocksttaus.ToString(), DateTime.Now.ToString());
+            DownloadStockExcel(List, fileName);
+            //CreateExcell(dt);
+            //return "";
+        }
         public ActionResult AdvancedSearch()
         {
             return View();
@@ -53,6 +64,36 @@ namespace Online_book_shop.Areas.Admin.Controllers
             ds.Tables.Add(dt);
             ExcelLibrary.DataSetHelper.CreateWorkbook("C:\\Users\\HI-TEC\\Desktop\\Med\\"+ fileName, ds);
             return fileName;
+        }
+        public void DownloadStockExcel(List<BookCountVM> collection, string fileName = "")
+        {
+
+            ExcelPackage Ep = new ExcelPackage();
+            ExcelWorksheet Sheet = Ep.Workbook.Worksheets.Add("Report");
+            Sheet.Cells["A1"].Value = "Book Name";
+            Sheet.Cells["B1"].Value = "Book Property";
+            Sheet.Cells["C1"].Value = "Author";
+            Sheet.Cells["D1"].Value = "Current Stock";
+            int row = 2;
+            foreach (var item in collection)
+            {
+
+                Sheet.Cells[string.Format("A{0}", row)].Value = item.BookName;
+                Sheet.Cells[string.Format("B{0}", row)].Value = item.BookPropertyName;
+                var author = BusinessHandlerAuthor.GetAuthorById(item.AuthorId);
+                Sheet.Cells[string.Format("C{0}", row)].Value = author !=null?author.Name:"";
+                Sheet.Cells[string.Format("D{0}", row)].Value = item.Count;
+
+                row++;
+            }
+
+
+            Sheet.Cells["A:AZ"].AutoFitColumns();
+            Response.Clear();
+            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            Response.AddHeader("content-disposition", "attachment: filename=" + fileName + ".xlsx");
+            Response.BinaryWrite(Ep.GetAsByteArray());
+            Response.End();
         }
         public void DownloadExcel(List<WebOrder> collection,string fileName="")
         {

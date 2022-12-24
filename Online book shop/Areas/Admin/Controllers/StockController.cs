@@ -1,4 +1,5 @@
 ﻿using Online_book_shop.Handlers.Business;
+using Online_book_shop.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,16 +17,16 @@ namespace Online_book_shop.Areas.Admin.Controllers
             int SelectedPublisherId = 0;
             int SelectedStockStatusId = 0;
             int PageId = 0;
-            int ItemsPerPage = 10;
-            if (!string.IsNullOrEmpty(Request.QueryString["author"]))
+            int ItemsPerPage = 100000;
+            if (!string.IsNullOrEmpty(Request.QueryString["author"]) && Request.QueryString["author"] !="0")
             {
                 SelectedAuthorId = int.Parse(Request.QueryString["author"]);
             }
-            if (!string.IsNullOrEmpty(Request.QueryString["publisher"]))
+            if (!string.IsNullOrEmpty(Request.QueryString["publisher"]) && Request.QueryString["publisher"] != "0")
             {
                 SelectedPublisherId = int.Parse(Request.QueryString["publisher"]);
             }
-            if (!string.IsNullOrEmpty(Request.QueryString["stockstatus"]))
+            if (!string.IsNullOrEmpty(Request.QueryString["stockstatus"]) && Request.QueryString["stockstatus"] != "0")
             {
                 SelectedStockStatusId = int.Parse(Request.QueryString["stockstatus"]);
             }
@@ -44,6 +45,30 @@ namespace Online_book_shop.Areas.Admin.Controllers
             ViewBag.Publishers=BusinessHandlerPublisher.GetPublishers();
 
             return View();
+        }
+
+        [HttpPost]
+        public bool UpdateBookStock(BookStockVM model)
+        {
+            if(model != null && model.Amount>0)
+            {
+                if (!string.IsNullOrEmpty(model.Ids))
+                {
+                     
+                    string[] ids=model.Ids.Split(',');
+                    List<Book_Property_Amount> arr = new List<Book_Property_Amount>();
+                    foreach (string id in ids)
+                    {
+                        Book_Property_Amount item = new Book_Property_Amount();
+                        item.Amount = Convert.ToInt32(model.Amount);
+                        item.BookId = Convert.ToInt32(id.Split('-')[0]);
+                        item.BookPropertyId = Convert.ToInt32(id.Split('-')[1]);
+                        arr.Add(item);
+                    }
+                    return BusinessHandlerStock.UpdateStock(arr);
+                }
+            }
+            return false;
         }
     }
 }

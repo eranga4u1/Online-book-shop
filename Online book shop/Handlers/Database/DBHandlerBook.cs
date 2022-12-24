@@ -1010,7 +1010,7 @@ namespace Online_book_shop.Handlers.Database
                                             ItemType=a.ItemType,
                                             Property =ctx.BookProperties.Where(x=> x.BookId==a.Id).ToList(),
                                             Categories= (from r in (from t in ctx.Book_Categories
-                                                         where t.BookId == a.Id && !t.isDeleted select t)                                                         join
+                                                          where t.BookId == a.Id && !t.isDeleted select t)                                                         join
                                                              c in ctx.Categories on r.CategoryId equals c.Id
                                                          select c).ToList(),
                                             FrontCover= (from x in ( from s in ctx.BookProperties
@@ -1600,6 +1600,82 @@ namespace Online_book_shop.Handlers.Database
                 
             }
             return false;
+        }
+
+        public static List<BookVMTile> GetPreOrderBooksFromStoredProcedures()
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                IEnumerable<BookVMTile> books = ctx.Database.SqlQuery <BookVMTile>("exec sp_GetPreOrderBooks").ToList();
+                if(books != null)
+                {
+                 foreach(var b in books)
+                    {
+                        b.Property= ctx.Database.SqlQuery<BookProperties>(String.Format("exec sp_GetBookProperties {0}", b.Id)).ToList();
+                        b.Categories= ctx.Database.SqlQuery<Category>(String.Format("exec sp_GetBookCategories {0}", b.Id)).ToList();
+                        b.FrontCover = ctx.Database.SqlQuery<Media>(String.Format("exec sp_GetBookFrontCover {0}", b.Id)).FirstOrDefault();
+                    }
+                    return books.ToList();
+                }
+                return null;
+            }
+        }
+
+        public static List<BookVMTile> GetLatestBooksFromStoredProcedures()
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                IEnumerable<BookVMTile> books = ctx.Database.SqlQuery<BookVMTile>("sp_GetLatestBooks").ToList();
+                if (books != null)
+                {
+                    foreach (var b in books)
+                    {
+                        b.Property = ctx.Database.SqlQuery<BookProperties>(String.Format("exec sp_GetBookProperties {0}", b.Id)).ToList();
+                        b.Categories = ctx.Database.SqlQuery<Category>(String.Format("exec sp_GetBookCategories {0}", b.Id)).ToList();
+                        b.FrontCover = ctx.Database.SqlQuery<Media>(String.Format("exec sp_GetBookFrontCover {0}", b.Id)).FirstOrDefault();
+                    }
+                    return books.ToList();
+                }
+                return null;
+            }
+        }
+
+        public static List<BookVMTile> GetBookPacksFromStoredProcedures()
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                IEnumerable<BookVMTile> books = ctx.Database.SqlQuery<BookVMTile>("sp_GetBookPacks").ToList();
+                if (books != null)
+                {
+                    foreach (var b in books)
+                    {
+                        b.Property = ctx.Database.SqlQuery<BookProperties>(String.Format("exec sp_GetBookProperties {0}", b.Id)).ToList();
+                        b.Categories = ctx.Database.SqlQuery<Category>(String.Format("exec sp_GetBookCategories {0}", b.Id)).ToList();
+                        b.FrontCover = ctx.Database.SqlQuery<Media>(String.Format("exec sp_GetBookFrontCover {0}", b.Id)).FirstOrDefault();
+                    }
+                    return books.ToList();
+                }
+                return null;
+            }
+        }
+
+        public static List<BookVMTile> GetBestSellingBooksFromStoredProcedures()
+        {
+            using (var ctx = new ApplicationDbContext())
+            {
+                IEnumerable<BookVMTile> books = ctx.Database.SqlQuery<BookVMTile>("sp_BestSellingBooks").ToList();
+                if (books != null)
+                {
+                    foreach (var b in books)
+                    {
+                        b.Property = ctx.Database.SqlQuery<BookProperties>(String.Format("exec sp_GetBookProperties {0}", b.Id)).ToList();
+                        b.Categories = ctx.Database.SqlQuery<Category>(String.Format("exec sp_GetBookCategories {0}", b.Id)).ToList();
+                        b.FrontCover = ctx.Database.SqlQuery<Media>(String.Format("exec sp_GetBookFrontCover {0}", b.Id)).FirstOrDefault();
+                    }
+                    return books.ToList();
+                }
+                return null;
+            }
         }
     }
 }

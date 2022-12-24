@@ -53,5 +53,14 @@ namespace Online_book_shop.Handlers.Database
         public DbSet<VoucherUser> VoucherUsers { get; set; }
         public DbSet<EmailItem> EmailItems { get; set; }
         public DbSet<PaymentState> PaymentStatus { get; set; }
+
+        //protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<EmployeeMaster>()
+        //        .MapToStoredProcedures(s => s.Insert(u => u.HasName("InsertEmployee", "dbo"))
+        //                                        .Update(u => u.HasName("UpdateEmployee", "dbo"))
+        //                                        .Delete(u => u.HasName("DeleteEmployee", "dbo"))
+        //        );
+        //}
     }
 }

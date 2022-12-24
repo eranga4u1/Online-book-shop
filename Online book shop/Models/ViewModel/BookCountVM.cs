@@ -12,6 +12,7 @@ namespace Online_book_shop.Models.ViewModel
 
         public string BookName { get; set; }
         public string BookPropertyName { get; set; }
+        public int BookPropertyId { get; set; }
         public int AuthorId { get; set; }
         public int PublisherId { get; set; }
     }

@@ -31,6 +31,12 @@
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
         });
     });
+    $("#stock-page-search-input").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#stock-page-bookList tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
 });
 
 $('.category-check-box').change(function () {
@@ -58,6 +64,116 @@ $('.checkmark').click(function () {
     } else {
         $('#Categories').val("");
     }
+});
+$('#btn-book-stock-advanced-filter').on('click', function (e) {
+    var selected_author = $('#authors').val();
+    var selected_publishers = $('#publisher').val();
+    var selected_stock_status = $('#stock_status').val();
+    var url = '/';
+    if (selected_author == 0 && selected_publishers == 0 && selected_stock_status == 0) {
+        url = '/admin/stock';
+    } else {
+        url = '/admin/stock?author=' + selected_author + '&publisher=' + selected_publishers + '&stockstatus=' + selected_stock_status;
+    }
+    window.location.replace(url);
+});
+$('#btn-book-stock-excel-download').on('click', function (e) {
+    var selected_author = $('#authors').val();
+    var selected_publishers = $('#publisher').val();
+    var selected_stock_status = $('#stock_status').val();
+    var url = '/';
+    if (selected_author == 0 && selected_publishers == 0 && selected_stock_status == 0) {
+        url = '/Admin/Report/DownloadStockExcell';
+    } else {
+        url = '/Admin/Report/DownloadStockExcell?author=' + selected_author + '&publisher=' + selected_publishers + '&stockstatus=' + selected_stock_status;
+    }
+    window.location.replace(url);
+});
+$('.btn-book-count-update').on('click', function (e) {
+    var book_id = $(this).attr("data-book-id");
+    var prop_id = $(this).attr("data-prop-id");
+    var amount = $('#book-count-' + book_id + '-' + prop_id).val();
+    bootbox.confirm({
+        message: "Are you sure you want update selected item amount by " + amount + "?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+              
+
+                if (amount != null && amount > 0) {
+                    var collection = book_id + '-' + prop_id;
+                    var url = '/Admin/Stock/bulkbookcountupdate';
+                    var model = {
+                        "Amount": amount,
+                        "Ids": collection
+                    };
+                    var url = "/Admin/Stock/UpdateBookStock";
+                    $.post(url, model)
+                        .done(function (data) {
+                            location.reload();
+                        })
+                        .fail(function (data) {
+                            console.log(data);
+                        });
+                } else {
+                    bootbox.alert("You have not selected any book for update");
+                }
+            }
+        }
+    });
+});
+$('.update-bulk-amount').on('click', function () {
+    var selectedbooks = $('.bulk-edit-d-book-count:checked');
+    var vals = [];
+    var collection = "";
+    var amount = $('#bulk_update_amount').val();
+    bootbox.confirm({
+        message: "Are you sure you want update selected items amount by " + amount +"?",
+        buttons: {
+            confirm: {
+                label: 'Yes',
+                className: 'btn-success'
+            },
+            cancel: {
+                label: 'No',
+                className: 'btn-danger'
+            }
+        },
+        callback: function (result) {
+            if (result) {
+                $.each(selectedbooks, function (key, value) {
+                    vals.push($(value).attr('data-book-id'));
+                });
+                if (vals != null && vals.length > 0) {
+                    collection = vals.join();
+                    var url = '/Admin/Stock/bulkbookcountupdate';
+                    var model = {
+                        "Amount": amount,
+                        "Ids": collection
+                    };
+                    var url = "/Admin/Stock/UpdateBookStock";
+                    $.post(url, model)
+                        .done(function (data) {
+                            location.reload();
+                        })
+                        .fail(function (data) {
+                            console.log(data);
+                        });
+                } else {
+                    bootbox.alert("You have not selected any book for update");
+                }
+            }
+        }
+    });    
 });
 $('.refresh-publishers').click(function () {
     var selected_publisher = $('#PublisherId').val();

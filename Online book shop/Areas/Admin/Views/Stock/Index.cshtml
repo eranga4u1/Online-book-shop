@@ -39,7 +39,7 @@
 <h2>Stock Management</h2>
 <div class="col-lg-12">
     <div class="col-lg-12" style="background-color: antiquewhite;margin:10px;">
-        <div class="card padding-top-bottom" >
+        <div class="card padding-top-bottom">
             <div class="card-header py-3 padding-top-bottom">
                 <h2 class="my-0 fw-normal">Summary Of Stocks</h2>
             </div>
@@ -163,7 +163,7 @@
                             <td></td>
                             <td></td>
                             <td>
-                                <button type="submit" class="btn btn-info float-right">Search</button>
+                                <button id="btn-book-stock-advanced-filter" type="submit" class="btn btn-info float-right ">Search</button>
                             </td>
                         </tr>
                     </tbody>
@@ -171,66 +171,116 @@
             </div>
         </div>
     </div>
-    
+
     <hr />
-    <div class="col-lg-12 margin-top-5px" style="background-color: antiquewhite; margin: 10px;">
-        <div class="card padding-top-bottom" >
+    <div class="col-lg-12 margin-top-5px" style="background-color: #90fac2; margin: 10px;">
+        <div class="card padding-top-bottom">
             <div class="card-header py-3 padding-top-bottom">
                 <h2 class="my-0 fw-normal">Bulk Stock Update</h2>
             </div>
             <div class="card-body" style="background-color: antiquewhite;">
                 @*<div class="margin-bottom-25">
-                    <div class="col-lg-6">
-                        Update Stock Status To
-                    </div>
-                    <div class="select col-lg-4">
-                        <select id="stock_status" class="form-control" name="PublisherId">
-                            <option @(SelectedStockStatusId == 0 ? "selected" : "") value="0">All</option>
-                            <option @(SelectedStockStatusId == 1 ? "selected" : "") value="1">Available</option>
-                            <option @(SelectedStockStatusId == 2 ? "selected" : "") value="2">Red Line</option>
-                            <option @(SelectedStockStatusId == 3 ? "selected" : "") value="3">Out Of Stock</option>
-                        </select>
-                    </div>
-                </div>*@
+                        <div class="col-lg-6">
+                            Update Stock Status To
+                        </div>
+                        <div class="select col-lg-4">
+                            <select id="stock_status" class="form-control" name="PublisherId">
+                                <option @(SelectedStockStatusId == 0 ? "selected" : "") value="0">All</option>
+                                <option @(SelectedStockStatusId == 1 ? "selected" : "") value="1">Available</option>
+                                <option @(SelectedStockStatusId == 2 ? "selected" : "") value="2">Red Line</option>
+                                <option @(SelectedStockStatusId == 3 ? "selected" : "") value="3">Out Of Stock</option>
+                            </select>
+                        </div>
+                    </div>*@
                 <div class="bg-info  margin-bottom-25">
                     <div class="col-lg-6">
                         Update Item Count To
                     </div>
                     <div class=" col-lg-4">
-                        <input type="number" min="0" max="1000" class="form-control" id="bulk_update_amount" />                   
+                        <input type="number" min="0"  class="form-control" id="bulk_update_amount" />
                     </div>
-                    <button type="submit" class="btn btn-success float-right">Update</button>
+                    <input type="button" class="btn btn-success float-right update-bulk-amount" value="Update"/>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <hr />
-    <table>
-        <thead>
-            <tr>
-                <td></td>
-                <td>Book name</td>
-                <td>Property name</td>
-                <td>Remaining count</td>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="col-lg-12 margin-top-5px" style="background-color: antiquewhite; margin: 10px; ">
+        <input class="form-control float-right" id="stock-page-search-input" type="text" placeholder="Search..">       
+        <br>
+        <table class="table table-bordered table-striped" style="background-color:white">
+            <thead>
+                <tr>
+                    <th>Book Name</th>
+                    <th>Property Name</th>
+                    <th>Availability</th>
+                    <th>Stock <strong>^</strong></th>
+                    <th>Operation  <span style="cursor:pointer;font-size:18px" id="btn-book-stock-excel-download"  class="text-info float-right"><span>Export to EXCEL</span></span></th>
+                </tr>
+            </thead>
+            <tbody id="stock-page-bookList">
+                @if (list != null)
+                {
+                    foreach (BookCountVM s in list)
+                    {
+                        <tr>
+                            <td>
+                                <input style="width:18px; height:18px;" class="form-check-input bulk-edit-d-book-count" type="checkbox" data-book-id="@s.BookId-@s.BookPropertyId">
+                                @if (s.Count <= 5)
+                                {
+                                    <span class="text-danger"> @s.BookName</span>
+                                }
+                                else
+                                {
+                                    <span > @s.BookName</span>
+                                }
+                            </td>
+                            <td>@s.BookPropertyName</td>
+                            <td style="">
+                                <button class="@(s.Count <= 0?"btn-danger":"btn-success") btn btn-block">
+                                    @(s.Count <= 0?"Out Of Stock":"In Stock")
+                                </button>
+                            </td>
+                            <td>@s.Count</td>
+                            <td>
+                                <input id="book-count-@s.BookId-@s.BookPropertyId" min="0" type="number" />
+                                <input data-book-id="@s.BookId" data-prop-id="@s.BookPropertyId"  type="button" class="btn btn-xs btn-success btn-book-count-update" value="Update" />
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        @*<ul style="margin:10px" id="stock-page-bookList">
             @if (list != null)
             {
                 foreach (BookCountVM s in list)
                 {
-                    <tr>
-                        <td></td>
-                        <td>@s.BookName</td>
-                        <td>@s.BookPropertyName</td>
-                        <td>@s.Count</td>
-                    </tr>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <input style="width:18px; height:18px;" class="form-check-input bulk-edit-d-book-count" type="checkbox" data-book-id="@s.BookId-@s.BookPropertyId">
+                        <span style="font-size:24px;">@s.BookName (@s.BookPropertyName)</span>
+                        <input class="float-left" type="number" />
+                        <input type="button" class="float-left btn btn-sm btn-warning" value="Update" />
+                        <span style="font-size:32px;" class="badge badge-primary badge-pill">@s.Count</span>
+                    </li>
                 }
 
             }
+        </ul>*@
+        @*<div class="col-lg-12 align-center">
+            <ul class="pagination float-right">
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">4</a></li>
+                <li><a href="#">5</a></li>
+            </ul>
+        </div>*@
 
-        </tbody>
-    </table>
+    </div>
+
+    
 </div>
+
 

@@ -37,7 +37,7 @@ namespace Online_book_shop.Handlers.Notifications
         {
             String[] paras = new String[2];
             paras[0] = user.Email;
-            paras[1] = "http://musespublishers.com/Invoice/Find?uid="+order.UId;
+            paras[1] = "http://musesbooks.com/Invoice/Find?uid="+order.UId;
             string content = EmailHandler.SetEmailParameter("Invoice.html", paras);
             return (EmailHandler.Email(EmailHandler.SetEmailParameter("Invoice.html", paras), "noreply@musesbooks.com", user.Email, "Muses Books : Invoice", "ORDER CONFIRMED: MusesBooks.com Invoice for Order no. "+ order.UId) == "Done")?true:false;
             //return EmailHandler.SendMailWithAttachment(content, "noreply@musesbooks.com", user.Email, "Muses Books : Invoice", "\\Content\\UploadFiles\\Invoices", "Invoice_" + order.UId + "_" + order.CartId + ".pdf") == "Done" ? true : false;

@@ -18,5 +18,10 @@ namespace Online_book_shop.Handlers.Business
         {
             return DBHandlerStockEntry.GetBookStockDetails(authorId, publisherId, stocktype, page, itemsperpage);
         }
+
+        public static bool UpdateStock(List<Book_Property_Amount> arr)
+        {
+            return DBHandlerStockEntry.UpdateStock(arr);
+        }
     }
 }

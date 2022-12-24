@@ -4,6 +4,7 @@ using Online_book_shop.Models;
 using Online_book_shop.Models.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using static iTextSharp.text.pdf.AcroFields;
@@ -135,6 +136,7 @@ namespace Online_book_shop.Handlers.Database
                                     Count = b.NumberOfCopies,
                                     BookName=a.Title,
                                     BookPropertyName=b.Title,
+                                    BookPropertyId=b.Id,
                                     AuthorId=a.AuthorId,
                                     PublisherId=a.PublisherId };
                     List<BookCountVM> filtered = new List<BookCountVM>();
@@ -160,7 +162,7 @@ namespace Online_book_shop.Handlers.Database
                     {
                         if (stocktype == 0)
                         {
-                            return filtered.Where(x => x.Count > 0).Skip((page-1)* itemsperpage).Take(itemsperpage).ToList();
+                            return filtered.Where(x => x.Count >= 0).Skip((page-1)* itemsperpage).Take(itemsperpage).ToList();
                         }
                         else if (stocktype == 1)
                         {
@@ -175,7 +177,7 @@ namespace Online_book_shop.Handlers.Database
                             return filtered.Where(x => x.Count < 1).Skip((page - 1) * itemsperpage).Take(itemsperpage).ToList();
                         }
                     }
-                    return filtered;
+                    return filtered.OrderBy(x=> x.BookName).ToList();
                 }
             }
             catch(Exception ex)
@@ -183,6 +185,30 @@ namespace Online_book_shop.Handlers.Database
 
             }
             return null;
+        }
+
+        internal static bool UpdateStock(List<Book_Property_Amount> arr)
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    foreach (var item in arr)
+                    {
+                        var s = ctx.BookProperties.Where(x => x.Id == item.BookPropertyId && x.BookId == item.BookId).FirstOrDefault();
+                        if(s != null)
+                        {
+                            s.NumberOfCopies = s.NumberOfCopies + item.Amount;
+                            BusinessHandlerStockEntry.Update(item.BookId, item.Amount, item.BookPropertyId, StockEntryOperation.In_Admin_Updated);
+                        }
+                    }
+                    ctx.SaveChanges();
+                    return true;
+                }
+            }catch(Exception ex)
+            {
+                return false;
+            }
         }
     }
 }

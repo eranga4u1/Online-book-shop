@@ -734,8 +734,10 @@
     <Compile Include="Models\ViewModel\BookPrice.cs" />
     <Compile Include="Models\ViewModel\BookPromotionVM.cs" />
     <Compile Include="Models\ViewModel\BookStat.cs" />
+    <Compile Include="Models\ViewModel\BookStockVM.cs" />
     <Compile Include="Models\ViewModel\BookVM.cs" />
     <Compile Include="Models\ViewModel\BookVMTile.cs" />
+    <Compile Include="Models\ViewModel\Book_Property_Amount.cs" />
     <Compile Include="Models\ViewModel\ChangeBookPropertyVM.cs" />
     <Compile Include="Models\ViewModel\Charts.cs" />
     <Compile Include="Models\ViewModel\ContactNumber.cs" />
