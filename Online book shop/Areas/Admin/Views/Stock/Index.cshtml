@@ -1,5 +1,7 @@
 ﻿@using Online_book_shop.Models
 @using Online_book_shop.Models.ViewModel;
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 @{
     ViewBag.Title = "Stock Management";
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
@@ -20,11 +22,11 @@
     }
     if (!string.IsNullOrEmpty(Request.QueryString["publisher"]))
     {
-        SelectedPublisherId= int.Parse(Request.QueryString["publisher"]);
+        SelectedPublisherId = int.Parse(Request.QueryString["publisher"]);
     }
     if (!string.IsNullOrEmpty(Request.QueryString["stockstatus"]))
     {
-        SelectedStockStatusId= int.Parse(Request.QueryString["stockstatus"]);
+        SelectedStockStatusId = int.Parse(Request.QueryString["stockstatus"]);
     }
     if (!string.IsNullOrEmpty(Request.QueryString["page"]))
     {
@@ -197,9 +199,9 @@
                         Update Item Count To
                     </div>
                     <div class=" col-lg-4">
-                        <input type="number" min="0"  class="form-control" id="bulk_update_amount" />
+                        <input type="number" min="0" class="form-control" id="bulk_update_amount" />
                     </div>
-                    <input type="button" class="btn btn-success float-right update-bulk-amount" value="Update"/>
+                    <input type="button" class="btn btn-success float-right update-bulk-amount" value="Update" />
                 </div>
             </div>
         </div>
@@ -207,16 +209,27 @@
 
     <hr />
     <div class="col-lg-12 margin-top-5px" style="background-color: antiquewhite; margin: 10px; ">
-        <input class="form-control float-right" id="stock-page-search-input" type="text" placeholder="Search..">       
+        <input class="form-control float-right" id="stock-page-search-input" type="text" placeholder="Search..">
         <br>
-        <table class="table table-bordered table-striped" style="background-color:white">
+        <table id="tbl-stock-page-bookList" class="table table-bordered table-striped" style="background-color:white">
             <thead>
                 <tr>
                     <th>Book Name</th>
                     <th>Property Name</th>
                     <th>Availability</th>
-                    <th>Stock <strong>^</strong></th>
-                    <th>Operation  <span style="cursor:pointer;font-size:18px" id="btn-book-stock-excel-download"  class="text-info float-right"><span>Export to EXCEL</span></span></th>
+                    <th>
+                        Stock
+                        @if (Request.QueryString["order"] != null && Request.QueryString["order"] == "a")
+                        {
+                            <i id="sort-icon-stock" class="fa fa-sort-amount-desc" style="font-size:24px"></i>
+                        }
+                        else
+                        {
+                            <i id="sort-icon-stock" class="fa fa-sort-amount-asc" style="font-size:24px"></i>
+                        }
+
+                    </th>
+                    <th>Operation  <span style="cursor:pointer;font-size:18px" id="btn-book-stock-excel-download" class="text-info float-right"><span>Export to EXCEL</span></span></th>
                 </tr>
             </thead>
             <tbody id="stock-page-bookList">
@@ -233,7 +246,7 @@
                                 }
                                 else
                                 {
-                                    <span > @s.BookName</span>
+                                    <span> @s.BookName</span>
                                 }
                             </td>
                             <td>@s.BookPropertyName</td>
@@ -245,42 +258,46 @@
                             <td>@s.Count</td>
                             <td>
                                 <input id="book-count-@s.BookId-@s.BookPropertyId" min="0" type="number" />
-                                <input data-book-id="@s.BookId" data-prop-id="@s.BookPropertyId"  type="button" class="btn btn-xs btn-success btn-book-count-update" value="Update" />
+                                <input data-book-id="@s.BookId" data-prop-id="@s.BookPropertyId" type="button" class="btn btn-xs btn-success btn-book-count-update" value="Update" />
                             </td>
                         </tr>
                     }
                 }
             </tbody>
         </table>
+        <div id="loader-icon" class="text-center display-none">
+            <img src="~/Content/SiteImages/wating.gif" />
+        </div>
         @*<ul style="margin:10px" id="stock-page-bookList">
-            @if (list != null)
-            {
-                foreach (BookCountVM s in list)
+                @if (list != null)
                 {
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <input style="width:18px; height:18px;" class="form-check-input bulk-edit-d-book-count" type="checkbox" data-book-id="@s.BookId-@s.BookPropertyId">
-                        <span style="font-size:24px;">@s.BookName (@s.BookPropertyName)</span>
-                        <input class="float-left" type="number" />
-                        <input type="button" class="float-left btn btn-sm btn-warning" value="Update" />
-                        <span style="font-size:32px;" class="badge badge-primary badge-pill">@s.Count</span>
-                    </li>
-                }
+                    foreach (BookCountVM s in list)
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <input style="width:18px; height:18px;" class="form-check-input bulk-edit-d-book-count" type="checkbox" data-book-id="@s.BookId-@s.BookPropertyId">
+                            <span style="font-size:24px;">@s.BookName (@s.BookPropertyName)</span>
+                            <input class="float-left" type="number" />
+                            <input type="button" class="float-left btn btn-sm btn-warning" value="Update" />
+                            <span style="font-size:32px;" class="badge badge-primary badge-pill">@s.Count</span>
+                        </li>
+                    }
 
-            }
-        </ul>*@
+                }
+            </ul>*@
         @*<div class="col-lg-12 align-center">
-            <ul class="pagination float-right">
-                <li><a href="#">1</a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-            </ul>
-        </div>*@
+                <ul class="pagination float-right">
+                    <li><a href="#">1</a></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                </ul>
+            </div>*@
 
     </div>
 
-    
+
 </div>
+<div id="loader"></div>
 
 

@@ -38,7 +38,20 @@ namespace Online_book_shop.Areas.Admin.Controllers
             {
                 ItemsPerPage = int.Parse(Request.QueryString["ItemsPerPage"]);
             }
-            ViewBag.FilteredBookStock = BusinessHandlerStock.GetBookStockDetails(SelectedAuthorId,SelectedPublisherId,SelectedStockStatusId,PageId,ItemsPerPage);
+
+            List<BookCountVM> filterRslt = BusinessHandlerStock.GetBookStockDetails(SelectedAuthorId,SelectedPublisherId,SelectedStockStatusId,PageId,ItemsPerPage);
+            if(filterRslt !=null && !string.IsNullOrEmpty(Request.QueryString["order"]) && Request.QueryString["order"] == "a")
+            {
+                ViewBag.FilteredBookStock = filterRslt.OrderByDescending(x => x.Count).ToList(); 
+            }
+            else if (filterRslt != null && !string.IsNullOrEmpty(Request.QueryString["order"]) && Request.QueryString["order"] == "a")
+            {
+                ViewBag.FilteredBookStock = filterRslt.OrderBy(x => x.Count).ToList(); 
+            }
+            else {
+                ViewBag.FilteredBookStock = filterRslt;
+            }
+            
             var summary = BusinessHandlerStock.GetStockVM();
             ViewBag.Summary = summary;
             ViewBag.Authers =BusinessHandlerAuthor.GetAuthors();
