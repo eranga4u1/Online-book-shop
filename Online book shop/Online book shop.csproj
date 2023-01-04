@@ -344,6 +344,7 @@
     <Compile Include="Handlers\Business\BusinessHandlerMedia.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerMPLog.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerOrder.cs" />
+    <Compile Include="Handlers\Business\BusinessHandlerPayment.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerPromotion.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerPropertyType.cs" />
     <Compile Include="Handlers\Business\BusinessHandlerPublisher.cs" />
@@ -393,6 +394,7 @@
     <Compile Include="Handlers\Database\DBHandlerVoucher.cs" />
     <Compile Include="Handlers\Database\DBHandlerWishListItem.cs" />
     <Compile Include="Handlers\Email\EmailHandler.cs" />
+    <Compile Include="Handlers\Helper\CryptoHelper.cs" />
     <Compile Include="Handlers\Helper\HTMLHelper.cs" />
     <Compile Include="Handlers\Helper\ImageResult.cs" />
     <Compile Include="Handlers\Helper\LevenshteinDistance.cs" />
@@ -756,6 +758,7 @@
     <Compile Include="Models\ViewModel\OrderStatus.cs" />
     <Compile Include="Models\ViewModel\Pager.cs" />
     <Compile Include="Models\ViewModel\PageResults.cs" />
+    <Compile Include="Models\ViewModel\PayHereRequest.cs" />
     <Compile Include="Models\ViewModel\Report\BookStock.cs" />
     <Compile Include="Models\ViewModel\Report\DeliveryReport.cs" />
     <Compile Include="Models\ViewModel\Report\WebOrder.cs" />
@@ -1306,6 +1309,7 @@
     <Content Include="Views\BookPacks\Index.cshtml" />
     <Content Include="Views\BookProfile\AllBooks.cshtml" />
     <Content Include="Views\Books\Index.cshtml" />
+    <Content Include="Views\Error\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

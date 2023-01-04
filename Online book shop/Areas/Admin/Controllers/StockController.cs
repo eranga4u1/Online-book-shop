@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace Online_book_shop.Areas.Admin.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class StockController : Controller
     {
         // GET: Admin/Stock

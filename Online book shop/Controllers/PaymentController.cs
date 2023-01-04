@@ -77,5 +77,10 @@ namespace Online_book_shop.Controllers
             
             return View();
         }
+
+        public ActionResult PaymentRequest()
+        {
+            return Redirect("");
+        }
     }
 }
