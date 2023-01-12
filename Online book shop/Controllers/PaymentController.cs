@@ -2,6 +2,7 @@
 using Online_book_shop.Handlers.Invoice;
 using Online_book_shop.Handlers.Notifications;
 using Online_book_shop.Models;
+using Online_book_shop.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,8 +79,12 @@ namespace Online_book_shop.Controllers
             return View();
         }
 
-        public ActionResult PaymentRequest()
+        [HttpPost]
+        public ActionResult PaymentRequest(PayHereRequest model)
         {
+            BusinessHandlerPayment b = new BusinessHandlerPayment();
+            b.PaymentRequestAsync(model);
+            //BusinessHandlerPayment.PaymentRequestAsync(model).Wait();
             return Redirect("");
         }
     }

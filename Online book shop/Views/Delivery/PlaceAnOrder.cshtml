@@ -154,77 +154,82 @@
             </table>
             @{
                 string domain = Request.Url.ToString().Replace(Request.Url.AbsolutePath, "");
-                string formSubmitUrl = PayHereUrl;
+                string formSubmitUrl = PayHereUrl;//"/Payment/PaymentRequest";//
                 if (remainingAmount < 0 || remainingAmount == 0)
                 {
                     formSubmitUrl = "/Delivery/OrderConfirmation?Ref=" + order.UId;
                 }
+                
+                string payhereSecret = CryptoHelper.CreateMD5(System.Configuration.ConfigurationManager.AppSettings["MerchantSecret"]).ToUpper();
+                string hash_1 = string.Format("{0}{1}{2}{3}{4}", MerchantId, order.UId, AmountTobeCollected, "LKR", payhereSecret);
+                string hash = CryptoHelper.CreateMD5(hash_1).ToUpper();
             }
-            <form id="frm-payment-details" method="post" action="@formSubmitUrl">
-                <input type="hidden" name="merchant_id" value="@MerchantId">    <!-- Replace your Merchant ID -->
-                <input type="hidden" name="return_url" value="@domain/Payment/PaymentResponse?state=done">
-                <input type="hidden" name="cancel_url" value="@domain/Payment/PaymentResponse?state=cancel">
-                <input type="hidden" name="notify_url" value="@domain/Payment/PaymentResponse?state=notify">
-                <input type="hidden" name="order_id" value="@order.UId">
-                <input type="hidden" name="items" value="Online Muses Book Store : @order.UId"><br>
-                <input type="hidden" name="currency" value="LKR">
-                <input type="hidden" name="amount" value="@AmountTobeCollected">
+        <form id="frm-payment-details" method="post" action="@formSubmitUrl">
+            <input type="hidden" name="merchant_id" value="@MerchantId">    <!-- Replace your Merchant ID -->
+            <input type="hidden" name="return_url" value="@domain/Payment/PaymentResponse?state=done">
+            <input type="hidden" name="cancel_url" value="@domain/Payment/PaymentResponse?state=cancel">
+            <input type="hidden" name="notify_url" value="@domain/Payment/PaymentResponse?state=notify">
+            <input type="hidden" name="order_id" value="@order.UId">
+            <input type="hidden" name="items" value="Online Muses Book Store : @order.UId"><br>
+            <input type="hidden" name="currency" value="LKR">
+            <input type="hidden" name="amount" value="@AmountTobeCollected">
+            <input type="hidden" name="hash" value="@hash">
 
 
-                <div class="col-lg-12">
-                    <div class="col-lg-4">
-                        <h3>Billing Address</h3>
-                        @*<div>@billing_address.FirstName @billing_address.LastName</div>*@
-                        <div>@order.BillingAddress</div>
-                        <div>@order.EmailAddress</div>
-                        <div>@billing_address.ContactNumber1</div>
-                        <div>@billing_address.ContactNumber2</div>
-                    </div>
-                    <div class="col-lg-4">
-                        <h3>Deliver Address</h3>
-                        <div>@delivery_address.FirstName @delivery_address.LastName</div>
-                        <div>@order.DeliveryAddress</div>
-                        <div>@delivery_address.EmailAddress</div>
-                        <div>@delivery_address.ContactNumber1</div>
-                        <div>@delivery_address.ContactNumber2</div>
-                    </div>
-                    <div class="col-lg-4">
-
-                    </div>
+            <div class="col-lg-12">
+                <div class="col-lg-4">
+                    <h3>Billing Address</h3>
+                    @*<div>@billing_address.FirstName @billing_address.LastName</div>*@
+                    <div>@order.BillingAddress</div>
+                    <div>@order.EmailAddress</div>
+                    <div>@billing_address.ContactNumber1</div>
+                    <div>@billing_address.ContactNumber2</div>
                 </div>
-                @if (!string.IsNullOrEmpty(paymentObj.Message))
-                {
-                    <div class="col-lg-12">
-                        <div class="alert alert-info bg-info h5" role="alert">
-                            <strong>Payment:</strong> @Html.Raw(paymentObj.Message.Replace("\n", "<br />"))
-                        </div>
-                    </div>
-                }
-                <div class="col-lg-12">
-
-                    <div class="form-check float-right margin-top-5px">
-                        <input class="form-check-input" type="checkbox" value="" id="flexCheckAgreed">
-                        <label class="form-check-label" for="flexCheckAgreed">
-                            <strong>
-                                I have read and agreed to the terms and conditions and privacy
-                                policy.
-                            </strong>
-                        </label>
-                    </div>
+                <div class="col-lg-4">
+                    <h3>Deliver Address</h3>
+                    <div>@delivery_address.FirstName @delivery_address.LastName</div>
+                    <div>@order.DeliveryAddress</div>
+                    <div>@delivery_address.EmailAddress</div>
+                    <div>@delivery_address.ContactNumber1</div>
+                    <div>@delivery_address.ContactNumber2</div>
+                </div>
+                <div class="col-lg-4">
 
                 </div>
+            </div>
+            @if (!string.IsNullOrEmpty(paymentObj.Message))
+            {
                 <div class="col-lg-12">
-                    <a href="/Delivery?order=@order.UId"><strong class="text-danger font-weight-bolder link-bold-text-danger"><i class="fas fa-backward"></i> Go Back</strong></a>
-                    <input id="cp-confirm-btn" data-order-id="@order.Id" disabled class="btn float-right po-confirm-btn" type="submit" value="Pay">
+                    <div class="alert alert-info bg-info h5" role="alert">
+                        <strong>Payment:</strong> @Html.Raw(paymentObj.Message.Replace("\n", "<br />"))
+                    </div>
                 </div>
-                <input type="hidden" name="first_name" value="@billing_address.FirstName">
-                <input type="hidden" name="last_name" value="@billing_address.LastName"><br>
-                <input type="hidden" name="email" value="@billing_address.EmailAddress">
-                <input type="hidden" name="phone" value="@billing_address.ContactNumber1"><br>
-                <input type="hidden" name="address" value="@order.BillingAddress">
-                <input type="hidden" name="city" value="@billing_address.City">
-                <input type="hidden" name="country" value="@billing_address.Country">
-            </form>
+            }
+            <div class="col-lg-12">
+
+                <div class="form-check float-right margin-top-5px">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckAgreed">
+                    <label class="form-check-label" for="flexCheckAgreed">
+                        <strong>
+                            I have read and agreed to the terms and conditions and privacy
+                            policy.
+                        </strong>
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-lg-12">
+                <a href="/Delivery?order=@order.UId"><strong class="text-danger font-weight-bolder link-bold-text-danger"><i class="fas fa-backward"></i> Go Back</strong></a>
+                <input id="cp-confirm-btn" data-order-id="@order.Id" disabled class="btn float-right po-confirm-btn" type="submit" value="Pay">
+            </div>
+            <input type="hidden" name="first_name" value="@billing_address.FirstName">
+            <input type="hidden" name="last_name" value="@billing_address.LastName"><br>
+            <input type="hidden" name="email" value="@billing_address.EmailAddress">
+            <input type="hidden" name="phone" value="@billing_address.ContactNumber1"><br>
+            <input type="hidden" name="address" value="@order.BillingAddress">
+            <input type="hidden" name="city" value="@billing_address.City">
+            <input type="hidden" name="country" value="@billing_address.Country">
+        </form>
 
 
 
