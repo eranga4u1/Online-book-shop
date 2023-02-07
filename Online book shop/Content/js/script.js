@@ -291,11 +291,7 @@ var serach = {
             if (data.length > 0) {
               $.each(data, function(key, value) {
                 _html +=
-                  "<span><a href='" +
-                  value.URL +
-                  "'/>" +
-                  value.Title +
-                  "</a></span>";
+                    "<a href='" + value.URL + "'/><span>" + value.Title +"</span></a>";
               });
               $(".search-sugges")
                 .empty()

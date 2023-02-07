@@ -291,12 +291,8 @@ var serach = {
           success: function(data) {
             if (data.length > 0) {
               $.each(data, function(key, value) {
-                _html +=
-                  "<span><a href='" +
-                  value.URL +
-                  "'/>" +
-                  value.Title +
-                  "</a></span>";
+                  _html +=
+                      "<a href='" + value.URL + "'/><span>" + value.Title + "</span></a>";
               });
               $(".search-sugges").append(_html);
             } else {
