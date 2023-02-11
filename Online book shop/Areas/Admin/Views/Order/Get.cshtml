@@ -126,22 +126,25 @@
 
                             @if (Model.PaymentMethod == 0)
                             {
-                <span class="badge badge-secondary">Cash On Delivery</span> }
+                                <span class="badge badge-secondary">Cash On Delivery</span> }
                             else if (Model.PaymentMethod == 1)
                             {
-                <span class="badge badge-secondary">Online Payment</span> }
+                                <span class="badge badge-secondary">Online Payment</span> }
                             else if (Model.PaymentMethod == 2)
                             {
-                <span class="badge badge-secondary">Bank Deposit</span> }
+                                <span class="badge badge-secondary">Bank Deposit</span> }
                             else if (Model.PaymentMethod == 3)
                             {
-                <span class="badge badge-secondary">Ez cash</span> }
+                                <span class="badge badge-secondary">Ez cash</span> }
                             else if (Model.PaymentMethod == 4)
                             {
-                <span class="badge badge-secondary">In Stock Payment</span> }
+                                <span class="badge badge-secondary">In Stock Payment</span> }
+                            else if (Model.PaymentMethod == 5)
+                            {
+                                <span class="badge badge-secondary">KOKO Payment</span> }
                             else
                             {
-                <span class="badge badge-secondary">@Model.PaymentMethod</span>}
+                                <span class="badge badge-secondary">@Model.PaymentMethod</span>}
                         </h5>
                     </div>
 

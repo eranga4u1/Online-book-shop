@@ -77,6 +77,14 @@ namespace Online_book_shop.Controllers
         [CaptchaValidator]
         public ActionResult SendContactUsEmail(ContactUsEmail model, bool captchaValid)
         {
+            var blockedEmailAddress = System.Configuration.ConfigurationManager.AppSettings["EmailBlockList"];
+            if (!string.IsNullOrEmpty(blockedEmailAddress)) {
+            var addresses= blockedEmailAddress.Split(',');
+                if (addresses.Contains(model.Email))
+                {
+                    return Redirect("/");
+                }
+            }
             if (ModelState.IsValid)
             {
                 string[] para = { model.FirstName + " " + model.LastName, model.Email, model.contactnumber, model.message };

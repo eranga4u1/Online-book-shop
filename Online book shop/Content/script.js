@@ -292,7 +292,7 @@ var serach = {
             if (data.length > 0) {
               $.each(data, function(key, value) {
                   _html +=
-                      "<a href='" + value.URL + "'/><span>" + value.Title + "</span></a>";
+                      "<a style='text-decoration: none;' href='" + value.URL + "'/><span style='color: black;text-decoration: none;'>" + value.Title + "</span></a>";
               });
               $(".search-sugges").append(_html);
             } else {

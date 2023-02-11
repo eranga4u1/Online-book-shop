@@ -84,7 +84,7 @@
     <form id="frm-delivery-details" action="/Delivery/PlaceAnOrder" method="post" class="deliveryform page-content">
         @if (order != null)
         {
-<input type="hidden" value="@order.UId" name="UId" />}
+        <input type="hidden" value="@order.UId" name="UId" />}
         <div class="bookcat-col @((string.IsNullOrEmpty(active_tab) || active_tab=="billing_address")?"active":"")">
             <h3 class="acordian-tab up-acordian-tab" id="up-acordian-tab-ba">Account And Billing Details</h3>
             <div class="book-overview" id="muses-deliveryform-billing">
@@ -357,36 +357,51 @@
         <input type="hidden" name="PaymentMethod" id="PaymentMethod" value="1" />
         <div class="col-lg-12">
             <div class="col-lg-6">
-                @{ if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 0).FirstOrDefault() != null)
-                                        {
-                    <div id="cod-section" class=@((order !=null && order.DeliveryMethod==(int)DeliveryTypes.Currier_Service)?"":"display-none")>
-                        <input type="radio" id="payment_methods_cod" @((order != null && order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery) ? "checked" : "") name="payment_methods" value="0">
-                        <label> Cash on delivery</label>
-                    </div> }
-                                        if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 2).FirstOrDefault() != null)
-                                        {
-                    <div>
-                        <input type="radio" id="payment_methods_bank_transfer" @((order != null && order.PaymentMethod == (int)PaymentMethods.Bank_Deposit) ? "checked" : "") name="payment_methods" value="2">
-                        <label>Bank deposit/ Online transfer</label>
-                    </div> }
-                                        if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 3).FirstOrDefault() != null)
-                                        {
-                    <div>
-                        <input type="radio" id="payment_methods_ez_cash" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.Ez_cash) ? "checked" : "") value="3">
-                        <label>EzCash</label>
-                    </div> }
-                                        if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 4).FirstOrDefault() != null)
-                                        {
-                    <div id="isp-section" class=@((order !=null && order.DeliveryMethod==(int)DeliveryTypes.In_Store_Pickup)?"":"display-none")>
-                        <input type="radio" id="payment_methods_in-store payment" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.In_store_payment) ? "checked" : "") value="4">
-                        <label>In-store payment</label>
-                    </div> }
-                                        if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 1).FirstOrDefault() != null)
-                                        {
-                    <div>
-                        <input type="radio" id="payment_methods_credit_card" name="payment_methods" @((order == null || (order != null && order.PaymentMethod == (int)PaymentMethods.Online_Payment) ? "checked" : "")) value="1">
-                        <label>Credit Debit cards</label>
-                    </div> } }
+                @{
+                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 0).FirstOrDefault() != null)
+                    {
+                        <div id="cod-section" class=@((order !=null && order.DeliveryMethod==(int)DeliveryTypes.Currier_Service)?"":"display-none")>
+                            <input type="radio" id="payment_methods_cod" @((order != null && order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery) ? "checked" : "") name="payment_methods" value="0">
+                            <label> Cash on delivery</label>
+                        </div>
+                    }
+                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 2).FirstOrDefault() != null)
+                    {
+                        <div>
+                            <input type="radio" id="payment_methods_bank_transfer" @((order != null && order.PaymentMethod == (int)PaymentMethods.Bank_Deposit) ? "checked" : "") name="payment_methods" value="2">
+                            <label>Bank deposit/ Online transfer</label>
+                        </div>
+                    }
+                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 3).FirstOrDefault() != null)
+                    {
+                        <div>
+                            <input type="radio" id="payment_methods_ez_cash" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.Ez_cash) ? "checked" : "") value="3">
+                            <label>EzCash</label>
+                        </div>
+                    }
+                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 4).FirstOrDefault() != null)
+                    {
+                        <div id="isp-section" class=@((order !=null && order.DeliveryMethod==(int)DeliveryTypes.In_Store_Pickup)?"":"display-none")>
+                            <input type="radio" id="payment_methods_in-store payment" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.In_store_payment) ? "checked" : "") value="4">
+                            <label>In-store payment</label>
+                        </div>
+                    }
+                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 1).FirstOrDefault() != null)
+                    {
+                        <div>
+                            <input type="radio" id="payment_methods_credit_card" name="payment_methods" @((order == null || (order != null && order.PaymentMethod == (int)PaymentMethods.Online_Payment) ? "checked" : "")) value="1">
+                            <label>Credit Debit cards</label>
+                        </div>
+                    }
+                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 5).FirstOrDefault() != null)
+                    {
+                        <div>
+                            <input type="radio" id="payment_methods_koko" name="payment_methods" @((order == null || (order != null && order.PaymentMethod == (int)PaymentMethods.Koko) ? "checked" : "")) value="5">
+                            <label>Buy Now Pay Later With KOKO(Installment Plan)</label>
+                        </div>
+
+                    }
+                }
 
             </div>
             <div class="col-lg-6">
@@ -402,58 +417,69 @@
 <input type="hidden" id="voucher-amount" value="@voucher.VoucherAmount" /> }
             else
             {
-<div id="payment-section" class="bookcat-col @((!string.IsNullOrEmpty(active_tab)&&active_tab=="payment_method")?"active":"")">
-    <h3 class="acordian-tab up-acordian-tab" id="up-acordian-tab-pm">Payment Methods</h3>
-    <div class="book-overview" id="muses-deliveryform-payment-methods">
-        <input type="hidden" name="PaymentMethod" id="PaymentMethod" value="1" />
-        <div class="col-lg-12">
-            <div class="col-lg-6">
-                @{ if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 0).FirstOrDefault() != null)
+                <div id="payment-section" class="bookcat-col @((!string.IsNullOrEmpty(active_tab)&&active_tab=="payment_method")?"active":"")">
+                    <h3 class="acordian-tab up-acordian-tab" id="up-acordian-tab-pm">Payment Methods</h3>
+                    <div class="book-overview" id="muses-deliveryform-payment-methods">
+                        <input type="hidden" name="PaymentMethod" id="PaymentMethod" value="1" />
+                        <div class="col-lg-12">
+                            <div class="col-lg-6">
+                                @{ if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 0).FirstOrDefault() != null)
                                     {
-                    <div id="cod-section" class=@(((order !=null && order.DeliveryMethod==(int)DeliveryTypes.Currier_Service && order.DeliveryMethod!=(int)DeliveryTypes.Postal_Service)) || order ==null?"":"display-none")>
-                        <input type="radio" id="payment_methods_cod" @((order != null && order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery) ? "checked" : "") name="payment_methods" value="0">
-                        <label> Cash on delivery</label>
-                    </div> }
+                                        <div id="cod-section" class=@(((order !=null && order.DeliveryMethod==(int)DeliveryTypes.Currier_Service && order.DeliveryMethod!=(int)DeliveryTypes.Postal_Service)) || order ==null?"":"display-none")>
+                                            <input type="radio" id="payment_methods_cod" @((order != null && order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery) ? "checked" : "") name="payment_methods" value="0">
+                                            <label> Cash on delivery</label>
+                                        </div>
+                                    }
                                     if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 2).FirstOrDefault() != null)
                                     {
-                    <div>
-                        <input type="radio" id="payment_methods_bank_transfer" @((order != null && order.PaymentMethod == (int)PaymentMethods.Bank_Deposit) ? "checked" : "") name="payment_methods" value="2">
-                        <label>Bank deposit/ Online transfer</label>
-                    </div> }
+                                        <div>
+                                            <input type="radio" id="payment_methods_bank_transfer" @((order != null && order.PaymentMethod == (int)PaymentMethods.Bank_Deposit) ? "checked" : "") name="payment_methods" value="2">
+                                            <label>Bank deposit/ Online transfer</label>
+                                        </div>
+                                    }
                                     if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 3).FirstOrDefault() != null)
                                     {
-                    <div>
-                        <input type="radio" id="payment_methods_ez_cash" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.Ez_cash) ? "checked" : "") value="3">
-                        <label>EzCash</label>
-                    </div> }
+                                        <div>
+                                            <input type="radio" id="payment_methods_ez_cash" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.Ez_cash) ? "checked" : "") value="3">
+                                            <label>EzCash</label>
+                                        </div>
+                                    }
                                     if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 4).FirstOrDefault() != null)
                                     {
-                    <div id="isp-section" class=@((order !=null && order.DeliveryMethod==(int)DeliveryTypes.In_Store_Pickup)?"":"display-none")>
-                        <input type="radio" id="payment_methods_in-store payment" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.In_store_payment) ? "checked" : "") value="4">
-                        <label>In-store payment</label>
-                    </div> }
+                                        <div id="isp-section" class=@((order !=null && order.DeliveryMethod==(int)DeliveryTypes.In_Store_Pickup)?"":"display-none")>
+                                            <input type="radio" id="payment_methods_in-store payment" name="payment_methods" @((order != null && order.PaymentMethod == (int)PaymentMethods.In_store_payment) ? "checked" : "") value="4">
+                                            <label>In-store payment</label>
+                                        </div>
+                                    }
                                     if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 1).FirstOrDefault() != null)
                                     {
-                    <div>
-                        <input type="radio" id="payment_methods_credit_card" name="payment_methods" @((order == null || (order != null && order.PaymentMethod == (int)PaymentMethods.Online_Payment) ? "checked" : "")) value="1">
-                        <label>Credit Debit cards</label>
-                    </div> } }
+                                        <div>
+                                            <input type="radio" id="payment_methods_credit_card" name="payment_methods" @((order == null || (order != null && order.PaymentMethod == (int)PaymentMethods.Online_Payment) ? "checked" : "")) value="1">
+                                            <label>Credit Debit cards</label>
+                                        </div>
+                                    }
+                                    if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 5).FirstOrDefault() != null)
+                                    {
+                                        <div>
+                                            <input type="radio" id="payment_methods_koko" name="payment_methods" @((order != null && (order != null && order.PaymentMethod == (int)PaymentMethods.Koko) ? "checked" : "")) value="5">
+                                            <label>Buy Now Pay Later With KOKO(Installment Plan)</label>
+                                        </div>
+                                    }
+                                }
 
-            </div>
-            <div class="col-lg-6">
-                <div>
-                    <label>Special Note</label>
-                    <textarea name="PaymentSpecialNote" id="payment_special_note">@(order !=null?order.PaymentSpecialNote:"")</textarea>
+                            </div>
+                            <div class="col-lg-6">
+                                <div>
+                                    <label>Special Note</label>
+                                    <textarea name="PaymentSpecialNote" id="payment_special_note">@(order !=null?order.PaymentSpecialNote:"")</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
-        </div>
-
-    </div>
-</div>
                 <input type="hidden" id="voucher-amount" value="0" />}
-
-
-        <input class="float-right" type="submit" value="Next Step">
+         <input class="float-right" type="submit" value="Next Step">
     </form>
     <div class="col-lg-12 margin-bottom-25 pop-up-content" style="display:none;" id="form-new-address" tabindex="-1" role="dialog" aria-labelledby="new address">
 

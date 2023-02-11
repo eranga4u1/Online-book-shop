@@ -87,5 +87,13 @@ namespace Online_book_shop.Controllers
             //BusinessHandlerPayment.PaymentRequestAsync(model).Wait();
             return Redirect("");
         }
+        [HttpPost]
+        public ActionResult KokoPaymentRequest(KokoRequest model)
+        {
+            BusinessHandlerPayment b = new BusinessHandlerPayment();
+            b.KokoRequest(model);
+            //BusinessHandlerPayment.PaymentRequestAsync(model).Wait();
+            return Redirect("");
+        }
     }
 }

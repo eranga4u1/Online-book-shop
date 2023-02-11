@@ -290,8 +290,8 @@ var serach = {
           success: function(data) {
             if (data.length > 0) {
               $.each(data, function(key, value) {
-                _html +=
-                    "<a href='" + value.URL + "'/><span>" + value.Title +"</span></a>";
+                  _html +=
+                      "<a style='text-decoration: none;' href='" + value.URL + "'/><span style='color: black;text-decoration: none;'>" + value.Title + "</span></a>";
               });
               $(".search-sugges")
                 .empty()

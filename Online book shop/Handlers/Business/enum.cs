@@ -66,11 +66,12 @@ namespace Online_book_shop.Handlers.Business
     }
     public enum PaymentMethods
     {
-        Cash_On_Delivery,
-        Online_Payment,
-        Bank_Deposit,
-        Ez_cash,
-        In_store_payment
+        Cash_On_Delivery=0,
+        Online_Payment=1,
+        Bank_Deposit=2,
+        Ez_cash=3,
+        In_store_payment=4,
+        Koko = 5,
     }
     public enum ObjectTypes
     {

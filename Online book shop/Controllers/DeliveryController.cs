@@ -120,6 +120,7 @@ namespace Online_book_shop.Controllers
                     ViewBag.Cart = cart;
                     ViewBag.MerchantId = System.Configuration.ConfigurationManager.AppSettings["MerchantId"];
                     ViewBag.PayHereUrl = System.Configuration.ConfigurationManager.AppSettings["PayHereUrl"];
+                    ViewBag.kokoUrl = System.Configuration.ConfigurationManager.AppSettings["KokoUrl"];
                 }
                 else
                 {
@@ -136,6 +137,14 @@ namespace Online_book_shop.Controllers
                 else if (order.PaymentMethod == (int)PaymentMethods.In_store_payment)
                 {
                     return RedirectToAction("InStorePickup", new RouteValueDictionary(new { controller = "Delivery", action = "InStorePickup", Ref = order.UId }));
+                }
+                else if(order.PaymentMethod == (int)PaymentMethods.Koko)
+                {
+                    ViewBag.Order = order;
+                    //ViewBag.SelectedCity =
+                    
+                    ViewBag.Cart = BusinessHandlerShopingCart.GetById(order != null ? order.CartId : 0);
+                    return View("KokoPayment");
                 }
                 else
                 {
@@ -198,7 +207,7 @@ namespace Online_book_shop.Controllers
                         }
                         DeliverStatus confiremedDeliverStatuses = BusinessHandlerDeliveryStatus.GetDeliverStatusByTitle("confirmed_order");
                         bool gate_1 = BusinessHandlerDelivery.ChangeDeliveryStatus(confiremedDeliverStatuses, order.Id);
-                        bool gate_2 = BusinessHandlerDelivery.ChangePaymentStatus(((order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery) || (order.PaymentMethod == (int)PaymentMethods.Bank_Deposit) || (order.PaymentMethod == (int)PaymentMethods.In_store_payment)) ? PaymentStatus.PendingPayment : PaymentStatus.Paid, order.Id);
+                        bool gate_2 = BusinessHandlerDelivery.ChangePaymentStatus(((order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery) || (order.PaymentMethod == (int)PaymentMethods.Bank_Deposit) || (order.PaymentMethod == (int)PaymentMethods.In_store_payment)) || (order.PaymentMethod==(int)PaymentMethods.Koko) ? PaymentStatus.PendingPayment : PaymentStatus.Paid, order.Id);
                         bool gate_3 = BusinessHandlerShopingCart.ChangeCartStatus(CartStatus.OrderConfirmedCart, order.CartId);
                         bool gate_4 = BusinessHandlerStockEntry.Update(cart.Items, ("Order Id" + order.Id.ToString()));
 
