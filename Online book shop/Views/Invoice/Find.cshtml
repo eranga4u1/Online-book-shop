@@ -422,17 +422,29 @@
                                     <td class="right">Rs. @cart.Discount</td>
                                 </tr>
                                 @*<tr>
-                                        <td class="left">
-                                            <strong>VAT (10%)</strong>
-                                        </td>
-                                        <td class="right">$679,76</td>
-                                    </tr>*@
+            <td class="left">
+                <strong>VAT (10%)</strong>
+            </td>
+            <td class="right">$679,76</td>
+        </tr>*@
                                 <tr>
                                     <td class="left">
                                         <strong>Delivery Charges</strong>
                                     </td>
                                     <td class="right">Rs. @order.DeliveryCharges</td>
                                 </tr>
+                                @{
+                                    if (order.PaymentMethod == (int)PaymentMethods.Koko)
+                                    {
+                                        decimal kokoServiceCharge = Math.Round((cart.AmountBeforeDiscount -cart.Discount + order.DeliveryCharges) * Convert.ToDecimal(0.10), 2);
+                                        <tr>
+                                            <td class="left">
+                                                <strong>KOKO Service Charges</strong>
+                                            </td>
+                                            <td class="right">Rs. @kokoServiceCharge</td>
+                                        </tr>
+                                    }
+                                }
                                 @{ decimal AmountTobeCollected = cart.AmountAfterDiscount + order.DeliveryCharges;
                                     decimal remainingAmount = cart.AmountAfterDiscount;
                                     if (!string.IsNullOrEmpty(cart.VoucherCode))
@@ -443,14 +455,14 @@
                                             <td><strong>Voucher Added (@voucher.Code)</strong></td>
                                             <td>Rs : @voucher.VoucherAmount</td>
                                         </tr>
- if ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount > -1)
+                                        if ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount > -1)
                                         {
                                             AmountTobeCollected = ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount);
                                             <tr class="grandtotal">
                                                 <td><strong>Remaining Payment</strong></td>
                                                 <td><strong>Rs : @((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount)</strong></td>
                                             </tr>
- }
+                                        }
                                         else
                                         {
                                             AmountTobeCollected = 0;
@@ -458,7 +470,7 @@
                                                 <td><strong>Remaining Payment</strong></td>
                                                 <td><strong>Rs : 0.00</strong></td>
                                             </tr>
- }
+                                        }
 
                                     }
                                     else
@@ -471,7 +483,7 @@
                                                 <strong>Rs. @(cart.AmountAfterDiscount + order.DeliveryCharges)</strong>
                                             </td>
                                         </tr>
- } }
+                                    } }
 
                             </tbody>
                         </table>

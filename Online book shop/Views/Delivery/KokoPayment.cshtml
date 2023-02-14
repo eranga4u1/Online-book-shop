@@ -19,7 +19,9 @@
 @using Online_book_shop.Models;
 @if (cart.Items != null)
 {
-    <div class="container carttable">
+    decimal kokoServiceCharge = Math.Round((cart.AmountAfterDiscount + order.DeliveryCharges) * Convert.ToDecimal(0.10), 2);
+
+        <div class="container carttable">
         <table style="width:100%">
             <tr>
                 <th>Book Name</th>
@@ -63,7 +65,7 @@
                 <td>@cart.Items.Count Item(s)</td>
                 <td>Rs : @cart.AmountBeforeDiscount</td>
                 <td>Rs : @cart.Discount</td>
-                <td>Rs : @cart.AmountAfterDiscount</td>
+                <td>Rs : @cart.AmountAfterDiscount </td>
             </tr>
             <tr class="">
                 <td></td>
@@ -114,7 +116,10 @@
                 <td></td>
                 <td></td>
                 <td><h3>Total Amount</h3></td>
-                <td><h3>Rs : @(cart.AmountAfterDiscount + order.DeliveryCharges)</h3></td>
+                <td>
+                    <h3>Rs : @(cart.AmountAfterDiscount + order.DeliveryCharges + kokoServiceCharge )</h3>
+                    (LKR @kokoServiceCharge added as KOKO service charges)
+                </td>
             </tr>
             @{
                 decimal AmountTobeCollected = cart.AmountAfterDiscount + order.DeliveryCharges;
@@ -168,22 +173,20 @@
         </p>
         <p>Reference for further enquiries: @order.UId</p>
     </div>*@
-    <div>
-        @*Please transfer/deposit invoice amount (Rs. @AmountTobeCollected) to following account with reference  @order.UId .
-        @Html.Raw(bankdeposit.Message)
-        XXXX-XXXX-XXXX-XXXX
-        Muses Publishers
-        ABC Bank
-        Colombo
-        Sri Lanka.
+        <h6>
+            <br />
+            @{
+                var installment = Math.Round((cart.AmountAfterDiscount + order.DeliveryCharges + kokoServiceCharge) / 3, 2);
+            }
+            ඔබ මෙම ඇණවුම @order.UId තහවරු කළ පසුව, ඔබ අපවෙත ලබාදුන් @order.ContactNumber  අංකය වෙත පැය 24ක් ඇතුළත කෙටි පණිවුඩයක් හරහා KOKO ගෙවීම් සබැඳිය ඔබට ලැබෙනු ඇත.
 
-        After you completed payment. Please send us email with reciept to sales@musespublishers.com with using @order.UId as email
-        header.Please note that until you submit reciept by email we wont process your order.*@
+            ඔබට KOKO සමඟ පොලී රහිත වාරික 3කින් (රු. @(cart.AmountAfterDiscount + order.DeliveryCharges + kokoServiceCharge ) -> 3 X @(@installment.ToString())) ගෙවිය හැක.
 
-        After you confirm this order, you will recieve KOKO payment link to your given email address within 24 hours. You can pay (Rs. @AmountTobeCollected)
-        by using your card. After complete payment please reply email with payment confirmation.
+            පළමු වාරිකය ගෙවීම සඳහා කෙටි පණිවුඩය ඔබ වෙත එවූ මොහොතේ සිට පැය 24 ක කාලයක් ඔබට හිමිවේ.
 
-    </div>
+            පළමු වාරික ගෙවීම සම්පූර්ණ කිරීමෙන් පසු, කරුණාකර ගෙවීම් තහවුරු කිරීමේ ස්ක්‍රීන් ෂොට් එකක් ඇණවුම් අංකය සමඟ webmaster@musespublishers.com ඊමේල් ලිපිනයට යොමු කරන්න.
+
+        </h6>
 
     <div class="form-group continue">
         <div class="">

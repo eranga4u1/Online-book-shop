@@ -336,5 +336,37 @@ namespace Online_book_shop.Handlers.Database
                 return null;
             }
         }
+
+        internal static decimal UpdateKokoServiceCharge(int orderId)
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    var order = ctx.Orders.Where(x=> x.Id==orderId).FirstOrDefault();
+                    if (order != null)
+                    {
+                        var cart = ctx.Carts.Where(x => x.Id == order.CartId).FirstOrDefault();
+                        if(cart != null)
+                        {
+                            decimal kokoServiceCharge = Math.Round((cart.AmountAfterDiscount + order.DeliveryCharges) * Convert.ToDecimal(0.10), 2);
+                            cart.AmountAfterDiscount = cart.AmountAfterDiscount +kokoServiceCharge;
+                            order.PaymentSpecialNote = String.Format("{0}.{1}", order.PaymentSpecialNote, "LKR "+kokoServiceCharge.ToString()+ " added as KOKO service charge");
+                            if (ctx.SaveChanges() > 0)
+                            {
+                                return cart.AmountAfterDiscount;
+                            }
+                        }
+                        
+                    }
+                    return 0;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Online_book_shop.Handlers.Database;
+﻿using OfficeOpenXml.Style;
+using Online_book_shop.Handlers.Database;
 using Online_book_shop.Models;
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,11 @@ namespace Online_book_shop.Handlers.Business
         internal static bool ChangePaymentStatus(List<Order> orders)
         {
             return DBHandlerOrder.ChangePaymentStatus(orders);
+        }
+
+        internal static decimal UpdateKokoServiceCharge(int OrderId)
+        {
+            return DBHandlerOrder.UpdateKokoServiceCharge(OrderId);
         }
     }
 }
