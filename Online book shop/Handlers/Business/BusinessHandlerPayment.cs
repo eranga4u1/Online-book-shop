@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Online_book_shop.Handlers.Database;
 using Online_book_shop.Handlers.Helper;
 using Online_book_shop.Models;
 using Online_book_shop.Models.ViewModel;
@@ -248,6 +249,15 @@ namespace Online_book_shop.Handlers.Business
                 signedData = Convert.ToBase64String(signedDataBytes);
                 signature = Convert.ToBase64String(rsa.ExportCspBlob(false));
             }
+        }
+
+        public static Cart UpdateCartForKokoPayment(int cartId)
+        {
+            return DBHandlerPayments.UpdateCartForKokoPayment(cartId);
+        }
+        public static Cart RevertCartFromKokoPayment(int cartId)
+        {
+            return DBHandlerPayments.RevertCartFromKokoPayment(cartId);
         }
     }
 }

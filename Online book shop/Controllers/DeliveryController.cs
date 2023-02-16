@@ -8,6 +8,7 @@ using Online_book_shop.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -142,7 +143,10 @@ namespace Online_book_shop.Controllers
                 {
                     ViewBag.Order = order;
                     //ViewBag.SelectedCity =
-                    
+                    if (order.CartId > 0)
+                    {
+                        BusinessHandlerPayment.UpdateCartForKokoPayment(order.CartId);
+                    }
                     ViewBag.Cart = BusinessHandlerShopingCart.GetById(order != null ? order.CartId : 0);
                     return View("KokoPayment");
                 }
@@ -158,6 +162,27 @@ namespace Online_book_shop.Controllers
             {
                 return RedirectToAction("NotFound", "Error");
             }                       
+        }
+
+        public void AddCartToCache(Cart c)
+        {
+            MemoryCache cache = MemoryCache.Default;
+
+            // add an item to the cache
+            cache.Add(String.Format("non_koko_cart_{0}",c.Id) , c, DateTimeOffset.Now.AddMinutes(30));
+
+
+        }
+        public Cart GetCachedCart(Cart c)
+        {
+            MemoryCache cache = MemoryCache.Default;
+            // retrieve an item from the cache
+            if (cache.Contains(String.Format("non_koko_cart_{0}", c.Id)))
+            {
+                Cart value = (Cart)cache.Get(String.Format("non_koko_cart_{0}", c.Id));
+                return value;
+            }
+            return c;
         }
         public ActionResult BankDeposit(string Ref)
         {
@@ -210,12 +235,12 @@ namespace Online_book_shop.Controllers
                         bool gate_2 = BusinessHandlerDelivery.ChangePaymentStatus(((order.PaymentMethod == (int)PaymentMethods.Cash_On_Delivery) || (order.PaymentMethod == (int)PaymentMethods.Bank_Deposit) || (order.PaymentMethod == (int)PaymentMethods.In_store_payment)) || (order.PaymentMethod==(int)PaymentMethods.Koko) ? PaymentStatus.PendingPayment : PaymentStatus.Paid, order.Id);
                         bool gate_3 = BusinessHandlerShopingCart.ChangeCartStatus(CartStatus.OrderConfirmedCart, order.CartId);
                         bool gate_4 = BusinessHandlerStockEntry.Update(cart.Items, ("Order Id" + order.Id.ToString()));
-                        if(order.PaymentMethod== (int)PaymentMethods.Koko)
-                        {
-                            // if koko add service charge to order amount
-                            BusinessHandlerOrder.UpdateKokoServiceCharge(order.Id);
+                        //if(order.PaymentMethod== (int)PaymentMethods.Koko)
+                        //{
+                        //    // if koko add service charge to order amount
+                        //    BusinessHandlerOrder.UpdateKokoServiceCharge(order.Id);
 
-                        }
+                        //}
 
                         //  PDFHandler.GenaratePDF(order,cart, "\\Content\\UploadFiles\\Invoices","Invoice_"+order.UId+"_"+order.CartId+".pdf");
                         if (gate_1 && gate_2 && gate_3 && gate_4)

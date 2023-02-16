@@ -204,10 +204,16 @@
                                 <span>Ez Cash</span> }
                             else if (order.PaymentMethod == 4)
                             {
-                                <span> In-Store Payment</span> }
+                                <span> In-Store Payment</span>
+                            }
+                            else if (order.PaymentMethod == 5)
+                            {
+                                <span> BNPL</span>
+                            }
                             else
                             {
-                                <span>@order.PaymentMethod</span>}
+                                <span>@order.PaymentMethod</span>
+                            }
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6 row">
@@ -433,18 +439,18 @@
                                     </td>
                                     <td class="right">Rs. @order.DeliveryCharges</td>
                                 </tr>
-                                @{
+                                @*@{
                                     if (order.PaymentMethod == (int)PaymentMethods.Koko)
                                     {
                                         decimal kokoServiceCharge = Math.Round((cart.AmountBeforeDiscount -cart.Discount + order.DeliveryCharges) * Convert.ToDecimal(0.10), 2);
                                         <tr>
                                             <td class="left">
-                                                <strong>KOKO Service Charges</strong>
+                                               <strong>BNPL Service Charges</strong>
                                             </td>
                                             <td class="right">Rs. @kokoServiceCharge</td>
                                         </tr>
                                     }
-                                }
+                                }*@
                                 @{ decimal AmountTobeCollected = cart.AmountAfterDiscount + order.DeliveryCharges;
                                     decimal remainingAmount = cart.AmountAfterDiscount;
                                     if (!string.IsNullOrEmpty(cart.VoucherCode))

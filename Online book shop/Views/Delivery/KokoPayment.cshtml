@@ -9,8 +9,9 @@
     {
         Obj_payment_option = JsonConvert.DeserializeObject<List<PaymentMethod>>(conf_payment_option.Value);
     }
-    PaymentMethod bankdeposit= Obj_payment_option.Where(x => x.EnumId == 2).FirstOrDefault();
+    PaymentMethod bankdeposit = Obj_payment_option.Where(x => x.EnumId == 2).FirstOrDefault();
 }
+@*<link href="~/Content/ShopingCart.css" rel="stylesheet" />*@
 @using Newtonsoft.Json;
 @using Online_book_shop.Models;
 @using Online_book_shop.Handlers.Business;
@@ -19,9 +20,9 @@
 @using Online_book_shop.Models;
 @if (cart.Items != null)
 {
-    decimal kokoServiceCharge = Math.Round((cart.AmountAfterDiscount + order.DeliveryCharges) * Convert.ToDecimal(0.10), 2);
+    //decimal kokoServiceCharge = Math.Round((cart.AmountAfterDiscount + order.DeliveryCharges) * Convert.ToDecimal(0.10), 2);
 
-        <div class="container carttable">
+    <div class="container carttable" style="width:1200px;">
         <table style="width:100%">
             <tr>
                 <th>Book Name</th>
@@ -67,13 +68,23 @@
                 <td>Rs : @cart.Discount</td>
                 <td>Rs : @cart.AmountAfterDiscount </td>
             </tr>
+            @*<tr class="">
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td>
+                    <h6>Koko Service Charge</h6>
+                </td>
+                <td><h6>Rs : @kokoServiceCharge</h6></td>
+            </tr>*@
             <tr class="">
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td>
-                    <h4>Delivery Charges</h4>
+                    <h6>Delivery Charges</h6>
                     @if ((int)DeliveryTypes.Postal_Service == order.DeliveryMethod)
                     {
                         <span>(Postal)</span>
@@ -95,7 +106,7 @@
                         <span>(EMS)</span>
                     }
                 </td>
-                <td><h4>Rs : @order.DeliveryCharges</h4></td>
+                <td><h6>Rs : @order.DeliveryCharges</h6></td>
             </tr>
             <tr>
                 <td colspan="6">
@@ -117,8 +128,8 @@
                 <td></td>
                 <td><h3>Total Amount</h3></td>
                 <td>
-                    <h3>Rs : @(cart.AmountAfterDiscount + order.DeliveryCharges + kokoServiceCharge )</h3>
-                    (LKR @kokoServiceCharge added as KOKO service charges)
+                    <h3>Rs : @(cart.AmountAfterDiscount + order.DeliveryCharges)</h3>
+                    @*(LKR @kokoServiceCharge added as KOKO service charges)*@
                 </td>
             </tr>
             @{
@@ -163,24 +174,130 @@
                 }
             }
         </table>
-        @*<div class="succsess-message">
-            <p>
-                @ViewBag.Message : Your Request Has Submited successfully.
-            <a target="_blank" href="/Invoice/Find?uid=@order.UId">
-                Please follow this link for view your
-                invoice.
-            </a>
-        </p>
-        <p>Reference for further enquiries: @order.UId</p>
-    </div>*@
+        @*<div class="shopping-cart">
+
+            @foreach (Cart_Book cb in cart.Items)
+            {
+                BookVMTile b = BusinessHandlerBook.GetSearchedBookForView(cb.BookId);
+                <div class="item">
+                    <div class="buttons">
+                        <span class="delete-btn"></span>
+                        <span class="like-btn"></span>
+                    </div>
+
+                    <div class="image">
+                        @b.BookName
+                    </div>
+                    <div class="image">
+                        @{
+                            BookProperties p = b.Property.Where(x => x.Id == cb.BookPropertyId).FirstOrDefault();
+                            if (p != null)
+                            {
+                                <span>@p.Title</span>
+                            }
+                            else
+                            {
+                                <span></span>
+                            }
+                        }
+                    </div>
+                    <div class="quantity">
+                        @cb.NumberOfItems
+                    </div>
+                    <div class="description">
+                        Rs.  @cb.AmountBeforeDiscount
+                    </div>
+                    <div class="description">
+                        Rs. @cb.Discount
+                    </div>
+                    <div class="description">Rs. @cb.AmountAfterDiscount</div>
+                </div>
+            }
+            <div class="item">
+                <div class="buttons">
+                    <span class="delete-btn"></span>
+                    <span class="like-btn"></span>
+                </div>
+
+                <div class="image">
+                
+                </div>
+                <div class="image">
+              
+                </div>
+                <div class="quantity">
+                   
+                </div>
+                <div class="description">
+                   
+                </div>
+                <div class="description">
+                    Delivery Charges
+                    @if ((int)DeliveryTypes.Postal_Service == order.DeliveryMethod)
+                    {
+                        <span>(Postal)</span>
+                    }
+                    else if ((int)DeliveryTypes.Currier_Service == order.DeliveryMethod)
+                    {
+                        <span>(Courier)</span>
+                    }
+                    else if ((int)DeliveryTypes.In_Store_Pickup == order.DeliveryMethod)
+                    {
+                        <span>(In Stock Pickup)</span>
+                    }
+                    else if ((int)DeliveryTypes.Foreign_Airmail == order.DeliveryMethod)
+                    {
+                        <span>(Airmail)</span>
+                    }
+                    else if ((int)DeliveryTypes.EMS == order.DeliveryMethod)
+                    {
+                        <span>(EMS)</span>
+                    }
+                </div>
+                <div class="description">Rs : @order.DeliveryCharges</div>
+            </div>
+            <div class="item">
+                <div class="buttons">
+                    <span class="delete-btn"></span>
+                    <span class="like-btn"></span>
+                </div>
+
+                <div class="image">
+                    Delivery Charges
+                    @if ((int)DeliveryTypes.Postal_Service == order.DeliveryMethod)
+                    {
+                        <span>(Postal)</span>
+                    }
+                    else if ((int)DeliveryTypes.Currier_Service == order.DeliveryMethod)
+                    {
+                        <span>(Courier)</span>
+                    }
+                    else if ((int)DeliveryTypes.In_Store_Pickup == order.DeliveryMethod)
+                    {
+                        <span>(In Stock Pickup)</span>
+                    }
+                    else if ((int)DeliveryTypes.Foreign_Airmail == order.DeliveryMethod)
+                    {
+                        <span>(Airmail)</span>
+                    }
+                    else if ((int)DeliveryTypes.EMS == order.DeliveryMethod)
+                    {
+                        <span>(EMS)</span>
+                    }
+                </div>
+
+                <div class="description">Rs : @order.DeliveryCharges</div>
+            </div>
+
+        </div>*@
         <h6>
             <br />
             @{
-                var installment = Math.Round((cart.AmountAfterDiscount + order.DeliveryCharges + kokoServiceCharge) / 3, 2);
+                var installment = Math.Round((cart.AmountAfterDiscount + order.DeliveryCharges) / 3, 2);
             }
             ඔබ මෙම ඇණවුම @order.UId තහවරු කළ පසුව, ඔබ අපවෙත ලබාදුන් @order.ContactNumber  අංකය වෙත පැය 24ක් ඇතුළත කෙටි පණිවුඩයක් හරහා KOKO ගෙවීම් සබැඳිය ඔබට ලැබෙනු ඇත.
 
-            ඔබට KOKO සමඟ පොලී රහිත වාරික 3කින් (රු. @(cart.AmountAfterDiscount + order.DeliveryCharges + kokoServiceCharge ) -> 3 X @(@installment.ToString())) ගෙවිය හැක.
+            ඔබට KOKO සමඟ පොලී රහිත වාරික 3කින් (රු. @(cart.AmountAfterDiscount + order.DeliveryCharges) -> 3 X @(@installment.ToString())) ගෙවිය හැක.
 
             පළමු වාරිකය ගෙවීම සඳහා කෙටි පණිවුඩය ඔබ වෙත එවූ මොහොතේ සිට පැය 24 ක කාලයක් ඔබට හිමිවේ.
 
@@ -188,11 +305,11 @@
 
         </h6>
 
-    <div class="form-group continue">
-        <div class="">
-            <a href="/Delivery/OrderConfirmation?Ref=@order.UId"><span class="btn-common btn-active">Confirm</span></a>
+        <div class="form-group continue">
+            <div class="">
+                <a href="/Delivery/OrderConfirmation?Ref=@order.UId"><span class="btn-common btn-active">Confirm</span></a>
+            </div>
         </div>
     </div>
-</div>
 }
 

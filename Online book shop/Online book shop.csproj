@@ -147,6 +147,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -382,6 +383,7 @@
     <Compile Include="Handlers\Database\DBHandlerMedia.cs" />
     <Compile Include="Handlers\Database\DBHandlerMPLog.cs" />
     <Compile Include="Handlers\Database\DBHandlerOrder.cs" />
+    <Compile Include="Handlers\Database\DBHandlerPayments.cs" />
     <Compile Include="Handlers\Database\DBHandlerPromotion.cs" />
     <Compile Include="Handlers\Database\DBHandlerPublisher.cs" />
     <Compile Include="Handlers\Database\DBHandlerRecentlyVisitedItems.cs" />
@@ -823,6 +825,7 @@
     <Content Include="Content\muses.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="Content\script.js" />
+    <Content Include="Content\ShopingCart.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />

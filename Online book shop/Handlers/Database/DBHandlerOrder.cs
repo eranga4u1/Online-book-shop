@@ -351,7 +351,7 @@ namespace Online_book_shop.Handlers.Database
                         {
                             decimal kokoServiceCharge = Math.Round((cart.AmountAfterDiscount + order.DeliveryCharges) * Convert.ToDecimal(0.10), 2);
                             cart.AmountAfterDiscount = cart.AmountAfterDiscount +kokoServiceCharge;
-                            order.PaymentSpecialNote = String.Format("{0}.{1}", order.PaymentSpecialNote, "LKR "+kokoServiceCharge.ToString()+ " added as KOKO service charge");
+                           // order.PaymentSpecialNote = String.Format("{0}.{1}", order.PaymentSpecialNote, "LKR "+kokoServiceCharge.ToString()+ " added as KOKO service charge");
                             if (ctx.SaveChanges() > 0)
                             {
                                 return cart.AmountAfterDiscount;

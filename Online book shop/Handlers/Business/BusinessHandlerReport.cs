@@ -84,6 +84,10 @@ namespace Online_book_shop.Handlers.Business
                     {
                         paymetMethod = "In-Stock Payment";
                     }
+                    else if (order.PaymentMethod == 5)
+                    {
+                        paymetMethod = "BNPL";
+                    }
 
                     if (order.PaymentStatus == 0)
                     {
