@@ -461,12 +461,13 @@
                                     if (Obj_payment_option.Where(x => x.isEnable && x.EnumId == 5).FirstOrDefault() != null)
                                     {
                                         <div>
-                                            <input type="radio" id="payment_methods_koko" name="payment_methods" @((order != null && (order != null && order.PaymentMethod == (int)PaymentMethods.Koko) ? "checked" : "")) value="5">
+                                            <input type="radio" id="payment_methods_koko" name="payment_methods" value="5">
                                             <label>Buy Now Pay Later With KOKO</label>
                                             <div>
                                                 <small>3 Months installments plan. (කොටස් වශයෙන් ගෙවීමේ දී ඔබට කෘතියකට ලැබෙන වට්ටම 10% ක් අඩුවේ.)</small>
-                                            </div> 
+                                            </div>
                                         </div>
+                                        @*@((order != null && (order != null && order.PaymentMethod == (int)PaymentMethods.Koko) ? "checked" : ""))*@
                                     }
                                 }
 
