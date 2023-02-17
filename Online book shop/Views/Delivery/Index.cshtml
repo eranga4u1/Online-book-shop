@@ -463,7 +463,9 @@
                                         <div>
                                             <input type="radio" id="payment_methods_koko" name="payment_methods" @((order != null && (order != null && order.PaymentMethod == (int)PaymentMethods.Koko) ? "checked" : "")) value="5">
                                             <label>Buy Now Pay Later With KOKO</label>
-                                            <small> (Installment Plan and this will add extra 10% for your bill amount as service charge)</small>
+                                            <div>
+                                                <small>3 Months installments plan. (කොටස් වශයෙන් ගෙවීමේ දී ඔබට කෘතියකට ලැබෙන වට්ටම 10% ක් අඩුවේ.)</small>
+                                            </div> 
                                         </div>
                                     }
                                 }

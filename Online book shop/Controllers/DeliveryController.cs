@@ -38,6 +38,11 @@ namespace Online_book_shop.Controllers
             else
             {
                 cart = Session["cart"] as Cart;
+                if(GetCachedCart(cart) != null)
+                {
+                    BusinessHandlerPayment.RevertCartFromKokoPayment(cart.Id);
+
+                }
             }
             ViewBag.Cart = cart;
             ViewBag.Addreses = BusinessHandlerAddress.GetAddresses();
