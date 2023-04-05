@@ -1,335 +1,248 @@
-﻿@using Online_book_shop.Models;
-@using Online_book_shop.Models;
-@{
-    Order order = ViewBag.Order;
-    Cart cart = ViewBag.Cart;
-    List<PaymentMethod> Obj_payment_option = new List<PaymentMethod>();
-    Configuration conf_payment_option = BusinessHandlerConfigurations.GetConfigByKey("PAYMENT_METHODS");
-    if (conf_payment_option != null && !string.IsNullOrEmpty(conf_payment_option.Value))
-    {
-        Obj_payment_option = JsonConvert.DeserializeObject<List<PaymentMethod>>(conf_payment_option.Value);
-    }
-    PaymentMethod bankdeposit = Obj_payment_option.Where(x => x.EnumId == 2).FirstOrDefault();
-}
-@*<link href="~/Content/ShopingCart.css" rel="stylesheet" />*@
+﻿
 @using Newtonsoft.Json;
 @using Online_book_shop.Models;
 @using Online_book_shop.Handlers.Business;
 @using Online_book_shop.Models.ViewModel;
 @using Online_book_shop.Handlers.Helper;
 @using Online_book_shop.Models;
-@if (cart.Items != null)
-{
-    //decimal kokoServiceCharge = Math.Round((cart.AmountAfterDiscount + order.DeliveryCharges) * Convert.ToDecimal(0.10), 2);
-
-    <div class="container carttable" style="width:1200px;">
-        <table style="width:100%">
-            <tr>
-                <th>Book Name</th>
-                <th>&nbsp;</th>
-                <th>Quantity</th>
-                <th>Total Price</th>
-                <th>Discount</th>
-                <th>Net Total</th>
-            </tr>
-            @foreach (Cart_Book cb in cart.Items)
-            {
-                BookVMTile b = BusinessHandlerBook.GetSearchedBookForView(cb.BookId);
-                <tr>
-
-                    <td>@b.BookName</td>
-                    <td>
-                        @{
-                            BookProperties p = b.Property.Where(x => x.Id == cb.BookPropertyId).FirstOrDefault();
-                            if (p != null)
-                            {
-                                <span>@p.Title</span>
-                            }
-                            else
-                            {
-                                <span></span>
-                            }
-                        }
-                    </td>
-                    <td>
-                        <span>@cb.NumberOfItems</span>
-                    </td>
-                    <td>Rs : @cb.AmountBeforeDiscount</td>
-                    <td>Rs : @cb.Discount</td>
-                    <td>Rs : @cb.AmountAfterDiscount</td>
-                </tr>
-            }
-
-            <tr class="finaltotal-row">
-                <td></td>
-                <td></td>
-                <td>@cart.Items.Count Item(s)</td>
-                <td>Rs : @cart.AmountBeforeDiscount</td>
-                <td>Rs : @cart.Discount</td>
-                <td>Rs : @cart.AmountAfterDiscount </td>
-            </tr>
-            @*<tr class="">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                    <h6>Koko Service Charge</h6>
-                </td>
-                <td><h6>Rs : @kokoServiceCharge</h6></td>
-            </tr>*@
-            <tr class="">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td>
-                    <h6>Delivery Charges</h6>
-                    @if ((int)DeliveryTypes.Postal_Service == order.DeliveryMethod)
-                    {
-                        <span>(Postal)</span>
-                    }
-                    else if ((int)DeliveryTypes.Currier_Service == order.DeliveryMethod)
-                    {
-                        <span>(Courier)</span>
-                    }
-                    else if ((int)DeliveryTypes.In_Store_Pickup == order.DeliveryMethod)
-                    {
-                        <span>(In Stock Pickup)</span>
-                    }
-                    else if ((int)DeliveryTypes.Foreign_Airmail == order.DeliveryMethod)
-                    {
-                        <span>(Airmail)</span>
-                    }
-                    else if ((int)DeliveryTypes.EMS == order.DeliveryMethod)
-                    {
-                        <span>(EMS)</span>
-                    }
-                </td>
-                <td><h6>Rs : @order.DeliveryCharges</h6></td>
-            </tr>
-            <tr>
-                <td colspan="6">
-                    <div class="text-left">
-                        <h4>Deliver To :</h4>
-                        @order.FirstName @order.LastName<br />
-                        @order.DeliveryAddress<br />
-                        @order.EmailAddress<br />
-                        @order.ContactNumber
-                    </div>
-
-                </td>
-            </tr>
-            <tr></tr>
-            <tr class="grandtotal">
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td><h3>Total Amount</h3></td>
-                <td>
-                    <h3>Rs : @(cart.AmountAfterDiscount + order.DeliveryCharges)</h3>
-                    @*(LKR @kokoServiceCharge added as KOKO service charges)*@
-                </td>
-            </tr>
-            @{
-                decimal AmountTobeCollected = cart.AmountAfterDiscount + order.DeliveryCharges;
-                if (!string.IsNullOrEmpty(cart.VoucherCode))
-                {
-                    Voucher voucher = BusinessHandlerVoucher.GetActiveVoucherByCode(cart.VoucherCode);
-
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td><h4>Voucher Added (@voucher.Code)</h4></td>
-                        <td><h4>Rs : @voucher.VoucherAmount</h4></td>
-                    </tr>
-                    if ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount > -1)
-                    {
-                        AmountTobeCollected = ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount);
-                        <tr class="grandtotal">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td><h3>Remaining Payment</h3></td>
-                            <td><h3>Rs : @((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount)</h3></td>
-                        </tr>
-                    }
-                    else
-                    {
-                        AmountTobeCollected = 0;
-                        <tr class="grandtotal">
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td><h3>Remaining Payment</h3></td>
-                            <td><h3>Rs : 0.00</h3></td>
-                        </tr>
-                    }
-
-                }
-            }
-        </table>
-        @*<div class="shopping-cart">
-
-            @foreach (Cart_Book cb in cart.Items)
-            {
-                BookVMTile b = BusinessHandlerBook.GetSearchedBookForView(cb.BookId);
-                <div class="item">
-                    <div class="buttons">
-                        <span class="delete-btn"></span>
-                        <span class="like-btn"></span>
-                    </div>
-
-                    <div class="image">
-                        @b.BookName
-                    </div>
-                    <div class="image">
-                        @{
-                            BookProperties p = b.Property.Where(x => x.Id == cb.BookPropertyId).FirstOrDefault();
-                            if (p != null)
-                            {
-                                <span>@p.Title</span>
-                            }
-                            else
-                            {
-                                <span></span>
-                            }
-                        }
-                    </div>
-                    <div class="quantity">
-                        @cb.NumberOfItems
-                    </div>
-                    <div class="description">
-                        Rs.  @cb.AmountBeforeDiscount
-                    </div>
-                    <div class="description">
-                        Rs. @cb.Discount
-                    </div>
-                    <div class="description">Rs. @cb.AmountAfterDiscount</div>
-                </div>
-            }
-            <div class="item">
-                <div class="buttons">
-                    <span class="delete-btn"></span>
-                    <span class="like-btn"></span>
-                </div>
-
-                <div class="image">
-
-                </div>
-                <div class="image">
-
-                </div>
-                <div class="quantity">
-
-                </div>
-                <div class="description">
-
-                </div>
-                <div class="description">
-                    Delivery Charges
-                    @if ((int)DeliveryTypes.Postal_Service == order.DeliveryMethod)
-                    {
-                        <span>(Postal)</span>
-                    }
-                    else if ((int)DeliveryTypes.Currier_Service == order.DeliveryMethod)
-                    {
-                        <span>(Courier)</span>
-                    }
-                    else if ((int)DeliveryTypes.In_Store_Pickup == order.DeliveryMethod)
-                    {
-                        <span>(In Stock Pickup)</span>
-                    }
-                    else if ((int)DeliveryTypes.Foreign_Airmail == order.DeliveryMethod)
-                    {
-                        <span>(Airmail)</span>
-                    }
-                    else if ((int)DeliveryTypes.EMS == order.DeliveryMethod)
-                    {
-                        <span>(EMS)</span>
-                    }
-                </div>
-                <div class="description">Rs : @order.DeliveryCharges</div>
-            </div>
-            <div class="item">
-                <div class="buttons">
-                    <span class="delete-btn"></span>
-                    <span class="like-btn"></span>
-                </div>
-
-                <div class="image">
-                    Delivery Charges
-                    @if ((int)DeliveryTypes.Postal_Service == order.DeliveryMethod)
-                    {
-                        <span>(Postal)</span>
-                    }
-                    else if ((int)DeliveryTypes.Currier_Service == order.DeliveryMethod)
-                    {
-                        <span>(Courier)</span>
-                    }
-                    else if ((int)DeliveryTypes.In_Store_Pickup == order.DeliveryMethod)
-                    {
-                        <span>(In Stock Pickup)</span>
-                    }
-                    else if ((int)DeliveryTypes.Foreign_Airmail == order.DeliveryMethod)
-                    {
-                        <span>(Airmail)</span>
-                    }
-                    else if ((int)DeliveryTypes.EMS == order.DeliveryMethod)
-                    {
-                        <span>(EMS)</span>
-                    }
-                </div>
-
-                <div class="description">Rs : @order.DeliveryCharges</div>
-            </div>
-
-        </div>*@
-        <div>
-            <br />
-            @{
-                var installment = Math.Round((cart.AmountAfterDiscount + order.DeliveryCharges) / 3, 2);
-            }
-            <div class="alert alert-info bg-info h5" role="alert">
-                <strong>Payment:</strong>ඔබ මෙම ඇණවුම @order.UId තහවරු කළ පසුව, ඔබ අපවෙත ලබාදුන් @order.ContactNumber  අංකය වෙත පැය 24ක් ඇතුළත කෙටි පණිවුඩයක් හරහා KOKO ගෙවීම් සබැඳිය ඔබට ලැබෙනු ඇත.
-
-                ඔබට KOKO සමඟ පොලී රහිත වාරික 3කින් (රු. @(cart.AmountAfterDiscount + order.DeliveryCharges) -> 3 X @(@installment.ToString())) ගෙවිය හැක.
-
-                පළමු වාරිකය ගෙවීම සඳහා කෙටි පණිවුඩය ඔබ වෙත එවූ මොහොතේ සිට පැය 24 ක කාලයක් ඔබට හිමිවේ.
-
-                පළමු වාරික ගෙවීම සම්පූර්ණ කිරීමෙන් පසු, කරුණාකර ගෙවීම් තහවුරු කිරීමේ ස්ක්‍රීන් ෂොට් එකක් ඇණවුම් අංකය සමඟ webmaster@musespublishers.com ඊමේල් ලිපිනයට යොමු කරන්න.
-
-            </div>
-
-        </div>
-        <div class="col-lg-12">
-            <div class="form-check float-right margin-top-5px">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckAgreed"> <br />
-                <label class="form-check-label" for="flexCheckAgreed">
-                    <strong>
-                        I have read and agreed to the terms and conditions and privacy
-                        policy.
-                    </strong>
-                </label>
-            </div>
-
-        </div>
-        <div class="col-lg-12">
-            <a href="/Delivery?order=@order.UId"><strong class="text-danger font-weight-bolder link-bold-text-danger"><i class="fas fa-backward"></i> Go Back</strong></a>
-            <input id="co-confirm-btn" data-href="/Delivery/OrderConfirmation?Ref=@order.UId" disabled class="btn float-right po-confirm-btn" type="submit" value="Confirm">
-            @*<a id="co-confirm-btn" data-href="/Delivery/OrderConfirmation?Ref=@order.UId"><span class="btn-common btn-active float-right">Confirm</span></a>*@
-        </div>
-        @*<div class="form-group continue">
-            <div class="">
-                <a href="/Delivery/OrderConfirmation?Ref=@order.UId"><span class="btn-common btn-active">Confirm</span></a>
-            </div>
-        </div>*@
-    </div>
+@{
+    Order order = ViewBag.Order;
+    Cart cart = ViewBag.Cart;
+    string MerchantId = ViewBag.MerchantId;
+    string KokoUrl = ViewBag.kokoUrl;
+    Address billing_address = BusinessHandlerAddress.GetAddress(order.BillingAddressId);
+    Address delivery_address = BusinessHandlerAddress.GetAddress(order.DeliveryAddressId);
+    List<PaymentMethod> Obj_payment_option = new List<PaymentMethod>();
+    Configuration conf_payment_option = BusinessHandlerConfigurations.GetConfigByKey("PAYMENT_METHODS");
+    if (conf_payment_option != null && !string.IsNullOrEmpty(conf_payment_option.Value))
+    {
+        Obj_payment_option = JsonConvert.DeserializeObject<List<PaymentMethod>>(conf_payment_option.Value);
+    }
+    PaymentMethod paymentObj = Obj_payment_option.Where(x => x.EnumId == order.PaymentMethod).FirstOrDefault();
+    decimal remainingAmount = cart.AmountAfterDiscount;
 }
+@*<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />*@
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<div class="container">
 
+    @if (cart.Items != null)
+    {
+        <div class="container carttable">
+            <table style="width:100%">
+                <tr>
+                    <th>Book Name</th>
+                    <th>&nbsp;</th>
+                    <th>Quantity</th>
+                    <th>Total Price</th>
+                    <th>Discount</th>
+                    <th>Net Total</th>
+                </tr>
+                @foreach (Cart_Book cb in cart.Items)
+                {
+                    BookVMTile b = BusinessHandlerBook.GetSearchedBookForView(cb.BookId);
+                    <tr>
+
+                        <td>@b.BookName</td>
+                        <td>
+                            @{
+                                BookProperties p = b.Property.Where(x => x.Id == cb.BookPropertyId).FirstOrDefault();
+                                if (p != null)
+                                {
+                                    <span>@p.Title</span>
+                                }
+                                else
+                                {
+                                    <span></span>
+                                }
+                            }
+                        </td>
+                        <td>
+                            <span>@cb.NumberOfItems</span>
+                        </td>
+                        <td>Rs : @cb.AmountBeforeDiscount</td>
+                        <td>Rs : @cb.Discount</td>
+                        <td>Rs : @cb.AmountAfterDiscount</td>
+                    </tr>
+                }
+
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>@cart.Items.Count Item(s)</td>
+                    <td>Rs : @cart.AmountBeforeDiscount</td>
+                    <td>Rs : @cart.Discount</td>
+                    <td>Rs : @cart.AmountAfterDiscount</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <h4>Delivery Charges</h4>
+                        @if ((int)DeliveryTypes.Postal_Service == order.DeliveryMethod)
+                        {
+                            <span>(Postal)</span>
+                        }
+                        else if ((int)DeliveryTypes.Currier_Service == order.DeliveryMethod)
+                        {
+                            <span>(Courier)</span>
+                        }
+                        else if ((int)DeliveryTypes.In_Store_Pickup == order.DeliveryMethod)
+                        {
+                            <span>(In Stock Pickup)</span>
+                        }
+                        else if ((int)DeliveryTypes.Foreign_Airmail == order.DeliveryMethod)
+                        {
+                            <span>(Airmail)</span>
+                        }
+                        else if ((int)DeliveryTypes.EMS == order.DeliveryMethod)
+                        {
+                            <span>(EMS)</span>
+                        }
+                    </td>
+                    <td><h4>Rs : @order.DeliveryCharges</h4></td>
+                </tr>
+                <tr class="grandtotal">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><h3>Total Amount</h3></td>
+                    <td><h3>Rs : @(cart.AmountAfterDiscount + order.DeliveryCharges)</h3></td>
+                </tr>
+                @{
+                    decimal AmountTobeCollected = cart.AmountAfterDiscount + order.DeliveryCharges;
+                    if (!string.IsNullOrEmpty(cart.VoucherCode))
+                    {
+                        Voucher voucher = BusinessHandlerVoucher.GetActiveVoucherByCode(cart.VoucherCode);
+                        remainingAmount = (cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount;
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td><h4>Voucher Added (@voucher.Code)</h4></td>
+                            <td><h4>Rs : @voucher.VoucherAmount</h4></td>
+                        </tr>
+                        if ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount > -1)
+                        {
+                            AmountTobeCollected = ((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount);
+                            <tr class="grandtotal">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><h3>Remaining Payment</h3></td>
+                                <td><h3>Rs : @((cart.AmountAfterDiscount + order.DeliveryCharges) - voucher.VoucherAmount)</h3></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            AmountTobeCollected = 0;
+                            <tr class="grandtotal">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td><h3>Remaining Payment</h3></td>
+                                <td><h3>Rs : 0.00</h3></td>
+                            </tr>
+                        }
+
+                    }
+                }
+            </table>
+            @{
+                string domain = Request.Url.ToString().Replace(Request.Url.AbsolutePath, "");
+                string formSubmitUrl = "/Payment/KokoPaymentRequest";//
+                if (remainingAmount < 0 || remainingAmount == 0)
+                {
+                    formSubmitUrl = "/Delivery/OrderConfirmation?Ref=" + order.UId;
+                }
+
+                string payhereSecret = CryptoHelper.CreateMD5(System.Configuration.ConfigurationManager.AppSettings["MerchantSecret"]).ToUpper();
+                string hash_1 = string.Format("{0}{1}{2}{3}{4}", MerchantId, order.UId, AmountTobeCollected, "LKR", payhereSecret);
+                string hash = CryptoHelper.CreateMD5(hash_1).ToUpper();
+            }
+        <form id="frm-payment-details" method="post" action="@formSubmitUrl">
+            <input type="hidden" name="_mId" value="@MerchantId">    <!-- Replace your Merchant ID -->
+            <input type="hidden" name="_returnUrl" value="@domain/Payment/PaymentResponse?state=done">
+            <input type="hidden" name="_cancelUrl" value="@domain/Payment/PaymentResponse?state=cancel">
+            <input type="hidden" name="_responseUrl" value="@domain/Payment/PaymentResponse?state=notify">
+            <input type="hidden" name="_orderId" value="@order.UId">
+            <input type="hidden" name="_reference" value="@order.UId">
+            <input type="hidden" name="_description" value="Online Muses Book Store : @order.UId"><br>
+            <input type="hidden" name="_currency" value="LKR">
+            <input type="hidden" name="_amount" value="@AmountTobeCollected">
+            <input type="hidden" name="api_key" value="">
+            <input type="hidden" name="_pluginVersion" value="1.10">
+            <input type="hidden" name="_pluginName" value="muses_koko_api">
+            <input type="hidden" name="_firstName" value="@billing_address.FirstName">
+            <input type="hidden" name="_lastName" value="@billing_address.LastName">
+            <input type="hidden" name="_lastName" value="@billing_address.LastName">
+            <input type="hidden" name="_email" value="@billing_address.EmailAddress">
+            <input type="hidden" name="dataString" value="">
+            <input type="hidden" name="signature" value="">
+
+            <div class="col-lg-12">
+                <div class="col-lg-4">
+                    <h3>Billing Address</h3>
+                    @*<div>@billing_address.FirstName @billing_address.LastName</div>*@
+                    <div>@order.BillingAddress</div>
+                    <div>@order.EmailAddress</div>
+                    <div>@billing_address.ContactNumber1</div>
+                    <div>@billing_address.ContactNumber2</div>
+                </div>
+                <div class="col-lg-4">
+                    <h3>Deliver Address</h3>
+                    <div>@delivery_address.FirstName @delivery_address.LastName</div>
+                    <div>@order.DeliveryAddress</div>
+                    <div>@delivery_address.EmailAddress</div>
+                    <div>@delivery_address.ContactNumber1</div>
+                    <div>@delivery_address.ContactNumber2</div>
+                </div>
+                <div class="col-lg-4">
+
+                </div>
+            </div>
+            @if (!string.IsNullOrEmpty(paymentObj.Message))
+            {
+                <div class="col-lg-12">
+                    <div class="alert alert-info bg-info h5" role="alert">
+                        <strong>Payment:</strong> @Html.Raw(paymentObj.Message.Replace("\n", "<br />"))
+                    </div>
+                </div>
+            }
+            <div class="col-lg-12">
+
+                <div class="form-check float-right margin-top-5px">
+                    <input class="form-check-input" type="checkbox" value="" id="flexCheckAgreed">
+                    <label class="form-check-label" for="flexCheckAgreed">
+                        <strong>
+                            I have read and agreed to the terms and conditions and privacy
+                            policy.
+                        </strong>
+                    </label>
+                </div>
+
+            </div>
+            <div class="col-lg-12">
+                <a href="/Delivery?order=@order.UId"><strong class="text-danger font-weight-bolder link-bold-text-danger"><i class="fas fa-backward"></i> Go Back</strong></a>
+                <input id="cp-confirm-btn" data-order-id="@order.Id" disabled class="btn float-right po-confirm-btn" type="submit" value="Pay">
+            </div>
+            <input type="hidden" name="first_name" value="@billing_address.FirstName">
+            <input type="hidden" name="last_name" value="@billing_address.LastName"><br>
+            <input type="hidden" name="email" value="@billing_address.EmailAddress">
+            <input type="hidden" name="phone" value="@billing_address.ContactNumber1"><br>
+            <input type="hidden" name="address" value="@order.BillingAddress">
+            <input type="hidden" name="city" value="@billing_address.City">
+            <input type="hidden" name="country" value="@billing_address.Country">
+        </form>
+
+
+
+        </div>
+    }
+</div>
 

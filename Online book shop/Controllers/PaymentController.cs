@@ -3,6 +3,7 @@ using Online_book_shop.Handlers.Invoice;
 using Online_book_shop.Handlers.Notifications;
 using Online_book_shop.Models;
 using Online_book_shop.Models.ViewModel;
+using Online_book_shop.Payments.MintPaySDK.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,10 +91,21 @@ namespace Online_book_shop.Controllers
         [HttpPost]
         public ActionResult KokoPaymentRequest(KokoRequest model)
         {
+            model._mId = "f45592f363a1647f44ee688185cf8d43";
             BusinessHandlerPayment b = new BusinessHandlerPayment();
             b.KokoRequest(model);
             //BusinessHandlerPayment.PaymentRequestAsync(model).Wait();
             return Redirect("");
+        }
+        [HttpPost]
+        public ActionResult MintPayPaymentRequest(ProcessOrder model)
+        {
+            
+           MintPayResponse response = BusinessHandlerPayment.MintPayPayment(model);
+            //BusinessHandlerPayment.PaymentRequestAsync(model).Wait();
+             ViewBag.purchaseId = response.data;
+            return View("MintPay");
+           // return Redirect(response.data);
         }
     }
 }

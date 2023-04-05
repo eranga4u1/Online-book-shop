@@ -90,8 +90,35 @@ namespace Online_book_shop.Handlers.Database
             {
                 using (var ctx = new ApplicationDbContext())
                 {
-                    var promotions = ctx.Promotions.Where(x => x.ObjectId == bookId && x.ObjectType == (int)ObjectTypes.Book);
+                    var promotions = ctx.Promotions.Where(x => x.ObjectId == bookId && x.ObjectType == (int)ObjectTypes.Book && !x.isDeleted);
                     foreach(var p in promotions)
+                    {
+                        if (!string.IsNullOrEmpty(p.OtherParameters))
+                        {
+                            PromptionParameters pp = JsonConvert.DeserializeObject<PromptionParameters>(p.OtherParameters);
+                            if (pp.BookPropertyId == propertyId)
+                            {
+                                return p;
+                            }
+                        }
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+        internal static Promotion GetRecentPromotion(int bookId, int propertyId)
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    var promotions = ctx.Promotions.Where(x => x.ObjectId == bookId && x.ObjectType == (int)ObjectTypes.Book && !x.isDeleted);
+                    foreach (var p in promotions)
                     {
                         if (!string.IsNullOrEmpty(p.OtherParameters))
                         {

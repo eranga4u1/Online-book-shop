@@ -72,6 +72,7 @@ namespace Online_book_shop.Handlers.Business
         Ez_cash=3,
         In_store_payment=4,
         Koko = 5,
+        MintPay=6
     }
     public enum ObjectTypes
     {
