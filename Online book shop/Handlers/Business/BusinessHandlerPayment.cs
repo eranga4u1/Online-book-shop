@@ -297,7 +297,7 @@ namespace Online_book_shop.Handlers.Business
                         sku = cart.Id.ToString(),
                         quantity = "1",
                         unit_price = cart.AmountAfterDiscount.ToString(),
-                        discount = cart.Discount.ToString(),
+                        discount = "0.0",
                         created_date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                         updated_date = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     };

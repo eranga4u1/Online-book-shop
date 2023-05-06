@@ -15,7 +15,7 @@
     InstantMessage Obj_instant_message = BusinessHandlerConfigurations.GetInstantMessage();
 
     MetaData metaData = ViewBag.MetaValues;
-    var environment= System.Configuration.ConfigurationManager.AppSettings["Environment"];
+    var environment = System.Configuration.ConfigurationManager.AppSettings["Environment"];
 }
 <head>
     @*SEO Section//*@
@@ -25,16 +25,18 @@
     }
 
 
-    <title>Muses Books - @((metaData !=null &&!string.IsNullOrEmpty(metaData.Title))? metaData.Title : "TODAY A READER TOMORROW A LEADER")</title>
+    <title>Muses Books - @((metaData != null && !string.IsNullOrEmpty(metaData.Title)) ? metaData.Title : "TODAY A READER TOMORROW A LEADER")</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <meta name="description" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Description))? metaData.Description : " Muses Publishing House (Pvt) Ltd is recognized as one of the most dynamic and creative Publishing House in Sri Lanka. Established in 2017, the company prides itself being a leader consistently at the forefront of innovation and technological advancement. Muses Publishing House also uses digital technology to create unique reading experience and expand the reach of their authors. Popular among the readers as MusesBooks, the company places strong emphasis on catering the distinct taste of the Sri Lankan reading community.")">
-    <meta name="keywords" content="Muses,Books,Online Book Store,Worldwide Delivery,Muses Publisher @((metaData !=null &&!string.IsNullOrEmpty(metaData.Keywords))? metaData.Keywords : "")">
-    <meta name="author" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Author))? metaData.Author : " Muses Publishing House")">
-    <meta name="robots" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Robots))? metaData.Robots : "index, follow")">
-
-    <meta property="og:url" content="@Request.Url.ToString()" />
+    <meta name="description" content="@((metaData != null && !string.IsNullOrEmpty(metaData.Description)) ? metaData.Description : " Muses Publishing House (Pvt) Ltd is recognized as one of the most dynamic and creative Publishing House in Sri Lanka. Established in 2017, the company prides itself being a leader consistently at the forefront of innovation and technological advancement. Muses Publishing House also uses digital technology to create unique reading experience and expand the reach of their authors. Popular among the readers as MusesBooks, the company places strong emphasis on catering the distinct taste of the Sri Lankan reading community.")">
+    <meta name="keywords" content="Muses,Books,Online Book Store,Worldwide Delivery,Muses Publisher @((metaData != null && !string.IsNullOrEmpty(metaData.Keywords)) ? metaData.Keywords : "")">
+    <meta name="author" content="@((metaData != null && !string.IsNullOrEmpty(metaData.Author)) ? metaData.Author : " Muses Publishing House")">
+    <meta name="robots" content="@((metaData != null && !string.IsNullOrEmpty(metaData.Robots)) ? metaData.Robots : "index, follow")">
+    @{
+        string url = Request.Url.ToString();
+    }
+    <meta property="og:url" content="@url.Replace("http","https")" />
     <meta property="og:type" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Type))? metaData.Type : "article")" />
     <meta property="og:title" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Title))? metaData.Title : " Muses Books - TODAY A READER TOMORROW A LEADER")" />
     <meta property="og:description" content="@((metaData !=null &&!string.IsNullOrEmpty(metaData.Description))? metaData.Description : " Muses Publishing House (Pvt) Ltd is recognized as one of the most dynamic and creative Publishing House in Sri Lanka. Established in 2017, the company prides itself being a leader consistently at the forefront of innovation and technological advancement. Muses Publishing House also uses digital technology to create unique reading experience and expand the reach of their authors. Popular among the readers as MusesBooks, the company places strong emphasis on catering the distinct taste of the Sri Lankan reading community.")" />
@@ -93,14 +95,9 @@
     @if (controllerName == "Delivery")
     {
         <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    }
-    @*<script type="text/javascript" src="snowstorm.js"></script>*@
-    @*<script src="~/Content/js/snowstorm-min.js"></script>
-    <script>
-        snowStorm.snowColor = '#99ccff';   // blue-ish snow!?
-        snowStorm.flakesMaxActive = 96;    // show more snow on screen at once
-        snowStorm.useTwinkleEffect = true; // let the snow flicker in and out of view
-    </script>*@
+}
+
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet">
     <link href="~/Content/fonts/fonts.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="~/Content/css/slick.css" />
@@ -420,18 +417,10 @@
                 <div class="payment-method">
                     <h3>Payment Methods</h3>
                     <ul class="payments-m">
-                        <li class="visa" style=" background-image:none">
-                            <img src="~/Content/PaymentMethods/cod.png" />
-                        </li>
-                        <li class="master" style=" background-image: none; margin-top: 10px;">
-                            <img src="~/Content/PaymentMethods/koko.png" />
-                        </li>
-                        <li class="americanex" style=" background-image: none; margin-top: 12px;">
-                            <img src="~/Content/PaymentMethods/MintPay.png" />
-                        </li>
-                        <li class="cod" style=" background-image: none; margin-top: 10px;">
-                            <img src="~/Content/PaymentMethods/PayHere.png" />
-                        </li>
+                        <li class="visa"></li>
+                        <li class="master"></li>
+                        <li class="americanex"></li>
+                        <li class="cod"></li>
                     </ul>
                     <h3>Shipping Methods</h3>
                     <ul class="shipment-m">

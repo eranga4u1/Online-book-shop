@@ -1335,6 +1335,7 @@
     <Folder Include="Areas\Admin\Models\" />
     <Folder Include="Areas\Admin\Views\AdminUtility\" />
     <Folder Include="Areas\Admin\Views\Media\" />
+    <Folder Include="Content\PaymentMethods\" />
     <Folder Include="Views\BookPack\" />
     <Folder Include="Views\PreOwnedBooks\" />
     <Folder Include="Views\PropertyType\" />

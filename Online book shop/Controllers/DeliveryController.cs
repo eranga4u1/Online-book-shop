@@ -158,6 +158,11 @@ namespace Online_book_shop.Controllers
                 else if(order.PaymentMethod == (int)PaymentMethods.MintPay)
                 {
                     ViewBag.Order = order;
+                    if (order.CartId > 0)
+                    {
+                        BusinessHandlerPayment.UpdateCartForKokoPayment(order.CartId);
+                    }
+                    ViewBag.Cart = BusinessHandlerShopingCart.GetById(order != null ? order.CartId : 0);
                     return View("MintPayPayment");
                 }
                 else
