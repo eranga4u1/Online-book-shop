@@ -49,13 +49,16 @@
             {
                 if (promo.PromotionMethods == (int)PromotionMethods.DeductFromFinalAmount)
                 {
-                    <div class="discount-pers">Offer<br />Off</div> }
-                else if (promo.PromotionMethods == (int)PromotionMethods.FixedAmount)
+                    <div class="discount-pers">Offer<br />Off</div> 
+                }
+                else if ((promo.PromotionMethods == (int)PromotionMethods.FixedAmount) && promo.DiscountValue>0)
                 {
-                    <div class="discount-pers">@promo.DiscountValue<br />Off</div> }
-                else if (promo.PromotionMethods == (int)PromotionMethods.Percentage)
+                    <div class="discount-pers">@promo.DiscountValue<br />Off</div> 
+                }
+                else if ((promo.PromotionMethods == (int)PromotionMethods.Percentage) &&  promo.DiscountValue > 0)
                 {
-                    <div class="discount-pers">@promo.DiscountValue%<br />Off</div>}
+                    <div class="discount-pers">@promo.DiscountValue%<br />Off</div>
+                }
             }
             <div class="viewmore-discprice">
                 <a href="/book/@b.Id" class="viewmore"></a>

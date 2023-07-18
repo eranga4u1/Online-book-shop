@@ -24,5 +24,6 @@ namespace Online_book_shop.Models
         public string _email { get; set; }
         public string dataString { get; set; }
         public string signature { get; set; }
+        public string baseUrl { get; set; }
     }
 }

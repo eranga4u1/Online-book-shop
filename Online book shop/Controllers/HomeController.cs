@@ -43,35 +43,35 @@ namespace Online_book_shop.Controllers
             return View();
         }
 
-        public ActionResult Contact()
-        {
-            Configuration config = BusinessHandlerConfigurations.GetConfigByKey("CONTACTUS-PAGE");
-            if (config != null)
-            {
-                ViewBag.contactVM = JsonConvert.DeserializeObject<ContactVM>(config.Value);
-            }
-            else
-            {
-                ContactVM contactVM = new ContactVM
-                {
-                    CompanyName= "Muses Publishing House - Pvt Ltd",
-                    AddressLine1 = "34/4, katuwalamulla",
-                    AddressLine2 = "11020 Ganemulla,",
-                    AddressLine3 = "Sri Lanka",
-                    Email1 = "support@musesbooks.com",
-                    Email2 = "mareting@musesbooks.com",
-                    Email3 = "publisher@musesbooks.com",
-                    Phone1 = "077 824 5459",
-                    Phone2 = "",
-                    Phone3 = "",
-                    Description = "საბეჭდი და ტიპოგრაფიული ინდუსტრიის უშინაარსო ტექსტია. იგი სტანდარტად 1500-იანი წლებიდან იქცა, როდესაც უცნობმა მბეჭდავმა ამწყობ დაზგაზე წიგნის საცდელი ეგზემპლარი დაბეჭდა. მისი ტექსტი არამარტო 5 საუკუნის მანძილზე შემორჩა, არამედ მან დღემდე, ელექტრონული ტიპოგრაფიის დრომდეც უცვლელად მოაღწია. განსაკუთრებული პოპულარობა მას 1960-იან წლებში გამოსულმა Letraset-ის ცნობილმა ტრაფარეტებმა მოუტანა, უფრო მოგვიანებით კი — Aldus PageMaker-ის ტიპის საგამომცემლო პროგრამებმა, რომლებშიც Lorem Ipsum-ის სხვადასხვა ვერსიები იყო ჩაშენებული.",
-                };
-                BusinessHandlerConfigurations.AddOrUpdate(new Configuration { Key = "CONTACTUS-PAGE", Value =JsonConvert.SerializeObject(contactVM) });
+        //public ActionResult Contact()
+        //{
+        //    Configuration config = BusinessHandlerConfigurations.GetConfigByKey("CONTACTUS-PAGE");
+        //    if (config != null)
+        //    {
+        //        ViewBag.contactVM = JsonConvert.DeserializeObject<ContactVM>(config.Value);
+        //    }
+        //    else
+        //    {
+        //        ContactVM contactVM = new ContactVM
+        //        {
+        //            CompanyName= "Muses Publishing House - Pvt Ltd",
+        //            AddressLine1 = "34/4, katuwalamulla",
+        //            AddressLine2 = "11020 Ganemulla,",
+        //            AddressLine3 = "Sri Lanka",
+        //            Email1 = "support@musesbooks.com",
+        //            Email2 = "mareting@musesbooks.com",
+        //            Email3 = "publisher@musesbooks.com",
+        //            Phone1 = "077 824 5459",
+        //            Phone2 = "",
+        //            Phone3 = "",
+        //            Description = "საბეჭდი და ტიპოგრაფიული ინდუსტრიის უშინაარსო ტექსტია. იგი სტანდარტად 1500-იანი წლებიდან იქცა, როდესაც უცნობმა მბეჭდავმა ამწყობ დაზგაზე წიგნის საცდელი ეგზემპლარი დაბეჭდა. მისი ტექსტი არამარტო 5 საუკუნის მანძილზე შემორჩა, არამედ მან დღემდე, ელექტრონული ტიპოგრაფიის დრომდეც უცვლელად მოაღწია. განსაკუთრებული პოპულარობა მას 1960-იან წლებში გამოსულმა Letraset-ის ცნობილმა ტრაფარეტებმა მოუტანა, უფრო მოგვიანებით კი — Aldus PageMaker-ის ტიპის საგამომცემლო პროგრამებმა, რომლებშიც Lorem Ipsum-ის სხვადასხვა ვერსიები იყო ჩაშენებული.",
+        //        };
+        //        BusinessHandlerConfigurations.AddOrUpdate(new Configuration { Key = "CONTACTUS-PAGE", Value =JsonConvert.SerializeObject(contactVM) });
 
-                ViewBag.contactVM = contactVM;
-            }
-            return View();
-        }
+        //        ViewBag.contactVM = contactVM;
+        //    }
+        //    return View();
+        //}
 
         [HttpPost]
         [CaptchaValidator]

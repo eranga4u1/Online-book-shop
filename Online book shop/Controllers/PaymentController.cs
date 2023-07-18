@@ -7,6 +7,7 @@ using Online_book_shop.Payments.MintPaySDK.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -91,11 +92,9 @@ namespace Online_book_shop.Controllers
         [HttpPost]
         public ActionResult KokoPaymentRequest(KokoRequest model)
         {
-            model._mId = "f45592f363a1647f44ee688185cf8d43";
             BusinessHandlerPayment b = new BusinessHandlerPayment();
-            b.KokoRequest(model);
-            //BusinessHandlerPayment.PaymentRequestAsync(model).Wait();
-            return Redirect("");
+            var rsult= b.KokoRequest(model);
+            return Redirect(rsult);
         }
         [HttpPost]
         public ActionResult MintPayPaymentRequest(ProcessOrder model)

@@ -17,11 +17,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Online_book_shop.Payments.MintPaySDK;
 using Online_book_shop.Payments.MintPaySDK.Models;
+using MongoDB.Driver.Core.Authentication.Vendored;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.OpenSsl;
+using HashAlgorithmName = System.Security.Cryptography.HashAlgorithmName;
 
 namespace Online_book_shop.Handlers.Business
 {
     public class BusinessHandlerPayment
     {
+
         public   async Task<string> PaymentRequestAsync(PayHereRequest model)
         {
             try
@@ -94,140 +101,70 @@ namespace Online_book_shop.Handlers.Business
             return content;
         }
 
-        public async Task<string> KokoRequest(KokoRequest model)
+        public string KokoRequest(KokoRequest model)
         {
-            var kokoUrl = System.Configuration.ConfigurationManager.AppSettings["KokoUrl"];
-            var kokoApiKey = System.Configuration.ConfigurationManager.AppSettings["kokoApiKey"];
-            var kokoMid = System.Configuration.ConfigurationManager.AppSettings["kokoMid"];
-            String dataString = model._mId + model._amount + model._currency + model._pluginName +
-                                model._pluginVersion + model._returnUrl +
-                                model._cancelUrl + model._orderId + model._reference +
+
+            var baseUrl = System.Configuration.ConfigurationManager.AppSettings["BaseUrl"];
+            model.baseUrl = baseUrl;
+            var kokoUrl = "https://prodapi.paykoko.com/api/merchants/orderCreate";
+            var kokoApiKey = "SVL5WxQ1i7Hq3M2foIv5kgUVyTMAZQ03";
+            var kokoMid = "f45592f363a1647f44ee688185cf8d43";
+            var returnUrl = string.Format("{0}Payment/PaymentResponse?state=done&order_id={1}", baseUrl, model._orderId);
+            var cancelUrl = string.Format("{0}Payment/PaymentResponse?state=cancel&order_id={1}", baseUrl, model._orderId); 
+            var responseUrl = string.Format("{0}Payment/PaymentResponse?state=notify&order_id={1}", baseUrl, model._orderId); 
+            var _pluginName = "customapi";
+            var _pluginVersion = "1";
+            var description = model._description= string.Format("Online Muses Book Store :{0}", model._orderId);
+
+            String dataString = kokoMid + model._amount + model._currency + _pluginName +
+                                _pluginVersion + returnUrl +
+                                cancelUrl + model._orderId + model._reference +
                                 model._firstName + model._lastName + model._email +
-                                model._description + model.api_key + model._responseUrl;
+                                 description + kokoApiKey + responseUrl;
 
-            string signedData;
-            string signature; ;
-            GetSignInfo(dataString, "koko_private_key.txt", "koko_public_key.txt", out signedData, out signature);
-            // GetSignInfo2(dataString, out signedData, out signature);
-            var client = new RestClient("https://prodapi.paykoko.com/api/merchants/orderCreate");
-            ServicePointManager.Expect100Continue = true;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+
+            string signature = SignStringWithRSA(model); // SignStringWithRSA(dataString);//
+
+            BusinessHandlerMPLog.Log(LogType.Message, String.Format("Data String for{0}: {1}", model._orderId, dataString), "BusinessHandlerPayment", "KokoRequest",null);
+            BusinessHandlerMPLog.Log(LogType.Message, String.Format("signature for{0}: {1}", model._orderId, signature), "BusinessHandlerPayment", "KokoRequest", null);
+
+            //string signature = "OTnomXksafe6ZdICi/pMEpRnXj54e5Qy5dxQ5O/oXYsi8vxAicKBAvgwLAmUYuMuTH6Kk4ltst/6hiHzmLZpn/8xb1EfTCIYYAf/mdUkqAjNDbyCNIiZPRBQIWTkBX0QeKkReyDBJAm6m2uv1QZWbQLoltNpH5pDvqZ/CgreKds=";
+
+            var client = new RestClient(kokoUrl);
+          
             client.Timeout = -1;
-            var request = new RestRequest(Method.POST);
-            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
-            request.AddParameter("_mId", model._mId);
-            request.AddParameter("api_key", kokoApiKey);
-            request.AddParameter("_returnUrl", "https://localhost:44361/Payment/PaymentResponse?state=done");
-            request.AddParameter("_cancelUrl", "https://localhost:44361/Payment/PaymentResponse?state=cancel");
-            request.AddParameter("_responseUrl", "https://localhost:44361/Payment/PaymentResponse?state=notify");
-            request.AddParameter("_amount", model._amount);
-            request.AddParameter("_currency", "LKR");
-            request.AddParameter("_reference", model._reference);
-            request.AddParameter("_orderId", model._orderId);
-            request.AddParameter("_pluginName", "customapi");
-            request.AddParameter("_pluginVersion", "1");
-            request.AddParameter("_description", string.Format("Online Muses Book Store :{0}",model._orderId) );
-            request.AddParameter("_firstName", model._firstName);
-            request.AddParameter("_lastName", model._lastName);
-            request.AddParameter("_email",model._email);
-            request.AddParameter("dataString", dataString);
-            request.AddParameter("signature", signature);
-            IRestResponse response = client.Execute(request);
+            var request1 = new RestRequest(Method.POST);
+            request1.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+            request1.AddParameter("_mId", kokoMid);
+            request1.AddParameter("api_key", kokoApiKey);
+            request1.AddParameter("_returnUrl", returnUrl);
+            request1.AddParameter("_cancelUrl", cancelUrl);
+            request1.AddParameter("_responseUrl", responseUrl);
+            request1.AddParameter("_amount", model._amount);
+            request1.AddParameter("_currency", "LKR");
+            request1.AddParameter("_reference", model._reference);
+            request1.AddParameter("_orderId", model._orderId);
+            request1.AddParameter("_pluginName", _pluginName);
+            request1.AddParameter("_pluginVersion", _pluginVersion);
+            request1.AddParameter("_description", description);
+            request1.AddParameter("_firstName", model._firstName);
+            request1.AddParameter("_lastName", model._lastName);
+            request1.AddParameter("_email", model._email);
+            request1.AddParameter("dataString", dataString);
+            request1.AddParameter("signature", signature);
+            IRestResponse response = client.Execute(request1);
+
+            BusinessHandlerMPLog.Log(LogType.Message, String.Format("Request for{0}: {1}", model._orderId, JsonConvert.SerializeObject(request1)), "BusinessHandlerPayment", "KokoRequest", null);
+
+            BusinessHandlerMPLog.Log(LogType.Message, String.Format("Response for{0}: {1}", model._orderId, JsonConvert.SerializeObject(response)), "BusinessHandlerPayment", "KokoRequest", null);
+
             Console.WriteLine(response.Content);
-            return response.Content;
+            return response.ResponseUri.AbsoluteUri;
         }
 
 
-        public static void SignData(string message, string privateKeyXml, out string signature, out string signedData)
-        {
-            using (var rsa = new RSACryptoServiceProvider())
-            {
-                // Load the private key from XML
-                rsa.FromXmlString(privateKeyXml);
 
-                // Compute the hash of the message
-                byte[] messageBytes = Encoding.UTF8.GetBytes(message);
-                byte[] hash = SHA256.Create().ComputeHash(messageBytes);
-
-                // Sign the hash
-                byte[] signatureBytes = rsa.SignHash(hash, CryptoConfig.MapNameToOID("SHA256"));
-
-                // Convert the signature and signed message to Base64 strings
-                signature = Convert.ToBase64String(signatureBytes);
-                signedData = Convert.ToBase64String(messageBytes);
-            }
-        }
-
-
-        private static void GetSignInfo(string data, string privateKeyFileName, string publicKeyFileName, out string signedData, out string signature)
-        {
-            try
-            {
-                string root = AppDomain.CurrentDomain.BaseDirectory;
-                string privateKeyFile = Path.Combine(root, privateKeyFileName);
-                string publicKeyFile = Path.Combine(root, publicKeyFileName);
-
-
-                using (var rsa = new RSACryptoServiceProvider())
-                {
-                    // Load the private key from XML
-                    rsa.FromXmlString(ReadTextFromFile(privateKeyFile));
-
-                    // Compute the hash of the message
-                    byte[] messageBytes = Encoding.UTF8.GetBytes(data);
-                    byte[] hash = SHA256.Create().ComputeHash(messageBytes);
-
-                    // Sign the hash
-                    byte[] signatureBytes = rsa.SignHash(hash, CryptoConfig.MapNameToOID("SHA256"));
-
-                    // Convert the signature and signed message to Base64 strings
-                    signature = Convert.ToBase64String(signatureBytes);
-                    signedData = Convert.ToBase64String(messageBytes);
-                }
-
-                //using (var rsa = new RSACryptoServiceProvider(1024))
-                //{
-                //    // Read the private key from the file
-                //    string privateKeyXml = File.ReadAllText(privateKeyFile);
-                //    rsa.FromXmlString(privateKeyXml);
-
-                //    // Sign the data
-                //    byte[] dataBytes = Encoding.UTF8.GetBytes(data);
-                //    byte[] signedDataBytes = rsa.SignData(dataBytes, new SHA256CryptoServiceProvider());
-
-                //    signedData = Convert.ToBase64String(signedDataBytes);
-
-                //    // Read the public key from the file
-                //    byte[] publicKeyBlob = File.ReadAllBytes(publicKeyFile);
-                //    rsa.ImportCspBlob(publicKeyBlob);
-                //    byte[] publicKey = rsa.ExportCspBlob(false);
-                //    signature = Convert.ToBase64String(publicKey);
-                //}
-
-
-                Console.WriteLine("Signed Data: " + signedData);
-                Console.WriteLine("Signature: " + signature);
-            }
-            catch(Exception ex)
-            {
-                signedData = "";
-                signature = "";
-                Console.WriteLine(ex.Message);
-            }
-
-        }
-        private static void GetSignInfo2(string data, out string signedData, out string signature)
-        {
-            using (var rsa = new RSACryptoServiceProvider(2048))
-            {
-                // Sign the data
-                byte[] dataBytes = Encoding.UTF8.GetBytes(data);
-                byte[] signedDataBytes = rsa.SignData(dataBytes, new SHA256CryptoServiceProvider());
-
-                signedData = Convert.ToBase64String(signedDataBytes);
-                signature = Convert.ToBase64String(rsa.ExportCspBlob(false));
-            }
-        }
 
         public static Cart UpdateCartForKokoPayment(int cartId)
         {
@@ -324,116 +261,77 @@ namespace Online_book_shop.Handlers.Business
             }
           
         }
+
+        private static string SignStringWithRSA(KokoRequest model)
+        {
+            var baseUrl = System.Configuration.ConfigurationManager.AppSettings["PaymentAPI"];
+            var client = new RestClient(String.Format("{0}api/Koko/Post", baseUrl));
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+            client.Timeout = -1;
+            var request = new RestRequest(Method.POST);
+            request.AddHeader("Content-Type", "application/json");
+            var body =JsonConvert.SerializeObject(model);
+            request.AddParameter("application/json", body, ParameterType.RequestBody);
+            IRestResponse response = client.Execute(request);
+            return response.Content;
+        }
+        private static string SignStringFromDataString(string datastring)
+        {
+            var client = new RestClient("http://localhost:5188/Koko?DataString=" + datastring);
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Content-Type", "application/json");
+            IRestResponse response = client.Execute(request);
+            return response.Content;
+        }
+        public static string SignStringWithRSA(string stringToSign)
+        {
+            string pemPrivateKey = "-----BEGIN RSA PRIVATE KEY-----" +
+                    "MIICWgIBAAKBgHYtAJezj90UF6mUfvajDXd0oZG1J3/LA/iXakBDXxegkgHiSyIh" +
+                    "ZdsRgZNa4aSlF1lEMmQJjaEP6CJv6PUDmCz1f8spGrT1JXGBiv54nrnPa87q68oU" +
+                    "8zt3B8UgAUBkM1EfKH2s7FPbQRs43oCVh6KmtaIvb/yCPoL+P3n1ybnLAgMBAAEC" +
+                    "gYAkoF4Gpoh4JLoQvQ18s5yA4Y0R8+uCGBHrAkLUGA1o7UNTgid3NJK1Cv/2A7zb" +
+                    "oq9R42kayDs1KBDyW20AQ1TubdYZW+u3svxh+vnpbqS6RGLI7pLJ8PkUDWqRLMFP" +
+                    "G3cDgfAOzT2+fuaBzK84sdr5nW1dpydecXdAPEOZVmbOAQJBAMHF5DaBywAqrKb6" +
+                    "tALUXUzkrmAiUPYNRYq7kb0x5KfVCg+go7Ecg7HNsHlljfGrEqcXyo36/Sb2jHY5" +
+                    "gi8yuCECQQCcIEB05xwvaGgABbLo9U1fLLgRcfLfVtLaq5nVuLlx4XdyGDoBTMqo" +
+                    "obATpnQweBhPyXYsvJ1xZCxUJl0U7kRrAkATCcVlUZVHW+oAsesTyBeuoV08lsKL" +
+                    "mjw16D3mb8t+beECLg9HLH0H8CShmMe8cclwX1cIYhuTQ3ADgZz31CzhAkAo2Ttk" +
+                    "Gs/CC6QiVVthHkVXIIEsd07fZn0Wn41JYOKMTDyPSo1qp6fihSNnkMaXo+Rgg8p6" +
+                    "nALplxcOEVeLUWfvAkB/C78+QyxX63NT7OcuZk5lBFb6FfzLqZxvK7Ll5t2qiQE7" +
+                    "c0tIgd04L68mOE4QmIrmio81v1vip/HwRnfhCl75" +
+                    "-----END RSA PRIVATE KEY-----";
+
+            // Load the RSA private key from the PEM string using BouncyCastle
+            var rsa = new RSACryptoServiceProvider();
+            rsa.ImportParameters(GetPrivateKeyFromPem(pemPrivateKey));
+
+            // Convert the string to sign to bytes
+            byte[] data = Encoding.UTF8.GetBytes(stringToSign);
+
+            // Compute the signature
+            byte[] signature = rsa.SignData(data, new SHA256CryptoServiceProvider());
+
+            // Convert the signature to base64 string
+            string base64Signature = Convert.ToBase64String(signature);
+
+            return base64Signature;
+        }
+
+        private static RSAParameters GetPrivateKeyFromPem(string pemPrivateKey)
+        {
+            // Extract the private key from the PEM string
+            var privateKeyBytes = Convert.FromBase64String(pemPrivateKey);
+            var rsa = new RSACryptoServiceProvider();
+            rsa.ImportCspBlob(privateKeyBytes);
+
+            return rsa.ExportParameters(true);
+        }
+
     }
 }
 //https://kashifsoofi.github.io/cryptography/rsa-signing-in-csharp-using-microsoft-cryptography/
 //https://blog.todotnet.com/2018/02/public-private-keys-and-signing/
 
 
-//   public async Task<String> KokoRequest(KokoRequest model)
-//   {
-//       var  kokoUrl = System.Configuration.ConfigurationManager.AppSettings["KokoUrl"];
-//       var kokoApiKey = System.Configuration.ConfigurationManager.AppSettings["kokoApiKey"];
-//       var kokoMid = System.Configuration.ConfigurationManager.AppSettings["kokoMid"];
-//       String dataString = model._mId + model._amount +model._currency+ model._pluginName +
-//                           model._pluginVersion + model._returnUrl +
-//                           model._cancelUrl+ model._orderId + model._reference+
-//                           model._firstName + model._lastName + model._email +
-//                           model._description + model.api_key + model._responseUrl;
-
-
-//       string signedData;
-//       string signature; ;
-//       GetSignInfo(dataString, "koko_private_key.txt", "koko_public_key.txt",out signedData,out signature);
-//      // GetSignInfo2(dataString, out signedData, out signature);
-
-//       //bool comply = RsaVerify.verify(data, signature,merchantPluginDetail.getMerchantPublicKey());
-
-//       if (!string.IsNullOrEmpty(kokoUrl) && !string.IsNullOrEmpty(kokoApiKey) && !string.IsNullOrEmpty(kokoMid))
-//       {
-//           model._mId = kokoMid;
-//           model.api_key = kokoApiKey;
-//           /* using (var client = new HttpClient())
-//            {
-//                var values = new Dictionary<string, string>
-//                {
-//                    {"_mId",model._mId},
-//                    {"api_key", model.api_key },
-//                    {"_returnUrl",model._returnUrl},
-//                    {"_cancelUrl", model._cancelUrl},
-//                    { "_responseUrl", model._responseUrl},
-//                    { "_amount", model._amount},
-//                    { "_currency",model._currency},
-//                    { "_reference",model._reference},
-//                    { "_orderId", model._orderId},
-//                    { "_pluginName", model._pluginName},
-//                    { "_pluginVersion", model._pluginVersion},
-//                    { "_description", model._description},
-//                    { "_firstName", model._firstName },
-//                    { "_lastName", model._lastName},
-//                    { "_email", model._email},
-//                    { "dataString",signedData},
-//                    {"signature",signature}
-//                };
-
-
-
-//                var content = new FormUrlEncodedContent(values);
-//                try
-//                {
-//                    var response = await client.PostAsync(kokoUrl, content);
-
-//                    var responseString = await response.Content.ReadAsStringAsync();
-//                    return responseString;
-//                }
-//                catch(Exception ex)
-//                {
-//                    return "";
-//                }
-
-
-//            }*/
-//var requestBody = new NameValueCollection
-//                    {
-//                        {"_mId", model._mId},
-//                        {"api_key",  model.api_key },
-//                        {"_returnUrl", model._returnUrl},
-//                        {"_cancelUrl", model._cancelUrl},
-//                        {"_responseUrl",model._responseUrl},
-//                        {"_amount", model._amount},
-//                        {"_currency", model._currency},
-//                        {"_reference", model._reference},
-//                        {"_orderId", model._orderId},
-//                        {"_pluginName", model._pluginName},
-//                        {"_pluginVersion", model._pluginVersion},
-//                        {"_description", model._description},
-//                        {"_firstName", model._firstName},
-//                        {"_lastName", model._lastName},
-//                        {"_email", model._email},
-//                        {"dataString", signedData},
-//                        {"signature", signature}
-//                    };
-
-//using (var client = new WebClient())
-//{
-//    client.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-//    try
-//    {
-//        var response = client.UploadValues(kokoUrl, "POST", requestBody);
-//        Console.WriteLine(System.Text.Encoding.Default.GetString(response));
-//        return response.ToString();
-//    }
-//    catch (Exception ex)
-//    {
-//        Console.WriteLine(ex.Message);
-//        return ex.Message;
-//    }
-
-//}
-//            }
-//            else
-//{
-//    return null;
-//}
-           
-//        }
