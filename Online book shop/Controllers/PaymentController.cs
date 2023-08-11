@@ -18,14 +18,27 @@ namespace Online_book_shop.Controllers
         // GET: Payment
         public ActionResult PaymentResponse()
         {
-            BusinessHandlerMPLog.Log(LogType.Message, string.Format("Returned From Payhere ({0})", Request.Url.AbsoluteUri), "Payment", "PaymentResponse");
-            string orderUid = Request.QueryString["order_id"];
-            string state= Request.QueryString["state"];
+            string orderUid = "";
+            string state = "";
+            //Returned From Payhere (http://www.musesbooks.com/Payment/PaymentResponse?trnId=d5cbb82564dd845d5b16e751edd3db5a&orderId=2023-IN-25980-C26072033&status=SUCCESS&desc=+&key=&wc-api=https%3A%2F%2Fwww.musesbooks.com%2FPayment%2FPaymentResponse&frontend=true)
+            if (!string.IsNullOrEmpty(Request.QueryString["trnId"]))//This is koko paytment
+            {
+                BusinessHandlerMPLog.Log(LogType.Message, string.Format("Returned From koko ({0})", Request.Url.AbsoluteUri), "Payment", "PaymentResponse");
+                orderUid = Request.QueryString["orderId"];
+                state = Request.QueryString["status"];
+            }
+            else
+            {
+                BusinessHandlerMPLog.Log(LogType.Message, string.Format("Returned From Payhere ({0})", Request.Url.AbsoluteUri), "Payment", "PaymentResponse");
+                orderUid = Request.QueryString["order_id"];
+                state = Request.QueryString["state"];
+            }
+            
             DeliverStatus tempDeliverStatuses = BusinessHandlerDeliveryStatus.GetDeliverStatusByTitle("temp_cart"); 
             DeliverStatus partiallyConfirmedDeliverStatuses = BusinessHandlerDeliveryStatus.GetDeliverStatusByTitle("partially_confirmed");
             ApplicationUser user = BusinessHandlerUser.GetApplicationUser();
             INotification PrintedNotification = new EmailNotifications();
-            if (state.ToLower().Trim() == "done")
+            if (state.ToLower().Trim() == "done" || state.ToLower().Trim() == "success")
             {
                 if (orderUid != null)
                 {

@@ -103,15 +103,22 @@ namespace Online_book_shop.Handlers.Business
 
         public string KokoRequest(KokoRequest model)
         {
+            model._amount = "1050.00";
+            model._currency = "LKR";
+            model._orderId = "2023-IN-22518-Y03042206";
+            model._reference = "2023-IN-22518-Y03042206";
+            model._firstName = "Jagath";
+            model._lastName = "Wijethunga";
+            model._email = "eranga.kdy@gmail.com";
 
             var baseUrl = System.Configuration.ConfigurationManager.AppSettings["BaseUrl"];
             model.baseUrl = baseUrl;
             var kokoUrl = "https://prodapi.paykoko.com/api/merchants/orderCreate";
             var kokoApiKey = "SVL5WxQ1i7Hq3M2foIv5kgUVyTMAZQ03";
             var kokoMid = "f45592f363a1647f44ee688185cf8d43";
-            var returnUrl = string.Format("{0}Payment/PaymentResponse?state=done&order_id={1}", baseUrl, model._orderId);
-            var cancelUrl = string.Format("{0}Payment/PaymentResponse?state=cancel&order_id={1}", baseUrl, model._orderId); 
-            var responseUrl = string.Format("{0}Payment/PaymentResponse?state=notify&order_id={1}", baseUrl, model._orderId); 
+            var returnUrl = string.Format("{0}Payment/PaymentResponse?state=done&order_id={1}&type=koko", baseUrl, model._orderId);
+            var cancelUrl = string.Format("{0}Payment/PaymentResponse?state=cancel&order_id={1}&type=koko", baseUrl, model._orderId); 
+            var responseUrl = string.Format("{0}Payment/PaymentResponse?state=notify&order_id={1}&type=koko", baseUrl, model._orderId); 
             var _pluginName = "customapi";
             var _pluginVersion = "1";
             var description = model._description= string.Format("Online Muses Book Store :{0}", model._orderId);
