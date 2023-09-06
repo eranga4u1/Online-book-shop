@@ -84,6 +84,9 @@ namespace Online_book_shop.Handlers.Database
                                         // reduce 10 from percentage because of KOKO
                                         var newpercentage = (percentage - 10);
                                         var newdescount = Math.Round((book.AmountBeforeDiscount) * Convert.ToDecimal(newpercentage / 100), 2);
+                                        if (newdescount <0) { 
+                                            newdescount = 0;
+                                        }
                                         var newAmountAfterDiscount = book.AmountBeforeDiscount - newdescount;
                                         book.AmountAfterDiscount = newAmountAfterDiscount;
                                         book.Discount = newdescount;

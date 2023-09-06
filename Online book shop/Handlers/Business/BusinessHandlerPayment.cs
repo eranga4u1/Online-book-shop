@@ -103,13 +103,13 @@ namespace Online_book_shop.Handlers.Business
 
         public string KokoRequest(KokoRequest model)
         {
-            model._amount = "1050.00";
-            model._currency = "LKR";
-            model._orderId = "2023-IN-22518-Y03042206";
-            model._reference = "2023-IN-22518-Y03042206";
-            model._firstName = "Jagath";
-            model._lastName = "Wijethunga";
-            model._email = "eranga.kdy@gmail.com";
+            //model._amount = "1050.00";
+            //model._currency = "LKR";
+            //model._orderId = "2023-IN-22518-Y03042206";
+            //model._reference = "2023-IN-22518-Y03042206";
+            //model._firstName = "Jagath";
+            //model._lastName = "Wijethunga";
+            //model._email = "eranga.kdy@gmail.com";
 
             var baseUrl = System.Configuration.ConfigurationManager.AppSettings["BaseUrl"];
             model.baseUrl = baseUrl;
