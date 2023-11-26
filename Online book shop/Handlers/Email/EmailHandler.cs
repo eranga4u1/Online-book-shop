@@ -7,7 +7,7 @@ namespace Online_book_shop.Handlers.Email
 {
     public class EmailHandler
     {
-        public static string Email(string htmlString,string From,string To, string Subject, string displayName= "MusesBooks.com")
+        public static string Email(string htmlString,string From,string To, string Subject, string displayName= "MusesBooks.com", int emailtype=0)
         {
             try
             {
@@ -40,9 +40,9 @@ namespace Online_book_shop.Handlers.Email
         {
             try
             {
-                string host = "smtp.gmail.com";//System.Configuration.ConfigurationManager.AppSettings["EmailHost"];
-                string user = "eranga.kdy.home@gmail.com";//System.Configuration.ConfigurationManager.AppSettings["EmailUser"];
-                string pwd = "Ranga@google";//System.Configuration.ConfigurationManager.AppSettings["EmailPwd"];
+                string host = System.Configuration.ConfigurationManager.AppSettings["EmailHost"];
+                string user = System.Configuration.ConfigurationManager.AppSettings["EmailUser"];
+                string pwd = System.Configuration.ConfigurationManager.AppSettings["EmailPwd"];
 
                 MailMessage message = new MailMessage();
                 SmtpClient smtp = new SmtpClient();
