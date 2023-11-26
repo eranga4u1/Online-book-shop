@@ -16,16 +16,18 @@ namespace Online_book_shop.Handlers.Email
                 string pwd = System.Configuration.ConfigurationManager.AppSettings["EmailPwd"];
                 MailMessage message = new MailMessage();
                 SmtpClient smtp = new SmtpClient();
-                message.From = new MailAddress(user, displayName);
+                message.From = new MailAddress("eranga.kdy.home@gmail.com", displayName);
+                message.ReplyTo = new MailAddress("eranga.kdy.home@gmail.com", displayName);
                 message.To.Add(new MailAddress(To));
+                message.To.Add(new MailAddress("online@musespublishers.com"));
                 message.Subject = Subject;
                 message.IsBodyHtml = true; //to make message body as html  
                 message.Body = htmlString;
-                smtp.Port = 587;
-                smtp.Host = host; //for gmail host  
+                smtp.Port = 2587;
+                smtp.Host = "smtp.gmail.com"; //for gmail host  
                 smtp.EnableSsl = true;
                 smtp.UseDefaultCredentials = false;
-                smtp.Credentials = new NetworkCredential(user, pwd);
+                smtp.Credentials = new NetworkCredential("eranga.kdy.home@gmail.com", "Ranga@google");
                 smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
                 smtp.Send(message);
                 return "Done";
@@ -34,6 +36,45 @@ namespace Online_book_shop.Handlers.Email
                 return ex.Message; 
             }
         }
+        public static string Email2(string htmlString, string From, string To, string Subject, string displayName = "MusesBooks.com")
+        {
+            try
+            {
+                string host = "smtp.gmail.com";//System.Configuration.ConfigurationManager.AppSettings["EmailHost"];
+                string user = "eranga.kdy.home@gmail.com";//System.Configuration.ConfigurationManager.AppSettings["EmailUser"];
+                string pwd = "Ranga@google";//System.Configuration.ConfigurationManager.AppSettings["EmailPwd"];
+
+                MailMessage message = new MailMessage();
+                SmtpClient smtp = new SmtpClient();
+
+                message.From = new MailAddress(user, displayName);
+                message.To.Add(new MailAddress(To));
+                message.To.Add(new MailAddress("online@musespublishers.com"));
+
+                message.Subject = Subject;
+                message.IsBodyHtml = true;
+                message.Body = htmlString;
+
+                smtp.Port = 587;
+                smtp.Host = host; // Use the value from your configuration
+                smtp.EnableSsl = true;
+
+                // Use the values from your configuration
+                smtp.UseDefaultCredentials = false;
+                smtp.Credentials = new NetworkCredential(user, pwd);
+
+                smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+
+                smtp.Send(message);
+
+                return "Done";
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
         public static string ReadHtmlTemplate(string fileName)
         {
             try

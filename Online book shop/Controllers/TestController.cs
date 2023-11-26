@@ -16,7 +16,7 @@ namespace Online_book_shop.Controllers
         }
         public string SendTestMail()
         {
-          return  EmailHandler.Email("<h1>This is test email<h1/>", "noreply@musespublishers.com", "eranga.kdy@gmail.com", "This is test mail");
+          return  EmailHandler.Email2("<h1>This is test email<h1/>", "noreply@musespublishers.com", "eranga.kdy@gmail.com", "This is test mail");
            // return "Done";
         }
         public string SendTestMailWithAttachment()
