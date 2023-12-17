@@ -1,13 +1,17 @@
-﻿using System;
+﻿using MimeKit;
+using Newtonsoft.Json.Linq;
+using System;
 using System.IO;
 using System.Net;
 using System.Net.Mail;
+using System.Text;
 using System.Web;
+using MailKit;
 namespace Online_book_shop.Handlers.Email
 {
     public class EmailHandler
     {
-        public static string Email(string htmlString,string From,string To, string Subject, string displayName= "MusesBooks.com", int emailtype=0)
+        public static string Email3(string htmlString,string From,string To, string Subject, string displayName= "MusesBooks.com", int emailtype=0)
         {
             try
             {
@@ -139,6 +143,95 @@ namespace Online_book_shop.Handlers.Email
                 return ex.Message;
             }
             
+        }
+        //public static string Email(string htmlString, string From, string To, string Subject, string displayName = "MusesBooks.com", int emailtype = 0)
+        //{
+        //    try
+        //    {
+        //        System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+        //        var baseAddress = "https://api.zeptomail.com/v1.1/email";
+
+        //        var http = (HttpWebRequest)WebRequest.Create(new Uri(baseAddress));
+        //        http.Accept = "application/json";
+        //        http.ContentType = "application/json";
+        //        http.Method = "POST";
+        //        http.PreAuthenticate = true;
+        //        http.Headers.Add("Authorization", "Zoho-enczapikey wSsVR61w+RKmC6wuzmCpdLw5mQxWUQigQRx50FTy4nb/TfnF88c5wxWaBQWnSPZKRTM9QmMT8r4rzRwEhDQGjdt/n1xTDSiF9mqRe1U4J3x17qnvhDzNWm1YlBqIKI8PxARpn2dnFMkl+g==");
+        //        JObject parsedContent = JObject.Parse("{'from': { 'address': 'noreply@online.musespublishers.com'},'to': [{'email_address': {'address': '" + To+"','name': 'MusesBooks.com'}}],'subject':'"+ Subject + "','htmlbody':'"+ htmlString + "'}");
+        //        Console.WriteLine(parsedContent.ToString());
+        //        ASCIIEncoding encoding = new ASCIIEncoding();
+        //        Byte[] bytes = encoding.GetBytes(parsedContent.ToString());
+
+        //        Stream newStream = http.GetRequestStream();
+        //        newStream.Write(bytes, 0, bytes.Length);
+        //        newStream.Close();
+
+        //        var response = http.GetResponse();
+
+        //        var stream = response.GetResponseStream();
+        //        var sr = new StreamReader(stream);
+        //        var content = sr.ReadToEnd();
+        //        Console.WriteLine(content);
+        //        return "Done";
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        return ex.Message;
+        //    }
+
+
+        //}
+        public static string Email(string htmlString, string From, string To, string Subject, string displayName = "MusesBooks.com", int emailtype = 0)
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("noreply", "noreply@online.musespublishers.com"));
+            message.To.Add(new MailboxAddress("MusesBooks.com", To));
+            message.Subject = Subject;
+            message.Body = new TextPart("html")
+            {
+                Text = htmlString
+            };
+            var client = new MailKit.Net.Smtp.SmtpClient();
+            try
+            {
+                client.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+                client.Connect("smtp.zeptomail.com", 587, false);
+                client.Authenticate("emailapikey", "wSsVR61w+RKmC6wuzmCpdLw5mQxWUQigQRx50FTy4nb/TfnF88c5wxWaBQWnSPZKRTM9QmMT8r4rzRwEhDQGjdt/n1xTDSiF9mqRe1U4J3x17qnvhDzNWm1YlBqIKI8PxARpn2dnFMkl+g==");
+                client.Send(message);
+                client.Disconnect(true);
+                return "Done";
+            }
+            catch (Exception e)
+            {
+                return e.Message;
+            }
+
+
+        }
+        public static void TestEmail2()
+        {
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("noreply", "noreply@online.musespublishers.com"));
+            message.To.Add(new MailboxAddress("MusesBooks.com", "eranga.kdy@gmail.com"));
+            message.Subject = "Test Email";
+            message.Body = new TextPart("html")
+            {
+                Text = "Test email sent successfully."
+            };
+            var client = new MailKit.Net.Smtp.SmtpClient(); 
+            try
+            {
+                client.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+                client.Connect("smtp.zeptomail.com", 587, false);
+                client.Authenticate("emailapikey", "wSsVR61w+RKmC6wuzmCpdLw5mQxWUQigQRx50FTy4nb/TfnF88c5wxWaBQWnSPZKRTM9QmMT8r4rzRwEhDQGjdt/n1xTDSiF9mqRe1U4J3x17qnvhDzNWm1YlBqIKI8PxARpn2dnFMkl+g==");
+                client.Send(message);
+                client.Disconnect(true);
+            }
+            catch (Exception e)
+            {
+                Console.Write(e.Message);
+            }
+
         }
     }
 }
