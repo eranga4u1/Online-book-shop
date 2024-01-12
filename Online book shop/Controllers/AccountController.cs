@@ -236,23 +236,33 @@ namespace Online_book_shop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null)// if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                if (ModelState.IsValid)
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
+                    var user = await UserManager.FindByNameAsync(model.Email);
+                    if (user == null)// if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                    {
+                        // Don't reveal that the user does not exist or is not confirmed
+                        BusinessHandlerMPLog.Log(LogType.Message, String.Format("No user :{0}", model.Email), "ForgotPassword", "Account");
+                        return View("ForgotPasswordConfirmation");
+                    }
+
+                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
+                    // Send an email with this link
+                    string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    string[] para = { "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>" };
+                    EmailHandler.Email(EmailHandler.SetEmailParameter("PasswordReset.html", para), "noreply@musesbooks.com", model.Email, "Reset Password", "MusesBooks.com : Reset Your Password");
+                    // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    return RedirectToAction("ResetPasswordEmail", "Account");
                 }
 
-                // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                string[] para = { "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>" };
-                EmailHandler.Email(EmailHandler.SetEmailParameter("PasswordReset.html", para), "noreply@musesbooks.com", model.Email, "Reset Password","MusesBooks.com : Reset Your Password");
-               // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                return RedirectToAction("ResetPasswordEmail", "Account");
+            }
+            catch(Exception ex)
+            {
+                BusinessHandlerMPLog.Log(LogType.Exception, ex.Message, "ForgotPassword", "Account");
+
             }
 
             // If we got this far, something failed, redisplay form

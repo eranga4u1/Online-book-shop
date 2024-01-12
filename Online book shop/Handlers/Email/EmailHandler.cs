@@ -7,6 +7,8 @@ using System.Net.Mail;
 using System.Text;
 using System.Web;
 using MailKit;
+using Online_book_shop.Handlers.Business;
+
 namespace Online_book_shop.Handlers.Email
 {
     public class EmailHandler
@@ -106,6 +108,8 @@ namespace Online_book_shop.Handlers.Email
             }
             catch(Exception ex)
             {
+                BusinessHandlerMPLog.Log(LogType.Exception, ex.Message, "SetEmailParameter", "EmailHandler");
+
                 return "";
             }
         }
@@ -201,9 +205,11 @@ namespace Online_book_shop.Handlers.Email
                 client.Disconnect(true);
                 return "Done";
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                return e.Message;
+                BusinessHandlerMPLog.Log(LogType.Exception, ex.Message, "Email", "EmailHandler");
+
+                return ex.Message;
             }
 
 

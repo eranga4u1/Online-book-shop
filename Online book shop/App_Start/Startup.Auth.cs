@@ -77,6 +77,10 @@ namespace Online_book_shop
             {
                 BusinessHandlerScheduller.ReleaseOldBookPack();
             });
+            SiteScheduler.IntervalInDays(05, 00, 1, () =>
+            {
+                BusinessHandlerScheduller.BackUpDatabase();
+            });
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Online_book_shop.Handlers.Database;
 using Online_book_shop.Models;
+using Online_book_shop.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,27 @@ namespace Online_book_shop.Handlers.Business
                 {
                     DBHandlerPromotion.SetToDefaultPromotion(p);
                 }
+            }
+            return true;
+        }
+
+        internal static bool BackUpDatabase()
+        {
+            try
+            {
+                using (var ctx = new ApplicationDbContext())
+                {
+                    var result = ctx.Database.SqlQuery<BookVMTile>("exec sp_BackUPDB").ToList();
+                    if (result != null)
+                    {
+                        BusinessHandlerMPLog.Log(LogType.Message, "Backup done", "BackUpDatabase", "BusinessHandlerScheduller");
+                        return true;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                BusinessHandlerMPLog.Log(LogType.Message, "DB BackUP Failed", "BackUpDatabase", "BusinessHandlerScheduller");
             }
             return true;
         }

@@ -13,8 +13,16 @@ namespace Online_book_shop.Handlers.Business
     {
         public static string GetLoginUserId()
         {
-            var User = HttpContext.Current.User;
-            return User.Identity.GetUserId(); 
+            try
+            {
+                var User = HttpContext.Current.User;
+                return User.Identity.GetUserId();
+            }
+            catch(Exception ex)
+            {
+                return "Annonymous";
+            }
+           
         }
         public static bool SaveNewAuthor(Author author)
         {
