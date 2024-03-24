@@ -1466,7 +1466,7 @@ namespace Online_book_shop.Handlers.Database
                                             LocalBookName = a.LocalTitle,
                                             AuthorName = b.Name,
                                             LocalAuthorName = b.LocalName,
-                                            isDeleted = b.isDeleted,
+                                            isDeleted =a.isDeleted, //b.isDeleted,
                                             Rating = a.Ratings,
                                             ISBN = a.ISBN,
                                             SaleType = a.SaleType,
